@@ -7,14 +7,35 @@ import { Card, CardImg, CardText, CardBody,
 class App extends Component {
   state = {
     response: "empty",
-    post: '',
-    responseToPost: 'dsf',
     lat: 51.505,
     lng: -0.09,
     zoom: 13,
   };
 
   componentDidMount() {
+    navigator.geolocation.getCurrentPosition((position) => {
+      console.log(position);
+      this.setState({ 
+        lat: position.coords.latitude,
+        lng: position.coords.longitude, 
+        zoom: 14,
+        haveUsersLocation: true
+      });
+    }, () => {
+      console.log("Location request denied.");
+      fetch('https://ipapi.co/json')
+        .then(res => res.json())
+        .then(location => {
+          console.log(location);
+          this.setState({
+            lat: location.latitude,
+            lng: location.longitude,
+            zoom: 14,
+            haveUsersLocation: true
+          })
+        })
+    });
+
     this.callApi()
       .then(res => this.setState({ response: res.example }))
       .catch(err => this.setState({ response: err.message}));
@@ -28,6 +49,7 @@ class App extends Component {
     return body;
   }
 
+  // an example function, as it is not very useful
   handleSubmit = async e => {
     e.preventDefault();
     const response = await fetch('/api/world', {
@@ -59,8 +81,10 @@ class App extends Component {
       </Map>
       <Card className="sample">
         <CardBody>
-          <CardTitle>EXAMPLE GET</CardTitle>
-          <CardText>{this.state.response.lng}</CardText>
+          <CardTitle>Estimated user coordinates</CardTitle>
+          <CardText>Latitude: {this.state.lat}</CardText>
+          <CardText>Longitude: {this.state.lng}</CardText>
+          <CardText>example API call gives this: {this.state.response.lat}</CardText>
         </CardBody>
       </Card>
       </div>
@@ -69,3 +93,4 @@ class App extends Component {
 }
 
 export default App;
+
