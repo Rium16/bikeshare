@@ -3,13 +3,22 @@ import './App.css';
 import { Map, TileLayer, Marker, Popup } from 'react-leaflet'
 import { Card, CardImg, CardText, CardBody,
   CardTitle, CardSubtitle, Button } from 'reactstrap';
+import L from 'leaflet';
+
+const myIcon = L.icon({
+  iconUrl: 'https://unpkg.com/leaflet@1.4.0/dist/images/marker-icon.png',
+  iconSize: [25, 41],
+  iconAnchor: [12.5, 41],
+  popupAnchor: [0, -42]
+});
 
 class App extends Component {
   state = {
     response: "empty",
-    lat: 51.505,
-    lng: -0.09,
+    lat: 55.953,
+    lng: -3.188,
     zoom: 13,
+    locations: []
   };
 
   componentDidMount() {
@@ -36,17 +45,17 @@ class App extends Component {
         })
     });
 
-    this.callApi()
-      .then(res => this.setState({ response: res.example }))
-      .catch(err => this.setState({ response: err.message}));
+    this.getLocations();
   }
 
-  callApi = async () => {
+  getLocations = async () => {
     const response = await fetch('/api/location');
     const body = await response.json();
     if (response.status !== 200) throw Error(body.message);
-
-    return body;
+    else {
+      this.setState({ locations: body });
+      return body;
+    }
   }
 
   // an example function, as it is not very useful
@@ -70,21 +79,28 @@ class App extends Component {
       <div className="App">
         <Map className="map" center={position} zoom={this.state.zoom}>
         <TileLayer
-          attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          attribution='&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>'
+          url='https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png'
         />
+        {this.state.locations.map(function(location) {
+          var position = [location.latitude, location.longitude];
+          return (
+          <Marker position={position} icon={myIcon}>
+            <Popup>
+              {location.name} <br /> 
+              Bike capacity: {location.bikeCapacity} <br />
+              Locker count: {location.lockerCapacity}
+            </Popup>
+          </Marker>
+          );
+        })}
         <Marker position={position}>
-          <Popup>
-            A pretty CSS3 popup. <br /> Easily customizable.
-          </Popup>
+          
         </Marker>
       </Map>
       <Card className="sample">
         <CardBody>
-          <CardTitle>Estimated user coordinates</CardTitle>
-          <CardText>Latitude: {this.state.lat}</CardText>
-          <CardText>Longitude: {this.state.lng}</CardText>
-          <CardText>example API call gives this: {this.state.response.lat}</CardText>
+          
         </CardBody>
       </Card>
       </div>
