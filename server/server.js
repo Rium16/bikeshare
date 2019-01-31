@@ -50,25 +50,23 @@ app.post('/api/world', (req, res) => {
 
 var attemptedLogins = 0;  //will eventually get from db, number times the designated user has attempted to login in past 24h
 app.post('/login', (req, res) => {
-    var email = "email"; var password = "password";  //hardcoded for testing, will query database in future
-
-    console.log(req);
-    if (req.body.email === email) {
-        if (req.body.password === password) {
-            //probs set a logged in flag in db?
-            res.send("Logged in");
+    var email = req.body.email; var password = req.body.password;
+    var db_email, db_password;
+    con.query(`SELECT * from cu61wxpybf25h0dg.customers WHERE email='${email}'`, (err, rows) => {
+        if (err) throw err;
+        db_email = rows[0].email;
+        db_password = rows[0].password;
+        console.log(email + " " + db_email);
+        if (db_email == null) {
+            res.send("User not found");
         } else {
-            attemptedLogins++;
-            if (attemptedLogins < 3) {
-                res.send("Wrong password");
+            if (password === db_password) {
+                res.send("Logged in");
             } else {
-                res.send("Too many failed logins");
+                res.send("Wrong password");
             }
         }
-    } else {
-        res.send(`User not found
-        ${CircularJSON.stringify(req.body.email)}`,);
-    }
+    });
 });
 
 app.post('/register', (req, res) => {
