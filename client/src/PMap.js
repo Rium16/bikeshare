@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import { Map, TileLayer, Viewport,  Marker, Popup } from 'react-leaflet';
-import { Button } from 'reactstrap';
 import L from 'leaflet';
-import { IoIosLocate } from 'react-icons/io';
 
 
 const DEFAULT_VIEWPORT = {
@@ -21,14 +19,6 @@ class PMap extends Component {
     state = {
         locations: [],
         viewport: DEFAULT_VIEWPORT
-    }
-
-    onClickLocate = () => {
-        this.setState({ viewport: DEFAULT_VIEWPORT });
-    }
-
-    onViewportChanged = (viewport) => {
-        this.setState({ viewport });
     }
 
     componentDidMount() {
@@ -68,12 +58,11 @@ class PMap extends Component {
       }
 
     render() {
-        const position = [this.state.lat, this.state.lng];
+
         return (
             <div className="map-container">
             <Map
                 zoomControl={false}
-                centre={position}
                 className={this.props.className}
                 viewport={this.state.viewport}
                 onViewportChanged={this.onViewportChanged}
@@ -97,7 +86,6 @@ class PMap extends Component {
 
             
             </Map>
-            <Button className="home-in" onClick={this.onClickLocate}><IoIosLocate/></Button>
             </div>
         
         )
