@@ -1,35 +1,50 @@
 import React, { Component } from 'react';
 import './App.css';
 import PMap from './PMap';
+import Navigation from './views/Navigation';
+import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 
-class App extends Component {
+export default class App extends Component {
   state = {
     
-  };
-
-  // an example function, as it is not very useful
-  handleSubmit = async e => {
-    e.preventDefault();
-    const response = await fetch('/api/world', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ post: this.state.post }),
-    });
-    const body = await response.text();
-
-    this.setState({ responseToPost: body });
   };
 
   render() {
     return (
       <div className="App">
-        <PMap className="map"/>
+        {Page()}
       </div>
     );
   }
 }
 
-export default App;
+function Page() {
+  return (
+    <Router>
+      <div>
+        <Navigation/>
+          <Route exact path="/" component={BikeMap} />
+          <Route path="/login" component={Login} />
+          <Route path="/account" component={Account} />
+      </div>
+    </Router>
+  );
+}
 
+function BikeMap() {
+  return (
+    <PMap className="map"></PMap>
+  );
+}
+
+function Login() {
+  return (
+    <div className="loginpage"><p>LOGIN PAGE</p></div>
+  );
+}
+
+function Account() {
+  return (
+    ""
+  );
+}
