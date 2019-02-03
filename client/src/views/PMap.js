@@ -1,25 +1,32 @@
 import React, { Component } from 'react';
 import { Map, TileLayer, Viewport,  Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
-import { Router, Route } from 'react-router-dom';
+import { Router, Route, Link } from 'react-router-dom';
+import Count from './Count';
+import PMarker from './PMarker';
+import { Button } from 'reactstrap';
 
 
+// defaults to edinburgh (for now)
 const DEFAULT_VIEWPORT = {
     center: [55.943, -3.188],
     zoom: 14
 }
 
-const myIcon = L.icon({
-    iconUrl: 'https://unpkg.com/leaflet@1.4.0/dist/images/marker-icon.png',
-    iconSize: [25, 41],
-    iconAnchor: [12.5, 41],
-    popupAnchor: [0, -42]
-  });
+class PMap extends React.Component {
 
-class PMap extends Component {
+    // state information:
+    //  -list of locations
+    //  -user location viewport (not implemented)
+    //  -whether or not a dock is being viewed (popup is open or not)
     state = {
         locations: [],
-        viewport: DEFAULT_VIEWPORT
+        viewport: DEFAULT_VIEWPORT,
+        viewing: false
+    }
+
+    constructor(props) {
+        super(props);
     }
 
     componentDidMount() {
@@ -53,13 +60,36 @@ class PMap extends Component {
         const body = await response.json();
         if (response.status !== 200) throw Error(body.message);
         else {
-          this.setState({ locations: body });
-          return body;
+            var locs = [];
+            body.map(function(x) {
+                var loc = {
+                    latitude: x.latitude,
+                    longitude: x.longitude,
+                    name: x.name,
+                    numBikes: x.NumBikes,
+                    numLockers: x.NumHelmets,
+                    bikeCapacity: x.bikeCapacity,
+                    helmetCapacity: x.helmetCapcity
+                }
+                locs.push(loc);
+            })
+            this.setState({ locations: locs });
+            return body;
         }
       }
 
-    render() {
+    openLocation = () => {
+        this.setState({ viewing: true });
+    }
 
+    closeLocation = () => {
+        this.setState({ viewing: false });
+    }
+
+    render() {
+        // reference to the instantiated PMap component, helpful for 
+        // nested functions, can't tell if this is hacky or not
+        const _this = this;
         return (
             <div className="map-container">
             <Map
@@ -75,18 +105,19 @@ class PMap extends Component {
             {this.state.locations.map(function(location) {
             var position = [location.latitude, location.longitude];
             return (
-                <Marker position={position} icon={myIcon}>
-                    <Popup>
-                    {location.name} <br /> 
-                    Bike capacity: {location.bikeCapacity} <br />
-                    Locker count: {location.lockerCapacity}
-                    </Popup>
-                </Marker>
+                <PMarker
+                position={position}
+                locationName={location.name}
+                bikeCapacity={location.bikeCapacity}
+                numBikes={location.numBikes}
+                onOpen={_this.openLocation}
+                onClose={_this.closeLocation}
+                >
+                </PMarker>
                 );
             })}
-
-            
             </Map>
+            <Button color="info" disabled={!this.state.viewing}  className='locker'>Lock</Button>
             </div>
         
         )
