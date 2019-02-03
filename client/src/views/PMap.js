@@ -5,7 +5,7 @@ import { Router, Route, Link } from 'react-router-dom';
 import Count from './Count';
 import PMarker from './PMarker';
 import { Button } from 'reactstrap';
-
+import { IoIosLock } from 'react-icons/io';
 
 // defaults to edinburgh (for now)
 const DEFAULT_VIEWPORT = {
@@ -117,7 +117,7 @@ class PMap extends React.Component {
                 );
             })}
             </Map>
-            <Button color="info" disabled={!this.state.viewing}  className='locker'>Lock</Button>
+            <Button color="info" disabled={!this.state.viewing}  className='locker'><IoIosLock size="1.5em"/></Button>
             </div>
         
         )
