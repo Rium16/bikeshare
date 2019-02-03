@@ -3,6 +3,30 @@
   height: 1000px;
 }
 
+
+/* 
+centering from https://www.w3.org/Style/Examples/007/center.en.html
+*/
+.locker {
+  position: absolute;
+  bottom: 2%;
+  z-index: 999;
+  height: 2em;
+  width: 33%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 1.5em;
+}
+
+.location-name {
+  font-size: 1em;
+}
+
+.count {
+  font-size: 2em;
+  color: green;
+}
+
 .loginpage {
   height: 1000%;
   width: 100%;

@@ -5,6 +5,7 @@ const CircularJSON = require('circular-json');
 
 const app = express();
 const port = process.env.PORT || 5000;
+const dbName = "cu61wxpybf25h0dg";
 
 // omit password!!
 const con = mysql.createConnection({
@@ -18,7 +19,10 @@ con.connect(function(err) {
     console.log("Connected!");
 })
 
-con.query("SELECT * from cu61wxpybf25h0dg.locations", (err, res) => {
+con.query(`SELECT locations.*,
+(SELECT COUNT(*) FROM ${dbName}.equipment WHERE locationID=locations.LID AND type='bike') AS NumBikes, 
+(SELECT COUNT(*) FROM ${dbName}.equipment WHERE locationID=locations.LID AND type='helmet') AS NumHelmets
+FROM ${dbName}.locations;`, (err, res) => {
     if (err) throw err;
     console.log(res);
 })
@@ -32,9 +36,14 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get('/api/location', (req, res) => {
-    con.query("SELECT * FROM cu61wxpybf25h0dg.locations;", (err, rows) => {
+    con.query(`SELECT locations.*,
+    (SELECT COUNT(*) FROM ${dbName}.equipment WHERE locationID=locations.LID AND type='bike') AS NumBikes, 
+    (SELECT COUNT(*) FROM ${dbName}.equipment WHERE locationID=locations.LID AND type='helmet') AS NumHelmets
+    FROM ${dbName}.locations;`, (err, rows) => {
         if (err) throw err
-        else res.send(rows);
+        else {
+            res.send(rows);
+        } 
     });
     
 });
