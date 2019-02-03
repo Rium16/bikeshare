@@ -117,3 +117,31 @@ centering from https://www.w3.org/Style/Examples/007/center.en.html
     transform: rotate(360deg);
   }
 }
+
+.signin {
+    position: absolute;
+    top: 20%;
+    left: 32%;
+    width: 36%;
+    height: auto;
+    padding-top: 2%;
+    padding-bottom: 2%;
+    background-color: #FCFCFC;
+    display: block;
+    text-align:center;
+    font-family: monospace;
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 10%;
+}
+
+@media screen and (max-width: 690px) {
+    .signin {
+        left: 12.5%;
+        width: 75%;
+    }
+}
+
+.padded {
+    padding: 5px;
+}
