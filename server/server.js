@@ -11,7 +11,8 @@ const dbName = "cu61wxpybf25h0dg";
 const con = mysql.createConnection({
     host: "u3y93bv513l7zv6o.chr7pe7iynqr.eu-west-1.rds.amazonaws.com",
     user: "hvenc4zr2d6up850",
-    password: "qbonvjemwu88w4ov"
+    password: "qbonvjemwu88w4ov",
+    database: "cu61wxpybf25h0dg"
 });
 
 con.connect(function(err) {
@@ -79,13 +80,34 @@ app.post('/login', (req, res) => {
 });
 
 app.post('/register', (req, res) => {
-    var email = "email"; var password = "password";  //(front end should only send request if confirm password matches password)
-    //put email & password in database
-    //maybe implement email verification later? (add an isVerified field for each user in db)
-    
-});
+    var CID = req.body.CID;
+    var email = req.body.email;
+    var password = req.body.password;
+    var firstname = req.body.firstname;
+    var lastname = req.body.lastname;
+    var DOB = req.body.DOB;
+    var email = req.body.email;
+    var phone = req.body.phone;
+    var payment_details = req.body.payment_details;
+    var address = req.body.address;
 
-//register
+    con.query(`SELECT * from ${dbName}.customers WHERE email='${email}'`, (err, rows) => {
+        if (err || rows[0].email != null) {
+            res.send("User already in db");
+        } else {
+            var sql = `INSERT INTO customers (CID, password, firstname, lastname, DOB, email, phone, payment_details, address) VALUES ('${CID}', '${password}', '${firstname}', '${lastname}', '${DOB}', '${email}', '${phone}', '${payment_details}', '${address}')`;
+            con.query(sql, (err, result) => {
+                if (err) {
+                    res.send("CID already exists");
+                } else {
+                    console.log("Inserted an entry");
+                    res.send("Inserted an entry");
+                }
+            });
+        }
+
+    });
+});
 //settings
 //borrow (put)
 //borrow_hist (get)
