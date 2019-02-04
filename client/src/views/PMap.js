@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import { Map, TileLayer, Viewport,  Marker, Popup } from 'react-leaflet';
-import L from 'leaflet';
-import { Router, Route, Link } from 'react-router-dom';
-import Count from './Count';
+import LoanScreen from './LoanScreen';
 import PMarker from './PMarker';
 import { Button } from 'reactstrap';
 import { IoIosLock } from 'react-icons/io';
@@ -22,7 +20,8 @@ class PMap extends React.Component {
     state = {
         locations: [],
         viewport: DEFAULT_VIEWPORT,
-        viewing: false
+        viewing: false,
+        viewingLoan: false
     }
 
     constructor(props) {
@@ -83,7 +82,11 @@ class PMap extends React.Component {
     }
 
     closeLocation = () => {
-        this.setState({ viewing: false });
+        this.setState({ viewing: false, viewingLoan: false });
+    }
+
+    toggleBorrow = () => {
+        this.setState({ viewingLoan: !this.state.viewingLoan});
     }
 
     render() {
@@ -118,6 +121,10 @@ class PMap extends React.Component {
             })}
             </Map>
             <Button color="info" disabled={!this.state.viewing}  className='locker'><IoIosLock size="1.5em"/></Button>
+            <Button color="info" disabled={!this.state.viewing} className='borrow' onClick={this.toggleBorrow}>B</Button>
+            
+            {/* bad logic - should only be enabled when locked */}
+            {this.state.viewingLoan ? <LoanScreen className="sample"/> : ""}
             </div>
         
         )

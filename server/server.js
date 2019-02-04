@@ -1,27 +1,12 @@
 const express = require('express');
+const moment = require('moment');
 const bodyParser = require('body-parser');
 const mysql = require('mysql');
 const CircularJSON = require('circular-json');
-const session = require('express-session');
-const cookieParser = require('cookie-parser');
 
 const app = express();
 const port = process.env.PORT || 5000;
 const dbName = "cu61wxpybf25h0dg";
-
-var sess = {
-    secret: 'some text, i think',
-    cookie: {}
-};
-
-app.use(cookieParser());
-
-if (app.get('env') === 'production') {
-    app.set('trust proxy', 1) // trust first proxy
-    sess.cookie.secure = true // serve secure cookies
-}
-
-app.use(session(sess));
 
 // omit password!!
 const con = mysql.createConnection({
@@ -78,60 +63,21 @@ var attemptedLogins = 0;  //will eventually get from db, number times the design
 app.post('/login', (req, res) => {
     var email = req.body.email; var password = req.body.password;
     var db_email, db_password;
-    var sessionID = req.sessionID;  //email for now, will be UUID v4 (random)
-
-    con.query(`SELECT * from ${dbName}.customers WHERE email='${email}'`, (err, rows) => {
+    con.query(`SELECT * from cu61wxpybf25h0dg.customers WHERE email='${email}'`, (err, rows) => {
         if (err) throw err;
         db_email = rows[0].email;
         db_password = rows[0].password;
+        console.log(email + " " + db_email);
         if (db_email == null) {
             res.send("User not found");
         } else {
             if (password === db_password) {
-                var sql = `UPDATE ${dbName}.customers SET sessionID='${sessionID}' where email='${email}';`;
-                con.query(sql, (err, result) => {
-                    if (err) {
-                        res.send(err);
-                    } else {
-                        res.send("Logged in (Updated sessionId to " + sessionID + ")");
-                    }
-                });
+                res.send("Logged in");
             } else {
                 res.send("Wrong password");
             }
         }
     });
-});
-
-app.post('/logout', (req, res) => {
-    var email = req.body.email;
-    var sessionID = req.sessionID;
-    var db_sessionID;
-
-    if (email) {
-        con.query(`SELECT * from ${dbName}.customers WHERE email='${email}'`, (err, rows) => {
-            if (err) throw err;
-            if (rows.length != 0) {
-                db_sessionID = rows[0].sessionID;
-                console.log("Session ID currently stored in db: " + db_sessionID);
-                console.log("Session ID contained in request: " + sessionID);
-                if (sessionID === db_sessionID) {
-                    sessionID = null;
-                    con.query(`UPDATE ${dbName}.customers SET sessionID='${sessionID}' where email='${email}';`, (err) => {
-                        if (err) throw err;
-                        res.send("Logged out, voided sessionID");
-                    });
-                    res.send("Need to void session id in db");
-                } else {
-                    res.send("Already logged out");
-                }
-            } else {
-                res.send("User not registered");
-            }
-        });
-    } else {
-        res.send("Wrong info");
-    }
 });
 
 app.post('/register', (req, res) => {
@@ -145,14 +91,12 @@ app.post('/register', (req, res) => {
     var phone = req.body.phone;
     var payment_details = req.body.payment_details;
     var address = req.body.address;
-    var sessionID = req.sessionID;
 
     con.query(`SELECT * from ${dbName}.customers WHERE email='${email}'`, (err, rows) => {
-        if (err) throw err;
-        if (rows.length != 0) {
-            res.send("User already in database");
+        if (err || rows[0].email != null) {
+            res.send("User already in db");
         } else {
-            var sql = `INSERT INTO customers (CID, password, firstname, lastname, DOB, email, phone, payment_details, address, sessionID) VALUES ('${CID}', '${password}', '${firstname}', '${lastname}', '${DOB}', '${email}', '${phone}', '${payment_details}', '${address}', '${sessionID}')`;
+            var sql = `INSERT INTO customers (CID, password, firstname, lastname, DOB, email, phone, payment_details, address) VALUES ('${CID}', '${password}', '${firstname}', '${lastname}', '${DOB}', '${email}', '${phone}', '${payment_details}', '${address}')`;
             con.query(sql, (err, result) => {
                 if (err) {
                     res.send("CID already exists");
@@ -162,21 +106,66 @@ app.post('/register', (req, res) => {
                 }
             });
         }
-    });
-});
 
-//call this to check if user is logged in (still using a session that they logged into or registered with)
-//returns 1 if logged in and 0 if not logged in
-app.get('/api/checkLogin', (req, res) => {
-    console.log("SessionID: " + req.sessionID);
-    var sessionID = req.sessionID;
-    con.query(`SELECT * from ${dbName}.customers WHERE sessionID='${sessionID}'`, (err, rows) => {
-        if (err) throw err;
-        if (rows.length != 0)
-            res.send("true");
-        else
-            res.send("false");
     });
 });
+//settings
+//borrow (put)
+
+app.put('/api/loan', (req, res) => {
+
+    // this query needs generalised
+    // req.body.type, req.body.locationID
+    con.query(`SELECT * FROM ${dbName}.equipment WHERE type='bike' AND locationID=1;`, (err, rows) => {
+        if (err) throw err;
+        else {
+            chooseItem(rows);
+            res.send(rows);
+        }
+    });
+
+    // randomly select one of the available pieces of equipment, then call the update function 
+    function chooseItem(equipmentList) {
+        var chosenItem = equipmentList[Math.floor(Math.random()*equipmentList.length)].EID;
+
+        updateResources(chosenItem);
+
+    }
+
+    // transaction: insert a row into equipment_loan, set equipment as unavailable and locationID=NULL
+    function updateResources(equipmentID) {
+        con.beginTransaction(function(err) {
+            if (err) { throw err; }
+            con.query(`INSERT INTO ${dbName}.equipment_loan VALUES (?, ?, NULL, ?, ?);`,
+            [req.body.customerID, moment().format('YYYY-MM-DD HH:mm:ss'), equipmentID, req.body.locationID], 
+            function(err, result) {
+              if (err) { 
+                con.rollback(function() {
+                  throw err;
+                });
+              }
+        
+              con.query(`UPDATE ${dbName}.equipment SET isUnavailable=1, locationID=NULL WHERE EID=?;`, [equipmentID], function(err, result) {
+                if (err) { 
+                  con.rollback(function() {
+                    throw err;
+                  });
+                }  
+                
+                con.commit(function(err) {
+                  if (err) { 
+                    con.rollback(function() {
+                      throw err;
+                    });
+                  }
+                  console.log('Transaction Complete.');
+                  con.end();
+                });
+              });
+            });
+          });
+        }
+    });
+//borrow_hist (get)
 
 app.listen(port, () => console.log(`Listening on port ${port}`));
