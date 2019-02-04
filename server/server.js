@@ -4,6 +4,7 @@ const mysql = require('mysql');
 const CircularJSON = require('circular-json');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
+const uuid = require('uuid/v1');
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -116,7 +117,7 @@ app.post('/logout', (req, res) => {
                 console.log("Session ID currently stored in db: " + db_sessionID);
                 console.log("Session ID contained in request: " + sessionID);
                 if (sessionID === db_sessionID) {
-                    sessionID = null;
+                    sessionID = uuid();
                     con.query(`UPDATE ${dbName}.customers SET sessionID='${sessionID}' where email='${email}';`, (err) => {
                         if (err) throw err;
                         res.send("Logged out, voided sessionID");
