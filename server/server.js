@@ -4,6 +4,10 @@ const bodyParser = require('body-parser');
 const mysql = require('mysql');
 const CircularJSON = require('circular-json');
 
+const session = require('express-session');
+const cookieParser = require('cookie-parser');
+const uuid = require('uuid/v1');
+
 const app = express();
 const port = process.env.PORT || 5000;
 const dbName = "cu61wxpybf25h0dg";
@@ -78,6 +82,37 @@ app.post('/login', (req, res) => {
             }
         }
     });
+});
+
+app.post('/logout', (req, res) => {
+    var email = req.body.email;
+    var sessionID = req.sessionID;
+    var db_sessionID;
+
+    if (email) {
+        con.query(`SELECT * from ${dbName}.customers WHERE email='${email}'`, (err, rows) => {
+            if (err) throw err;
+            if (rows.length != 0) {
+                db_sessionID = rows[0].sessionID;
+                console.log("Session ID currently stored in db: " + db_sessionID);
+                console.log("Session ID contained in request: " + sessionID);
+                if (sessionID === db_sessionID) {
+                    sessionID = uuid();
+                    con.query(`UPDATE ${dbName}.customers SET sessionID='${sessionID}' where email='${email}';`, (err) => {
+                        if (err) throw err;
+                        res.send("Logged out, voided sessionID");
+                    });
+                    res.send("Need to void session id in db");
+                } else {
+                    res.send("Already logged out");
+                }
+            } else {
+                res.send("User not registered");
+            }
+        });
+    } else {
+        res.send("Wrong info");
+    }
 });
 
 app.post('/register', (req, res) => {
