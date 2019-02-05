@@ -40,8 +40,10 @@ con.connect(function(err) {
 })
 
 con.query(`SELECT locations.*,
-(SELECT COUNT(*) FROM ${dbName}.equipment WHERE locationID=locations.LID AND type='bike') AS NumBikes, 
-(SELECT COUNT(*) FROM ${dbName}.equipment WHERE locationID=locations.LID AND type='helmet') AS NumHelmets
+(SELECT COUNT(*) FROM ${dbName}.equipment WHERE locationID=locations.LID AND type='bike' AND isUnavailable=0 AND isLocked=0) AS numFreeBikes, 
+(SELECT COUNT(*) FROM ${dbName}.equipment WHERE locationID=locations.LID AND type='helmet') AS numFreeHelmets,
+(SELECT COUNT(*) FROM ${dbName}.equipment WHERE locationID=locations.LID AND type='bike') AS numBikes,
+(SELECT COUNT(*) FROM ${dbName}.equipment WHERE locationID=locations.LID AND type='helmet') AS numHelmets
 FROM ${dbName}.locations;`, (err, res) => {
     if (err) throw err;
     console.log(res);
@@ -57,8 +59,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get('/api/location', (req, res) => {
     con.query(`SELECT locations.*,
-    (SELECT COUNT(*) FROM ${dbName}.equipment WHERE locationID=locations.LID AND type='bike') AS NumBikes, 
-    (SELECT COUNT(*) FROM ${dbName}.equipment WHERE locationID=locations.LID AND type='helmet') AS NumHelmets
+    (SELECT COUNT(*) FROM ${dbName}.equipment WHERE locationID=locations.LID AND type='bike' AND isUnavailable=0 AND isLocked=0) AS numFreeBikes, 
+    (SELECT COUNT(*) FROM ${dbName}.equipment WHERE locationID=locations.LID AND type='helmet') AS numFreeHelmets,
+    (SELECT COUNT(*) FROM ${dbName}.equipment WHERE locationID=locations.LID AND type='bike') AS numBikes,
+    (SELECT COUNT(*) FROM ${dbName}.equipment WHERE locationID=locations.LID AND type='helmet') AS numHelmets
     FROM ${dbName}.locations;`, (err, rows) => {
         if (err) throw err
         else {
@@ -249,9 +253,9 @@ app.post('/api/lock', (req, res) => {
     // randomly select one of the available pieces of equipment, then call the update function 
     function chooseItem(equipmentList) {
         if (equipmentList.length > 0) {
-            var chosenItem = equipmentList[Math.floor(Math.random()*equipmentList.length)].EID;
+            var chosenItem = equipmentList[Math.floor(Math.random()*equipmentList.length)];
 
-            con.query(`UPDATE ${dbName}.equipment SET isLocked=1 WHERE EID=?`, [chosenItem], (err, rows) => {
+            con.query(`UPDATE ${dbName}.equipment SET isLocked=1 WHERE EID=?`, [chosenItem.EID], (err, rows) => {
                 if (err) throw err;
                 else {
                     res.send({reservedItem: chosenItem});
@@ -260,11 +264,22 @@ app.post('/api/lock', (req, res) => {
         } else {
             res.send({
                 reservedItem: null,
-                message: "No equipment."
+                message: "No equipment currently available."
             });
         }
 
     }
+});
+
+app.post('/api/unlock', (req, res) => {
+    con.query(`UPDATE ${dbName}.equipment SET isLocked=0 WHERE EID=?;`, [req.body.equipmentID], (err, rows) => {
+        if (err) throw err;
+        else {
+            res.send({
+                message: "Item successfully unlocked."
+            });
+        }
+    });
 });
 
 app.listen(port, () => console.log(`Listening on port ${port}`));

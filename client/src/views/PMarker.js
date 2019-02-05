@@ -21,8 +21,8 @@ class PMarker extends Component {
                 onOpen={this.props.onOpen}
                 onClose={this.props.onClose}
                 >
-                <p className="location-name">{this.props.locationName}</p>
-                <Count max={this.props.bikeCapacity} current={this.props.numBikes} className="count">{this.props.numBikes}</Count> bikes <br />
+                <p className="location-name">{this.props.name}</p>
+                <Count max={this.props.bikeCapacity} current={this.props.numFreeBikes} className="count">{this.props.numFreeBikes}</Count> bikes <br />
                 <Count max={this.props.bikeCapacity} current={this.props.bikeCapacity - this.props.numBikes} className="count">{this.props.bikeCapacity - this.props.numBikes}</Count> docks
                 </Popup>
             </Marker>

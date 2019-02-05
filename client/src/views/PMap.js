@@ -14,10 +14,11 @@ class PMap extends React.Component {
 
     // state information:
     //  -list of locations
-    //  -user location viewport (not implemented)
-    //  -whether or not a dock is being viewed (popup is open or not)
+    //  -user's location viewport (not implemented)
+    //  -which location is being viewed (popup is open or not)
+    //  -locked location
     state = {
-        locations: [],
+        docks: [],
         viewport: DEFAULT_VIEWPORT,
         viewing: null,
         lockDetails: null
@@ -65,14 +66,14 @@ class PMap extends React.Component {
                     latitude: x.latitude,
                     longitude: x.longitude,
                     name: x.name,
-                    numBikes: x.NumBikes,
-                    numLockers: x.NumHelmets,
+                    numBikes: x.numBikes,
+                    numFreeBikes: x.numFreeBikes,
                     bikeCapacity: x.bikeCapacity,
                     helmetCapacity: x.helmetCapcity
                 }
                 locs.push(loc);
             })
-            this.setState({ locations: locs });
+            this.setState({ docks: locs });
             return body;
         }
       }
@@ -82,18 +83,40 @@ class PMap extends React.Component {
     }
 
     closeLocation = () => {
-        this.setState({ viewing: false, viewingLoan: false });
+        this.setState({ viewing: false });
     }
 
-    toggleBorrow = () => {
-        this.setState({ viewingLoan: !this.state.viewingLoan});
+    lock = async (viewing) => {
+        const response = await fetch('/api/lock', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ locationID: viewing.LID }),
+          });
+        var body = await response.json();
+        if (body.reservedItem) {
+            this.setState({ lockDetails: {
+                location: viewing,
+                equipment: body.reservedItem
+            }});
+            this.getDockingStations();
+        } else {
+            alert(body.message);
+        }
+        
     }
 
-    lock = (viewing) => {
-        this.setState({ lockDetails: viewing });
-    }
+    unlock = async () => {
+        const response = await fetch('/api/unlock', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ equipmentID: this.state.lockDetails.equipment.EID })
+        });
 
-    unlock = () => {
+        this.getDockingStations();
         this.setState({ lockDetails: null });
         alert("Bike successfully unlocked.");
     }
@@ -114,14 +137,12 @@ class PMap extends React.Component {
                 attribution='&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>'
                 url='https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png'
             />
-            {this.state.locations.map(function(location) {
+            {this.state.docks.map(function(location) {
             var position = [location.latitude, location.longitude];
             return (
                 <PMarker
+                {...location}
                 position={position}
-                locationName={location.name}
-                bikeCapacity={location.bikeCapacity}
-                numBikes={location.numBikes}
                 onOpen={() => _this.openLocation(location)}
                 onClose={_this.closeLocation}
                 >
@@ -138,8 +159,10 @@ class PMap extends React.Component {
             {this.state.lockDetails ?
             <Card className="lock-display">
                 <CardBody>
-                    <CardHeader>Bike locked at {this.state.lockDetails.name}!</CardHeader>
-                    <CardText>{}</CardText>
+                    <CardHeader>Bike locked at {this.state.lockDetails.location.name}!</CardHeader>
+                    <CardText>Equipment type: {this.state.lockDetails.equipment.type}, 
+                    Equipment ID: {this.state.lockDetails.equipment.EID}
+                    </CardText>
                 </CardBody>
             </Card>
             : "" }
