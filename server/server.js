@@ -1,6 +1,8 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const mysql = require('mysql');
+const moment = require('moment'); 
+
 const CircularJSON = require('circular-json');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
@@ -178,6 +180,91 @@ app.get('/api/checkLogin', (req, res) => {
         else
             res.send("false");
     });
+});
+
+app.put('/api/loan', (req, res) => {
+
+    // this query needs generalised
+    // req.body.type, req.body.locationID
+    con.query(`SELECT * FROM ${dbName}.equipment WHERE type='bike' AND locationID=1;`, (err, rows) => {
+        if (err) throw err;
+        else {
+            chooseItem(rows);
+            res.send(rows);
+        }
+    });
+
+    // randomly select one of the available pieces of equipment, then call the update function 
+    function chooseItem(equipmentList) {
+        var chosenItem = equipmentList[Math.floor(Math.random()*equipmentList.length)].EID;
+
+        updateResources(chosenItem);
+
+    }
+
+    // transaction: insert a row into equipment_loan, set equipment as unavailable and locationID=NULL
+    function updateResources(equipmentID) {
+        con.beginTransaction(function(err) {
+            if (err) { throw err; }
+            con.query(`INSERT INTO ${dbName}.equipment_loan VALUES (?, ?, NULL, ?, ?);`,
+            [req.body.customerID, moment().format('YYYY-MM-DD HH:mm:ss'), equipmentID, req.body.locationID], 
+            function(err, result) {
+              if (err) { 
+                con.rollback(function() {
+                  throw err;
+                });
+              }
+        
+              con.query(`UPDATE ${dbName}.equipment SET isUnavailable=1, locationID=NULL WHERE EID=?;`, [equipmentID], function(err, result) {
+                if (err) { 
+                  con.rollback(function() {
+                    throw err;
+                  });
+                }  
+                
+                con.commit(function(err) {
+                  if (err) { 
+                    con.rollback(function() {
+                      throw err;
+                    });
+                  }
+                  console.log('Transaction Complete.');
+                  con.end();
+                });
+              });
+            });
+          });
+        }
+    });
+
+app.post('/api/lock', (req, res) => {
+    console.log(req.body.locationID);
+    con.query(`SELECT * FROM ${dbName}.equipment WHERE type='bike' AND locationID=? AND isUnavailable=0 AND isLocked=0;`, [req.body.locationID], (err, rows) => {
+        if (err) throw err;
+        else {
+            chooseItem(rows);
+        }
+    });
+
+    // randomly select one of the available pieces of equipment, then call the update function 
+    function chooseItem(equipmentList) {
+        if (equipmentList.length > 0) {
+            var chosenItem = equipmentList[Math.floor(Math.random()*equipmentList.length)].EID;
+
+            con.query(`UPDATE ${dbName}.equipment SET isLocked=1 WHERE EID=?`, [chosenItem], (err, rows) => {
+                if (err) throw err;
+                else {
+                    res.send({reservedItem: chosenItem});
+                }
+            });
+        } else {
+            res.send({
+                reservedItem: null,
+                message: "No equipment."
+            });
+        }
+
+    }
 });
 
 app.listen(port, () => console.log(`Listening on port ${port}`));
