@@ -1,11 +1,8 @@
 import React, { Component } from 'react';
 import { Map, TileLayer, Viewport,  Marker, Popup } from 'react-leaflet';
-import L from 'leaflet';
-import { Router, Route, Link } from 'react-router-dom';
-import Count from './Count';
 import PMarker from './PMarker';
-import { Button } from 'reactstrap';
-import { IoIosLock } from 'react-icons/io';
+import { Button, Card, CardBody, CardText, CardHeader } from 'reactstrap';
+import { IoIosLock, IoIosKey } from 'react-icons/io';
 
 // defaults to edinburgh (for now)
 const DEFAULT_VIEWPORT = {
@@ -22,7 +19,8 @@ class PMap extends React.Component {
     state = {
         locations: [],
         viewport: DEFAULT_VIEWPORT,
-        viewing: false
+        viewing: null,
+        lockDetails: null
     }
 
     constructor(props) {
@@ -63,6 +61,7 @@ class PMap extends React.Component {
             var locs = [];
             body.map(function(x) {
                 var loc = {
+                    LID: x.LID,
                     latitude: x.latitude,
                     longitude: x.longitude,
                     name: x.name,
@@ -78,12 +77,25 @@ class PMap extends React.Component {
         }
       }
 
-    openLocation = () => {
-        this.setState({ viewing: true });
+    openLocation = (location) => {
+        this.setState({ viewing: location  });
     }
 
     closeLocation = () => {
-        this.setState({ viewing: false });
+        this.setState({ viewing: false, viewingLoan: false });
+    }
+
+    toggleBorrow = () => {
+        this.setState({ viewingLoan: !this.state.viewingLoan});
+    }
+
+    lock = (viewing) => {
+        this.setState({ lockDetails: viewing });
+    }
+
+    unlock = () => {
+        this.setState({ lockDetails: null });
+        alert("Bike successfully unlocked.");
     }
 
     render() {
@@ -110,16 +122,28 @@ class PMap extends React.Component {
                 locationName={location.name}
                 bikeCapacity={location.bikeCapacity}
                 numBikes={location.numBikes}
-                onOpen={_this.openLocation}
+                onOpen={() => _this.openLocation(location)}
                 onClose={_this.closeLocation}
                 >
                 </PMarker>
                 );
             })}
             </Map>
-            <Button color="info" disabled={!this.state.viewing}  className='locker'><IoIosLock size="1.5em"/></Button>
+            {this.state.lockDetails ?
+            <Button color="info" onClick={() => this.unlock()}  className='locker'><IoIosKey size="1.5em"/></Button>
+            :
+            <Button color="info" disabled={!this.state.viewing} onClick={() => this.lock(this.state.viewing)} className='locker'><IoIosLock size="1.5em"/></Button>
+            }
+
+            {this.state.lockDetails ?
+            <Card className="lock-display">
+                <CardBody>
+                    <CardHeader>Bike locked at {this.state.lockDetails.name}!</CardHeader>
+                    <CardText>{}</CardText>
+                </CardBody>
+            </Card>
+            : "" }
             </div>
-        
         )
     }
 }

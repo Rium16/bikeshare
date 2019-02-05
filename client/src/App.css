@@ -3,6 +3,12 @@
   height: 1000px;
 }
 
+.lock-display {
+  z-index: 999;
+  margin: 0 auto;
+  width: 80%;
+}
+
 
 /* 
 centering from https://www.w3.org/Style/Examples/007/center.en.html
