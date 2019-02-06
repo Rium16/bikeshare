@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "node server",
-    "test": "concurrently --kill-others-on-fail \"node server\" \"cd ../client && npm start\""
+    "test": "concurrently --kill-others-on-fail \"node server\" \"cd ../client && npm start\"",
+    "heroku-postbuild": "cd client && npm install && npm run build"
   },
   "keywords": [],
   "author": "",
