@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import './App.css';
 import PMap from './views/PMap';
 import Navigation from './views/Navigation';
-import Signup from './views/Signup';
-import Example from './views/signin';
+import Signup from './views/signup';
+import Login from './views/signin';
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 
 export default class App extends Component {
@@ -26,9 +26,9 @@ function Page() {
       <div>
         <Navigation/>
         <Route exact path="/" component={BikeMap} />
-        <Route path="/login" component={Login} />
+        <Route path="/login" component={LogIn} />
         <Route path="/account" component={Account} />
-        <Route path="/signup" component={SignUp} />
+        <Route path="/register" component={SignUp} />
       </div>
     </Router>
   );
@@ -40,9 +40,9 @@ function BikeMap() {
   );
 }
 
-function Login() {
+function LogIn() {
   return (
-    <Example />
+    <Login />
   );
 }
 
