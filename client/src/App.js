@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import './App.css';
 import PMap from './views/PMap';
 import Navigation from './views/Navigation';
-import Signup from './views/Signup';
-import Example from './views/Signin';
+import Signup from './views/signup';
+import Example from './views/signin';
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 
 export default class App extends Component {
