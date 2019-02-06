@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
 import { Map, TileLayer, Viewport,  Marker, Popup } from 'react-leaflet';
 import PMarker from './PMarker';
+import MessageModal from './MessageModal';
 import { Button, Card, CardBody, CardText, CardHeader } from 'reactstrap';
 import { IoIosLock, IoIosKey } from 'react-icons/io';
 
@@ -21,7 +23,8 @@ class PMap extends React.Component {
         docks: [],
         viewport: DEFAULT_VIEWPORT,
         viewing: null,
-        lockDetails: null
+        lockDetails: null,
+        messageDetails: null
     }
 
     constructor(props) {
@@ -87,6 +90,9 @@ class PMap extends React.Component {
     }
 
     lock = async (viewing) => {
+        this.setState({
+            messageDetails: null
+        })
         const response = await fetch('/api/lock', {
             method: 'POST',
             headers: {
@@ -102,12 +108,17 @@ class PMap extends React.Component {
             }});
             this.getDockingStations();
         } else {
-            alert(body.message);
+            this.setState({
+                messageDetails: {
+                    message: body.message
+                }
+            })
         }
         
     }
 
     unlock = async () => {
+        this.setState({ messageDetails: null });
         const response = await fetch('/api/unlock', {
             method: 'POST',
             headers: {
@@ -118,7 +129,11 @@ class PMap extends React.Component {
 
         this.getDockingStations();
         this.setState({ lockDetails: null });
-        alert("Bike successfully unlocked.");
+        this.setState({ 
+            messageDetails: {
+                message: "Equipment lock successfully removed."
+            }
+        });
     }
 
     render() {
@@ -166,6 +181,10 @@ class PMap extends React.Component {
                 </CardBody>
             </Card>
             : "" }
+            {this.state.messageDetails ?
+            <MessageModal className="message-modal" message={this.state.messageDetails.message} modal={true} />
+            :
+            ""}
             </div>
         )
     }

@@ -20,6 +20,7 @@ class PMarker extends Component {
                 <Popup
                 onOpen={this.props.onOpen}
                 onClose={this.props.onClose}
+                closeButton={false}
                 >
                 <p className="location-name">{this.props.name}</p>
                 <Count max={this.props.bikeCapacity} current={this.props.numFreeBikes} className="count">{this.props.numFreeBikes}</Count> bikes <br />
