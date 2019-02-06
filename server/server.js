@@ -86,24 +86,27 @@ app.post('/login', (req, res) => {
     var email = req.body.email; var password = req.body.password;
     var db_email, db_password;
     var sessionID = req.sessionID;  //email for now, will be UUID v4 (random)
-
+    console.log(`SELECT * from ${dbName}.customers WHERE email='${email}'`);
     con.query(`SELECT * from ${dbName}.customers WHERE email='${email}'`, (err, rows) => {
         if (err) throw err;
-        db_email = rows[0].email;
-        db_password = rows[0].password;
-        if (db_email == null) {
+        if (!rows) {
+            console.log("User not found");
             res.send("User not found");
         } else {
+            db_email = rows[0].email;
+            db_password = rows[0].password;
             if (password === db_password) {
                 var sql = `UPDATE ${dbName}.customers SET sessionID='${sessionID}' where email='${email}';`;
                 con.query(sql, (err, result) => {
                     if (err) {
                         res.send(err);
                     } else {
-                        res.send("Logged in (Updated sessionId to " + sessionID + ")");
+                        console.log("Logged in (Updated sessionID to " + sessionID + ")");
+                        res.redirect("/");
                     }
                 });
             } else {
+                console.log("Wrong password");
                 res.send("Wrong password");
             }
         }
@@ -165,7 +168,7 @@ app.post('/register', (req, res) => {
                     res.send("CID already exists");
                 } else {
                     console.log("Inserted an entry");
-                    res.send("Inserted an entry");
+                    res.redirect("/");
                 }
             });
         }
@@ -177,10 +180,11 @@ app.post('/register', (req, res) => {
 app.get('/api/checkLogin', (req, res) => {
     console.log("SessionID: " + req.sessionID);
     var sessionID = req.sessionID;
+    console.log(`SELECT * from ${dbName}.customers WHERE sessionID='${sessionID}'`);
     con.query(`SELECT * from ${dbName}.customers WHERE sessionID='${sessionID}'`, (err, rows) => {
-        if (err) throw err;
+        if (err) res.send("false");
         if (rows.length != 0)
-            res.send("true");
+            res.send("Logged in as " + rows[0].firstname);
         else
             res.send("false");
     });
