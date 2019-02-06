@@ -1,5 +1,4 @@
 import React from 'react';
-import './App.css';
 import { Button, Form, FormGroup, Label, Input, FormText } from 'reactstrap';
 
 export default class Example extends React.Component {
