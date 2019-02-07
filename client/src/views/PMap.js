@@ -175,6 +175,7 @@ class PMap extends React.Component {
 
             {this.state.lockDetails ?
             <LockPanel
+            locationName={this.state.lockDetails.location.name}
             equipmentType={this.state.lockDetails.equipment.type}
             equipmentID={this.state.lockDetails.equipment.EID}
             />
