@@ -18,7 +18,7 @@ class LockPanel extends Component {
         return (
             <Card onClick={this.toggle} className="lock-display">
                 <CardBody>
-                    <CardHeader>Bike locked at Waverley!</CardHeader>
+                    <CardHeader>Bike locked at {this.props.locationName}!</CardHeader>
                 
                     <Collapse isOpen={this.state.collapse}>
                         <CardText>Equipment ID: {this.props.equipmentID}</CardText>
