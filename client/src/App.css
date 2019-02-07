@@ -3,6 +3,10 @@
   height: 1000px;
 }
 
+.lock-display {
+  z-index: 999;
+}
+
 .message-modal {
   z-index: 999;
 }

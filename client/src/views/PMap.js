@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import { Map, TileLayer, Viewport,  Marker, Popup } from 'react-leaflet';
 import PMarker from './PMarker';
 import MessageModal from './MessageModal';
+import LockPanel from './LockPanel';
 import { Button, Card, CardBody, CardText, CardHeader } from 'reactstrap';
 import { IoIosLock, IoIosKey } from 'react-icons/io';
 
@@ -165,6 +166,7 @@ class PMap extends React.Component {
                 );
             })}
             </Map>
+
             {this.state.lockDetails ?
             <Button color="info" onClick={() => this.unlock()}  className='locker'><IoIosKey size="1.5em"/></Button>
             :
@@ -172,19 +174,18 @@ class PMap extends React.Component {
             }
 
             {this.state.lockDetails ?
-            <Card className="lock-display">
-                <CardBody>
-                    <CardHeader>Bike locked at {this.state.lockDetails.location.name}!</CardHeader>
-                    <CardText>Equipment type: {this.state.lockDetails.equipment.type}, 
-                    Equipment ID: {this.state.lockDetails.equipment.EID}
-                    </CardText>
-                </CardBody>
-            </Card>
+            <LockPanel
+            equipmentType={this.state.lockDetails.equipment.type}
+            equipmentID={this.state.lockDetails.equipment.EID}
+            />
             : "" }
+
             {this.state.messageDetails ?
             <MessageModal className="message-modal" message={this.state.messageDetails.message} modal={true} />
             :
             ""}
+
+
             </div>
         )
     }

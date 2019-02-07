@@ -74,7 +74,7 @@ class Navigation extends Component {
                         <Nav className="ml-auto" navbar>
                             <NavItem>{this.state.loginMessage}</NavItem>
                             <NavItem>
-                                <Link to="/login"><IoIosContact size={32} />Sign In</Link>
+                                <Link to="/login"><IoIosContact size={32} /></Link>
                             </NavItem>
                         </Nav>
 
