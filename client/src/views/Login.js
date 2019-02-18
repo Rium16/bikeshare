@@ -13,15 +13,15 @@ class Login extends Component {
             <CardBody>
                 <Button tag={Link} to="/register" className="float-right" outline color="info">sign up</Button>
                 <h4 class="card-title mb-4 mt-1">sign in</h4>
-                <Form>
+                <Form method="POST">
                 <FormGroup>
                     <label>email address</label>
-                    <input name="" class="form-control" placeholder="john@mail.com" type="email"/>
+                    <input name="email" class="form-control" placeholder="john@mail.com" type="email"/>
                 </FormGroup>
                 <FormGroup>
                     <a class="float-right" href="#">forgot?</a>
                     <label>password</label>
-                    <input class="form-control" placeholder="********" type="password"/>
+                    <input name="password" class="form-control" placeholder="********" type="password"/>
                 </FormGroup>
                 <FormGroup>
                     <Button color="info" className="btn-primary btn-block">submit</Button>

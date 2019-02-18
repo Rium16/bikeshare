@@ -85,10 +85,10 @@ app.post('/api/world', (req, res) => {
 
 
 var attemptedLogins = 0;  //will eventually get from db, number times the designated user has attempted to login in past 24h
-app.post('/login', (req, res) => {
+app.post('/map/login', (req, res) => {
     var email = req.body.email; var password = req.body.password;
     var db_email, db_password;
-    var sessionID = req.sessionID;  //email for now, will be UUID v4 (random)
+    var sessionID = req.sessionID;
     console.log(`SELECT * from ${dbName}.customers WHERE email='${email}'`);
     con.query(`SELECT * from ${dbName}.customers WHERE email='${email}'`, (err, rows) => {
         if (err) throw err;
@@ -179,17 +179,21 @@ app.post('/register', (req, res) => {
 });
 
 //call this to check if user is logged in (still using a session that they logged into or registered with)
-//returns 1 if logged in and 0 if not logged in
 app.get('/api/checkLogin', (req, res) => {
     console.log("SessionID: " + req.sessionID);
     var sessionID = req.sessionID;
     console.log(`SELECT * from ${dbName}.customers WHERE sessionID='${sessionID}'`);
     con.query(`SELECT * from ${dbName}.customers WHERE sessionID='${sessionID}'`, (err, rows) => {
-        if (err) res.send("false");
+        var res_body = "{ name : null }";
+        if (err) res.send(res_body);
+        
         if (rows.length != 0)
-            res.send("Logged in as " + rows[0].firstname);
-        else
-            res.send("false");
+            res_body =
+                "{ name : '" + rows[0].firstname + "' }";
+        res.status(200);
+        res_body = '{ name : "testname" }';
+        res.send(res_body);
+        console.log(res_body);
     });
 });
 
