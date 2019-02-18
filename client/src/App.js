@@ -1,10 +1,15 @@
 import React, { Component } from 'react';
 import './App.css';
+import { Modal } from 'reactstrap';
+
+import MessageModal from './views/MessageModal'
 import PMap from './views/PMap';
 import Navigation from './views/Navigation';
 import Signup from './views/signup';
-import Login from './views/signin';
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import Login from './views/Login';
+import LoginModal from './views/LoginModal';
+
+import { BrowserRouter as Router, Route, Redirect } from "react-router-dom";
 
 export default class App extends Component {
   state = {
@@ -25,8 +30,11 @@ function Page() {
     <Router>
       <div>
         <Navigation/>
-        <Route exact path="/" component={BikeMap} />
-        <Route path="/login" component={LogIn} />
+        <Route path="/" render={() => (
+          <Redirect to="/map" />
+        )}/>
+        <Route path="/map" component={BikeMap} />
+        <Route path="/map/login" component={LogIn} />
         <Route path="/account" component={Account} />
         <Route path="/register" component={SignUp} />
       </div>
@@ -42,7 +50,7 @@ function BikeMap() {
 
 function LogIn() {
   return (
-    <Login />
+    <LoginModal className="login-modal col-md-5 col-md-offset-5" modal={true}/>
   );
 }
 
