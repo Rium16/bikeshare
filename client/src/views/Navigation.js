@@ -9,52 +9,45 @@ import { IoIosContact } from 'react-icons/io';
 class Navigation extends Component {
 
     state = {
-        loginMessage : null
+        loginData: [],
+        loginMessage: null
     }
 
     constructor(props) {
         super(props);
     }
 
-    getLoginMessage = async () => {
+    getLoginData = async () => {
         const response = await fetch('/api/checkLogin');
         const body = await response.json();
-        var message = "";
+        var message = "error";
+        var data = [];
         if (response.status !== 200) throw Error(body.message);
         else {
-            if (response !== "false") {
-                message = "Logged in as " + response.body;
-            }
+            data = body;
         }
-        this.setState({
-            loginMessage : message
-        });
+        //return message;
+        return data;
     }
-
+    
     componentDidMount() {
-        this._asyncRequest = this.getLoginMessage().then(
-            loginMessage => {
-                this._asyncRequest = null;
-                this.setState({ loginMessage });
-            }
-        );
-    }
-
-    componentWillUnmount() {
-        if (this._asyncRequest) {
-            this._asyncRequest.cancel();
-        }
-    }
+        fetch('/api/checkLogin')
+            .then(res => res.json())
+            .then(json =>
+                this.setState({
+                    loginMessage : json + " test"
+                })
+            );
+    }    
 
     render() {
-        if (this.state.loginMessage === null) {
+        if (this.state.loginData === []) {
             return (
                 <div>
                     <Navbar color="light" light expand="md">
                         <NavbarBrand><Link to="/map">pyroiscycles</Link></NavbarBrand>
 
                         <Nav className="ml-auto" navbar>
-                            <NavItem>{this.state.loginMessage}</NavItem>
                             <NavItem>
                                 <Link to="/map/login"><IoIosContact size={32} /></Link>
                             </NavItem>
