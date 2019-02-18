@@ -51,12 +51,12 @@ class Navigation extends Component {
             return (
                 <div>
                     <Navbar color="light" light expand="md">
-                        <NavbarBrand><Link to="/">PyroiCyles</Link></NavbarBrand>
+                        <NavbarBrand><Link to="/map">pyroiscycles</Link></NavbarBrand>
 
                         <Nav className="ml-auto" navbar>
                             <NavItem>{this.state.loginMessage}</NavItem>
                             <NavItem>
-                                <Link to="/login"><IoIosContact size={32} /></Link>
+                                <Link to="/map/login"><IoIosContact size={32} /></Link>
                             </NavItem>
                         </Nav>
 
@@ -67,12 +67,12 @@ class Navigation extends Component {
             return (
                 <div>
                     <Navbar color="light" light expand="md">
-                        <NavbarBrand><Link to="/">PyroiCyles</Link></NavbarBrand>
+                        <NavbarBrand><Link to="/map">pyroiscycles</Link></NavbarBrand>
 
                         <Nav className="ml-auto" navbar>
                             <NavItem>{this.state.loginMessage}</NavItem>
                             <NavItem>
-                                <Link to="/login"><IoIosContact size={32} /></Link>
+                                <Link to="/map/login"><IoIosContact size={32} /></Link>
                             </NavItem>
                         </Nav>
 
