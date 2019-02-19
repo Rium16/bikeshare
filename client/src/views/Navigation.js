@@ -41,6 +41,7 @@ class Navigation extends Component {
     }    
 
     render() {
+        // this can probs be simplified
         if (this.state.loginData === []) {
             return (
                 <div>
@@ -65,7 +66,7 @@ class Navigation extends Component {
                         <Nav className="ml-auto" navbar>
                             <NavItem>{this.state.loginMessage}</NavItem>
                             <NavItem>
-                                <Link to="/map/login"><IoIosContact size={32} /></Link>
+                                <Link className="icon" to="/map/login"><IoIosContact size={32} /></Link>
                             </NavItem>
                         </Nav>
 
