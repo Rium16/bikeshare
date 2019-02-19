@@ -1,12 +1,15 @@
+// adapted from https://scotch.io/tutorials/creating-multistep-forms-with-react-and-semantic-ui
 import React, { Component } from 'react';
 import Contact from './signup_components/Contact';
 import Personal from './signup_components/Personal';
+import Password from './signup_components/Password';
 
 import { Card, FormGroup, Button } from 'reactstrap';
 
-const step = {
+// enum for registration step
+const stepEnum = {
     CONTACT: 1,
-    NAME: 2,
+    PERSONAL: 2,
     PASSWORD: 3,
 }
 
@@ -14,7 +17,13 @@ class SignUp extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            step: step.CONTACT
+            step: stepEnum.CONTACT,
+            firstName: '',
+            lastName: '',
+            email: '',
+            phone: '',
+            password: '',
+            confirmPassword: ''
         }
     }
 
@@ -29,18 +38,64 @@ class SignUp extends Component {
             step: this.state.step - 1
         });
     }
+    
+    handleChange = input => event => {
+        this.setState({ [input] : event.target.value })
+    }
 
     render() {
-        return (
-            <Card>
-                <Contact style={{display: this.state.step === 1 ? 'block' : 'none'}}/>
-                <Personal style={{display: this.state.step === 2 ? 'block' : 'none'}} />
-                <FormGroup>
-                    <Button onClick={this.next} color="info" className="float-right">next</Button>
-                    <Button disabled={this.state.step === step.CONTACT ? true : false} onClick={this.prev} color="secondary" className="float-right">prev</Button>
-                </FormGroup>    
-            </Card>
-        );
+        const { step, firstName, lastName, email, phone, password, confirmPassword } = this.state;
+        const values = { firstName, lastName, email, phone, password, confirmPassword };
+
+        switch(step) {
+            case stepEnum.CONTACT:
+                return (
+                    <Card>
+                        <Contact
+                        nextStep={this.next}
+                        handleChange={this.handleChange}
+                        values={values}
+                        />         
+                        <FormGroup>
+                            <Button onClick={this.next} color="info" className="float-right">next</Button>
+                            <Button disabled={this.state.step === stepEnum.CONTACT ? true : false} onClick={this.prev} color="secondary" className="float-right">prev</Button>
+                        </FormGroup>    
+                    </Card>
+                );
+
+
+            case stepEnum.PERSONAL:
+                return (
+                    <Card>
+                        <Personal
+                        nextStep={this.next}
+                        handleChange={this.handleChange}
+                        values={values}
+                        />         
+                        <FormGroup>
+                            <Button onClick={this.next} color="info" className="float-right">next</Button>
+                            <Button disabled={this.state.step === stepEnum.CONTACT ? true : false} onClick={this.prev} color="secondary" className="float-right">prev</Button>
+                        </FormGroup>    
+                    </Card>
+                );
+
+            
+            case stepEnum.PASSWORD:
+                return (
+                    <Card>
+                        <Password
+                        nextStep={this.next}
+                        handleChange={this.handleChange}
+                        values={values}
+                        />         
+                        <FormGroup>
+                            <Button onClick={this.next} color="info" className="float-right">next</Button>
+                            <Button disabled={this.state.step === stepEnum.CONTACT ? true : false} onClick={this.prev} color="secondary" className="float-right">prev</Button>
+                        </FormGroup>    
+                    </Card>
+                );
+
+        }
     }
 }
 
