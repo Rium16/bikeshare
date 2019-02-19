@@ -1,212 +1,47 @@
 import React, { Component } from 'react';
-import { Button, Form, FormGroup, Label, Input, FormText } from 'reactstrap';
+import Contact from './signup_components/Contact';
+import Personal from './signup_components/Personal';
 
-class Signup extends React.Component {
+import { Card, FormGroup, Button } from 'reactstrap';
+
+const step = {
+    CONTACT: 1,
+    NAME: 2,
+    PASSWORD: 3,
+}
+
+class SignUp extends Component {
     constructor(props) {
-      super(props);
-      this.state = {
-        firstName: null,
-        surname:null,
-        email:null,
-        mobile:null,
-        cardNumber:null,
-        expiryDate:null,
-        cvc:null,
-        username:null,
-        password:null,
-      };
-      this.handleChange = this.handleChange.bind(this);
+        super(props);
+        this.state = {
+            step: step.CONTACT
+        }
     }
 
-    handleChange(event) {
-      const target = event.target;
-      const value = target.value;
-      const name = target.name;
-      this.setState({
-        [name]: value
-      });
+    next = () => {
+        this.setState({
+            step: this.state.step + 1
+        });
     }
-    
+
+    prev = () => {
+        this.setState({
+            step: this.state.step - 1
+        });
+    }
+
     render() {
         return (
-            <div className="signin">
-                <h1 className="signinhead">SIGN UP</h1>
-                <Form method="POST">
-                    <FormGroup>
-                        <label className="padded"> First Name
-                            <input
-                                type="text"
-                                onChange={this.state.firstName}
-                                name="firstName"
-                                pattern="[A-Za-z\s]"
-                                placeholder=""
-                                required />
-                        </label>
-                    </FormGroup>
-                    <FormGroup>
-                        <label className="padded">Surname
-                            <input
-                                type="text"
-                                onChange={this.state.surname}
-                                name="surname"
-                                pattern="[A-za-z\s]"
-                                required />
-                        </label>
-                    </FormGroup>
-                    <FormGroup>
-                        <label className="padded">Email
-                            <input
-                                type="email"
-                                onChange={this.state.email}
-                                name="email"
-                                placeholder="user@domain.com"
-                                required />
-                        </label>
-                    </FormGroup>
-                    <FormGroup>
-                        <label className="padded">Mobile Phone Number
-                            <input
-                                type="tel"
-                                onChange={this.state.mobile}
-                                name="mobile"
-                                placeholder="11 Numbers"
-                                required />
-                        </label>
-                    </FormGroup>
-                    <FormGroup>
-                        <label className="padded">Card Number
-                            <input
-                                type="number"
-                                onChange={this.state.cardNumber}
-                                name="cardNumber"
-                                placeholder="16 Numbers"
-                                required />
-                        </label>
-                    </FormGroup>
-                    <FormGroup>
-                        <label className="padded">Expiry Date
-                            <input
-                                type="number"
-                                onChange={this.state.expiryDate}
-                                name="expiryDate"
-                                placeholder="MM/YYYY"
-                                required />
-                        </label>
-                    </FormGroup>
-                    <FormGroup>
-                        <label className="padded">Username
-                            <input
-                                type="text"
-                                onChange={this.state.username}
-                                name="username"
-                                required />
-                        </label>
-                    </FormGroup>
-                    <FormGroup>
-                        <label className="padded">Password
-                            <input
-                                type="password"
-                                onChange={this.state.password}
-                                name="password"
-                                required />
-                        </label>
-                    </FormGroup>
-                    <Button>Sign Up</Button>
-                </Form>
-            </div>
+            <Card>
+                <Contact style={{display: this.state.step === 1 ? 'block' : 'none'}}/>
+                <Personal style={{display: this.state.step === 2 ? 'block' : 'none'}} />
+                <FormGroup>
+                    <Button onClick={this.next} color="info" className="float-right">next</Button>
+                    <Button disabled={this.state.step === step.CONTACT ? true : false} onClick={this.prev} color="secondary" className="float-right">prev</Button>
+                </FormGroup>    
+            </Card>
         );
-
-    }
-
-    render_alternative() {  //Not currently used, form fields don't match db schema
-        return (
-            <div className="signin">
-                <h1 className="signinhead">SIGN UP</h1>
-                <Form method="POST">
-                    <FormGroup>
-                        <label className="padded"> First Name
-                            <input
-                                type="text"
-                                onChange={this.state.firstName}
-                                name="firstName"
-                                pattern="[A-Za-z\s]"
-                                placeholder=""
-                                required />
-                        </label>
-                    </FormGroup>
-                    <FormGroup>
-                        <label className="padded">Surname
-                            <input
-                                type="text"
-                                onChange={this.state.surname}
-                                name="surname"
-                                pattern="[A-za-z\s]"
-                                required />
-                        </label>
-                    </FormGroup>
-                    <FormGroup>
-                        <label className="padded">Email
-                            <input
-                                type="email"
-                                onChange={this.state.email}
-                                name="email"
-                                placeholder="user@domain.com"
-                                required />
-                        </label>
-                    </FormGroup>
-                    <FormGroup>
-                        <label className="padded">Mobile Phone Number
-                            <input
-                                type="tel"
-                                onChange={this.state.mobile}
-                                name="mobile"
-                                placeholder="11 Numbers"
-                                required />
-                        </label>
-                    </FormGroup>
-                    <FormGroup>
-                        <label className="padded">Card Number
-                            <input
-                                type="number"
-                                onChange={this.state.cardNumber}
-                                name="cardNumber"
-                                placeholder="16 Numbers"
-                                required />
-                        </label>
-                    </FormGroup>
-                    <FormGroup>
-                        <label className="padded">Expiry Date
-                            <input
-                                type="number"
-                                onChange={this.state.expiryDate}
-                                name="expiryDate"
-                                placeholder="MM/YYYY"
-                                required />
-                        </label>
-                    </FormGroup>
-                    <FormGroup>
-                        <label className="padded">Username
-                            <input
-                                type="text"
-                                onChange={this.state.username}
-                                name="username"
-                                required />
-                        </label>
-                    </FormGroup>
-                    <FormGroup>
-                        <label className="padded">Password
-                            <input
-                                type="password"
-                                onChange={this.state.password}
-                                name="password"
-                                required />
-                        </label>
-                    </FormGroup>
-                    <Button>Sign Up</Button>
-                </Form>
-            </div>
-        );
-
     }
 }
-export default Signup;
+
+export default SignUp;

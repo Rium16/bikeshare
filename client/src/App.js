@@ -5,7 +5,7 @@ import { Modal } from 'reactstrap';
 import MessageModal from './views/MessageModal'
 import PMap from './views/PMap';
 import Navigation from './views/Navigation';
-import Signup from './views/signup';
+import SignUp from './views/SignUp';
 import Login from './views/Login';
 import LoginModal from './views/LoginModal';
 
@@ -36,7 +36,7 @@ function Page() {
         <Route path="/map" component={BikeMap} />
         <Route path="/map/login" component={LogIn} />
         <Route path="/account" component={Account} />
-        <Route path="/register" component={SignUp} />
+        <Route path="/register" component={Register} />
       </div>
     </Router>
   );
@@ -50,7 +50,7 @@ function BikeMap() {
 
 function LogIn() {
   return (
-    <LoginModal className="login-modal col-md-5 col-md-offset-5" modal={true}/>
+    <LoginModal className="col-md-5 col-md-offset-5" modal={true}/>
   );
 }
 
@@ -60,8 +60,8 @@ function Account() {
   );
 }
 
-function SignUp() {
+function Register() {
   return (
-    <Signup />
+    <SignUp />
   )
 }
