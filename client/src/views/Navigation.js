@@ -4,17 +4,16 @@
 import { Collapse, Navbar, NavbarToggler, NavbarBrand, Nav, NavItem, NavLink, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { IoIosContact } from 'react-icons/io';
+import { IoIosContact, IoIosSettings } from 'react-icons/io';
 
 class Navigation extends Component {
 
-    state = {
-        loginData: [],
-        loginMessage: null
-    }
-
     constructor(props) {
         super(props);
+        this.state = {
+            loginData: null,
+            loginMessage: null
+        }
     }
 
     getLoginData = async () => {
@@ -41,38 +40,25 @@ class Navigation extends Component {
     }    
 
     render() {
-        if (this.state.loginData === []) {
-            return (
-                <div>
-                    <Navbar color="light" light expand="md">
-                        <NavbarBrand><Link to="/map">pyroiscycles</Link></NavbarBrand>
+        return (
+            <div>
+                <Navbar className="nav" color="light" light expand="md">
+                    <NavbarBrand><Link to="/map">pyroiscycles</Link></NavbarBrand>
 
-                        <Nav className="ml-auto" navbar>
-                            <NavItem>
-                                <Link to="/map/login"><IoIosContact size={32} /></Link>
-                            </NavItem>
-                        </Nav>
+                    <Nav className="ml-auto" navbar>
+                        <NavItem>{this.state.loginMessage}</NavItem>
+                        <NavItem>
+                            {this.state.loginData ?
+                            <Link to="/account"><IoIosSettings size={32} /></Link>
+                            :
+                            <Link to="/map/login"><IoIosContact size={32} /></Link>
+                            }
+                        </NavItem>
+                    </Nav>
 
-                    </Navbar>
-                </div>
-            );
-        } else {
-            return (
-                <div>
-                    <Navbar color="light" light expand="md">
-                        <NavbarBrand><Link to="/map">pyroiscycles</Link></NavbarBrand>
-
-                        <Nav className="ml-auto" navbar>
-                            <NavItem>{this.state.loginMessage}</NavItem>
-                            <NavItem>
-                                <Link to="/map/login"><IoIosContact size={32} /></Link>
-                            </NavItem>
-                        </Nav>
-
-                    </Navbar>
-                </div>
-            );
-        }
+                </Navbar>
+            </div>
+        );
     }
 }
 
