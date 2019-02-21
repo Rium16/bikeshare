@@ -4,13 +4,14 @@ import Contact from './signup_components/Contact';
 import Personal from './signup_components/Personal';
 import Password from './signup_components/Password';
 
-import { Card, FormGroup, Button } from 'reactstrap';
+import { Card, FormGroup, Button, Container } from 'reactstrap';
 
 // enum for registration step
 const stepEnum = {
     CONTACT: 1,
     PERSONAL: 2,
     PASSWORD: 3,
+    FINAL: 4,
 }
 
 class SignUp extends Component {
@@ -25,6 +26,12 @@ class SignUp extends Component {
             password: '',
             confirmPassword: ''
         }
+    }
+
+    handleSubmit = (e) => {
+        e.preventDefault();
+        
+        // return success code or failure code
     }
 
     next = () => {
@@ -47,20 +54,18 @@ class SignUp extends Component {
         const { step, firstName, lastName, email, phone, password, confirmPassword } = this.state;
         const values = { firstName, lastName, email, phone, password, confirmPassword };
 
+        // each case is a step in the multi-step sign up form
         switch(step) {
             case stepEnum.CONTACT:
                 return (
-                    <Card>
+                    <Container className="h-100">
                         <Contact
+                        className="h-100"
                         nextStep={this.next}
                         handleChange={this.handleChange}
                         values={values}
                         />         
-                        <FormGroup>
-                            <Button onClick={this.next} color="info" className="float-right">next</Button>
-                            <Button disabled={this.state.step === stepEnum.CONTACT ? true : false} onClick={this.prev} color="secondary" className="float-right">prev</Button>
-                        </FormGroup>    
-                    </Card>
+                    </Container>
                 );
 
 
@@ -74,7 +79,7 @@ class SignUp extends Component {
                         />         
                         <FormGroup>
                             <Button onClick={this.next} color="info" className="float-right">next</Button>
-                            <Button disabled={this.state.step === stepEnum.CONTACT ? true : false} onClick={this.prev} color="secondary" className="float-right">prev</Button>
+                            <Button onClick={this.prev} color="secondary" className="float-right">prev</Button>
                         </FormGroup>    
                     </Card>
                 );
@@ -90,11 +95,21 @@ class SignUp extends Component {
                         />         
                         <FormGroup>
                             <Button onClick={this.next} color="info" className="float-right">next</Button>
-                            <Button disabled={this.state.step === stepEnum.CONTACT ? true : false} onClick={this.prev} color="secondary" className="float-right">prev</Button>
+                            <Button onClick={this.prev} color="secondary" className="float-right">prev</Button>
                         </FormGroup>    
                     </Card>
                 );
 
+            case stepEnum.FINAL:
+                return (
+                    <Card>
+                        {/* finalise page */}
+                        <FormGroup>
+                            <Button onClick={this.next} color="info" className="float-right">next</Button>
+                            <Button onClick={this.prev} color="secondary" className="float-right">prev</Button>
+                        </FormGroup>    
+                    </Card>
+                );
         }
     }
 }
