@@ -3,6 +3,15 @@
   height: 100%;
 }
 
+#root {
+  height: 100%;
+}
+
+html, body {
+  margin: 0;
+  height: 100%;
+}
+
 body {
   font-family: 'Fira Sans', sans-serif;
 }
@@ -22,6 +31,16 @@ body {
   width: 33%;
   left: 50%;
   transform: translate(-50%, -50%);
+
+.signup-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.signup-input {
+  width: 100%;
+
 }
 
 .message-modal {

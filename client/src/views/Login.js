@@ -1,5 +1,5 @@
 // adapted from https://bootsnipp.com/user/snippets/3Aq2B
-// Jamie
+// Jamie Muir
 import React, { Component } from 'react';
 import { Card, CardHeader, CardBody, Button, Form, FormGroup,  } from 'reactstrap';
 import { Link } from 'react-router-dom';
