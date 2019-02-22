@@ -56,7 +56,7 @@ function LogIn() {
 
 function Account() {
   return (
-    
+    ""
   );
 }
 
