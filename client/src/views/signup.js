@@ -1,212 +1,117 @@
+// adapted from https://scotch.io/tutorials/creating-multistep-forms-with-react-and-semantic-ui
 import React, { Component } from 'react';
-import { Button, Form, FormGroup, Label, Input, FormText } from 'reactstrap';
+import Contact from './signup_components/Contact';
+import Personal from './signup_components/Personal';
+import Password from './signup_components/Password';
 
-class Signup extends React.Component {
+import { Card, FormGroup, Button, Container } from 'reactstrap';
+
+// enum for registration step
+const stepEnum = {
+    CONTACT: 1,
+    PERSONAL: 2,
+    PASSWORD: 3,
+    FINAL: 4,
+}
+
+class SignUp extends Component {
     constructor(props) {
-      super(props);
-      this.state = {
-        firstName: null,
-        surname:null,
-        email:null,
-        mobile:null,
-        cardNumber:null,
-        expiryDate:null,
-        cvc:null,
-        username:null,
-        password:null,
-      };
-      this.handleChange = this.handleChange.bind(this);
+        super(props);
+        this.state = {
+            step: stepEnum.CONTACT,
+            firstName: '',
+            lastName: '',
+            email: '',
+            phone: '',
+            password: '',
+            confirmPassword: ''
+        }
     }
 
-    handleChange(event) {
-      const target = event.target;
-      const value = target.value;
-      const name = target.name;
-      this.setState({
-        [name]: value
-      });
+    handleSubmit = (e) => {
+        e.preventDefault();
+        
+        // return success code or failure code
+    }
+
+    next = () => {
+        this.setState({
+            step: this.state.step + 1
+        });
+    }
+
+    prev = () => {
+        this.setState({
+            step: this.state.step - 1
+        });
     }
     
-    render() {
-        return (
-            <div className="signin">
-                <h1 className="signinhead">SIGN UP</h1>
-                <Form method="POST">
-                    <FormGroup>
-                        <label className="padded"> First Name
-                            <input
-                                type="text"
-                                onChange={this.state.firstName}
-                                name="firstName"
-                                pattern="[A-Za-z\s]"
-                                placeholder=""
-                                required />
-                        </label>
-                    </FormGroup>
-                    <FormGroup>
-                        <label className="padded">Surname
-                            <input
-                                type="text"
-                                onChange={this.state.surname}
-                                name="surname"
-                                pattern="[A-za-z\s]"
-                                required />
-                        </label>
-                    </FormGroup>
-                    <FormGroup>
-                        <label className="padded">Email
-                            <input
-                                type="email"
-                                onChange={this.state.email}
-                                name="email"
-                                placeholder="user@domain.com"
-                                required />
-                        </label>
-                    </FormGroup>
-                    <FormGroup>
-                        <label className="padded">Mobile Phone Number
-                            <input
-                                type="tel"
-                                onChange={this.state.mobile}
-                                name="mobile"
-                                placeholder="11 Numbers"
-                                required />
-                        </label>
-                    </FormGroup>
-                    <FormGroup>
-                        <label className="padded">Card Number
-                            <input
-                                type="number"
-                                onChange={this.state.cardNumber}
-                                name="cardNumber"
-                                placeholder="16 Numbers"
-                                required />
-                        </label>
-                    </FormGroup>
-                    <FormGroup>
-                        <label className="padded">Expiry Date
-                            <input
-                                type="number"
-                                onChange={this.state.expiryDate}
-                                name="expiryDate"
-                                placeholder="MM/YYYY"
-                                required />
-                        </label>
-                    </FormGroup>
-                    <FormGroup>
-                        <label className="padded">Username
-                            <input
-                                type="text"
-                                onChange={this.state.username}
-                                name="username"
-                                required />
-                        </label>
-                    </FormGroup>
-                    <FormGroup>
-                        <label className="padded">Password
-                            <input
-                                type="password"
-                                onChange={this.state.password}
-                                name="password"
-                                required />
-                        </label>
-                    </FormGroup>
-                    <Button>Sign Up</Button>
-                </Form>
-            </div>
-        );
-
+    handleChange = input => event => {
+        this.setState({ [input] : event.target.value })
     }
 
-    render_alternative() {  //Not currently used, form fields don't match db schema
-        return (
-            <div className="signin">
-                <h1 className="signinhead">SIGN UP</h1>
-                <Form method="POST">
-                    <FormGroup>
-                        <label className="padded"> First Name
-                            <input
-                                type="text"
-                                onChange={this.state.firstName}
-                                name="firstName"
-                                pattern="[A-Za-z\s]"
-                                placeholder=""
-                                required />
-                        </label>
-                    </FormGroup>
-                    <FormGroup>
-                        <label className="padded">Surname
-                            <input
-                                type="text"
-                                onChange={this.state.surname}
-                                name="surname"
-                                pattern="[A-za-z\s]"
-                                required />
-                        </label>
-                    </FormGroup>
-                    <FormGroup>
-                        <label className="padded">Email
-                            <input
-                                type="email"
-                                onChange={this.state.email}
-                                name="email"
-                                placeholder="user@domain.com"
-                                required />
-                        </label>
-                    </FormGroup>
-                    <FormGroup>
-                        <label className="padded">Mobile Phone Number
-                            <input
-                                type="tel"
-                                onChange={this.state.mobile}
-                                name="mobile"
-                                placeholder="11 Numbers"
-                                required />
-                        </label>
-                    </FormGroup>
-                    <FormGroup>
-                        <label className="padded">Card Number
-                            <input
-                                type="number"
-                                onChange={this.state.cardNumber}
-                                name="cardNumber"
-                                placeholder="16 Numbers"
-                                required />
-                        </label>
-                    </FormGroup>
-                    <FormGroup>
-                        <label className="padded">Expiry Date
-                            <input
-                                type="number"
-                                onChange={this.state.expiryDate}
-                                name="expiryDate"
-                                placeholder="MM/YYYY"
-                                required />
-                        </label>
-                    </FormGroup>
-                    <FormGroup>
-                        <label className="padded">Username
-                            <input
-                                type="text"
-                                onChange={this.state.username}
-                                name="username"
-                                required />
-                        </label>
-                    </FormGroup>
-                    <FormGroup>
-                        <label className="padded">Password
-                            <input
-                                type="password"
-                                onChange={this.state.password}
-                                name="password"
-                                required />
-                        </label>
-                    </FormGroup>
-                    <Button>Sign Up</Button>
-                </Form>
-            </div>
-        );
+    render() {
+        const { step, firstName, lastName, email, phone, password, confirmPassword } = this.state;
+        const values = { firstName, lastName, email, phone, password, confirmPassword };
 
+        // each case is a step in the multi-step sign up form
+        switch(step) {
+            case stepEnum.CONTACT:
+                return (
+                    <Container className="h-100">
+                        <Contact
+                        className="h-100"
+                        nextStep={this.next}
+                        handleChange={this.handleChange}
+                        values={values}
+                        />         
+                    </Container>
+                );
+
+
+            case stepEnum.PERSONAL:
+                return (
+                    <Card>
+                        <Personal
+                        nextStep={this.next}
+                        handleChange={this.handleChange}
+                        values={values}
+                        />         
+                        <FormGroup>
+                            <Button onClick={this.next} color="info" className="float-right">next</Button>
+                            <Button onClick={this.prev} color="secondary" className="float-right">prev</Button>
+                        </FormGroup>    
+                    </Card>
+                );
+
+            
+            case stepEnum.PASSWORD:
+                return (
+                    <Card>
+                        <Password
+                        nextStep={this.next}
+                        handleChange={this.handleChange}
+                        values={values}
+                        />         
+                        <FormGroup>
+                            <Button onClick={this.next} color="info" className="float-right">next</Button>
+                            <Button onClick={this.prev} color="secondary" className="float-right">prev</Button>
+                        </FormGroup>    
+                    </Card>
+                );
+
+            case stepEnum.FINAL:
+                return (
+                    <Card>
+                        {/* finalise page */}
+                        <FormGroup>
+                            <Button onClick={this.next} color="info" className="float-right">next</Button>
+                            <Button onClick={this.prev} color="secondary" className="float-right">prev</Button>
+                        </FormGroup>    
+                    </Card>
+                );
+        }
     }
 }
-export default Signup;
+
+export default SignUp;
