@@ -2,11 +2,10 @@ import React, { Component } from 'react';
 import './App.css';
 import { Modal } from 'reactstrap';
 
-import MessageModal from './views/MessageModal'
 import PMap from './views/PMap';
 import Navigation from './views/Navigation';
-import SignUp from './views/SignUp';
-import Login from './views/Login';
+import SignUp from './views/signup';
+import Settings from './views/Settings';
 import LoginModal from './views/LoginModal';
 
 import { BrowserRouter as Router, Route, Redirect } from "react-router-dom";
@@ -35,7 +34,7 @@ function Page() {
         )}/>
         <Route path="/map" component={BikeMap} />
         <Route path="/map/login" component={LogIn} />
-        <Route path="/account" component={Account} />
+        <Route path="/settings" component={Account} />
         <Route path="/register" component={Register} />
       </div>
     </Router>
@@ -56,7 +55,7 @@ function LogIn() {
 
 function Account() {
   return (
-    ""
+    <Settings />
   );
 }
 

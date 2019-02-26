@@ -12,6 +12,17 @@ html, body {
   height: 100%;
 }
 
+.settings-link {
+  display: 'block';
+  height: '100';
+  text-decoration: 'none';
+}
+
+
+.first-settings-item {
+  margin-top: 55px;
+}
+
 body {
   font-family: 'Fira Sans', sans-serif;
 }
@@ -31,6 +42,7 @@ body {
   width: 33%;
   left: 50%;
   transform: translate(-50%, -50%);
+}
 
 .signup-container {
   display: flex;

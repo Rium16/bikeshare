@@ -50,10 +50,12 @@ class Navigation extends Component {
                         <NavItem>{this.state.loginMessage}</NavItem>
                         <NavItem>
                             {this.state.loginData ?
-                            <Link to="/account"><IoIosSettings size={32} /></Link>
+                            <Link to="/settings"><IoIosSettings size={32} /></Link>
                             :
                             <Link to="/map/login"><IoIosContact size={32} /></Link>
                             }
+                            {/* temp link to account */}
+                            <Link to="/settings"><IoIosSettings size={32} /></Link>
                         </NavItem>
                     </Nav>
                 </Navbar>
