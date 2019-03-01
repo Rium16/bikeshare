@@ -27,7 +27,7 @@ export default class App extends Component {
 function Page() {
   return (
     <Router>
-      <div className="App">
+      <div>
         <Navigation/>
         <Route path="/" render={() => (
           <Redirect to="/map" />
