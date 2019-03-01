@@ -12,6 +12,10 @@ html, body {
   height: 100%;
 }
 
+.account-container {
+  padding-top: 55px;
+}
+
 .settings-link {
   display: 'block';
   height: '100';

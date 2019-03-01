@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 import { Modal } from 'reactstrap';
 
+import AccountSummary from './views/AccountSummary';
 import PMap from './views/PMap';
 import Navigation from './views/Navigation';
 import SignUp from './views/signup';
@@ -34,8 +35,9 @@ function Page() {
         )}/>
         <Route path="/map" component={BikeMap} />
         <Route path="/map/login" component={LogIn} />
-        <Route path="/settings" component={Account} />
+        <Route path="/settings" component={Settings} />
         <Route path="/register" component={Register} />
+        <Route path="/account" component={AccountSummary} />
       </div>
     </Router>
   );
@@ -50,12 +52,6 @@ function BikeMap() {
 function LogIn() {
   return (
     <LoginModal className="col-md-5 col-md-offset-5" modal={true}/>
-  );
-}
-
-function Account() {
-  return (
-    <Settings />
   );
 }
 

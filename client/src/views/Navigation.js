@@ -55,7 +55,7 @@ class Navigation extends Component {
                             <Link to="/map/login"><IoIosContact size={32} /></Link>
                             }
                             {/* temp link to account */}
-                            <Link to="/settings"><IoIosSettings size={32} /></Link>
+                            <Link to="/account"><IoIosSettings size={32} /></Link>
                         </NavItem>
                     </Nav>
                 </Navbar>
