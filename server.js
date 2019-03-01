@@ -96,6 +96,7 @@ app.post('/map/login', (req, res) => {
             console.log("User not found");
             res.send("User not found");
         } else {
+            // this breaks if the email doesn't exist in the db
             db_email = rows[0].email;
             db_password = rows[0].password;
             if (password === db_password) {
