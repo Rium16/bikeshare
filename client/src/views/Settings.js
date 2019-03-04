@@ -22,7 +22,7 @@ class Settings extends Component {
                 <Route path="/settings/faq" component={FAQPage} />
 
                 <ListGroup >
-                    <Link to="/settings/account" style={{textDecoration: 'none'}} className="first-settings-item"><ListGroupItem>account</ListGroupItem></Link>
+                    <Link to="/settings/account" style={{textDecoration: 'none'}} className="first-settings-item"><ListGroupItem >account</ListGroupItem></Link>
                     <Link to="/settings/billing" style={{textDecoration: 'none'}}><ListGroupItem>billing</ListGroupItem></Link>
                     <Link to="/settings/display" style={{textDecoration: 'none'}}><ListGroupItem>display</ListGroupItem></Link>
                     <Badge style={{textAlign: 'left'}} color="info">Info</Badge>
