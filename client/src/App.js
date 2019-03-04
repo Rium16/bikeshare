@@ -9,6 +9,8 @@ import SignUp from './views/signup';
 import Settings from './views/Settings';
 import LoginModal from './views/LoginModal';
 
+import Staff from './views/Staff';
+
 import { BrowserRouter as Router, Route, Redirect } from "react-router-dom";
 
 export default class App extends Component {
@@ -29,7 +31,7 @@ function Page() {
   return (
     <Router>
       <div>
-        <Navigation/>
+		<Navigation />
         <Route path="/" render={() => (
           <Redirect to="/map" />
         )}/>
@@ -38,6 +40,9 @@ function Page() {
         <Route path="/settings" component={Settings} />
         <Route path="/register" component={Register} />
         <Route path="/account" component={AccountSummary} />
+
+        <Route path="/staff" component={StaffPage} />
+
       </div>
     </Router>
   );
@@ -59,4 +64,10 @@ function Register() {
   return (
     <SignUp />
   )
+}
+
+function StaffPage() {
+    return (
+      <Staff />  
+    );
 }
