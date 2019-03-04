@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { Container, Row, Col } from 'reactstrap';
 import { IoIosContact } from 'react-icons/io';
 
+import ReservationDisplay from './ReservationDisplay';
+
 import { Link } from 'react-router-dom';
 
 class AccountSummary extends Component {
@@ -15,9 +17,10 @@ class AccountSummary extends Component {
                         <h1 align="center">Jamie</h1>
                         <br />
                         <p>Current reservation:</p>
-                        <p align="center">[none]</p>
+                        <ReservationDisplay />
                     </Col>
                 </Row>
+
             </Container>
             
         );
