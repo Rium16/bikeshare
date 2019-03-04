@@ -83,15 +83,15 @@ export class AboutPage extends Component {
                     <Row>
                         
                         <Col sm="12" md="6" className="offset-md-3">
-                        <h4>About</h4>
-                            <p>
+                        <h4 align="center">About</h4>
+                            <p align="center">
                                 We're just a couple a' dudes being guys.
                             </p>
                         </Col>
                     </Row>
                     <Row>
                         <Col sm="12" md="6" className="offset-md-3">
-                            Find our company website&nbsp;<a href="https://i.imgur.com/EzQZz.jpg">here</a>.
+                            <p align="center">Find our company website&nbsp;<a href="https://i.imgur.com/EzQZz.jpg">here</a>.</p>
                         </Col>
                     </Row>
                 </Container>

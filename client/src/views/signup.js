@@ -3,8 +3,9 @@ import React, { Component } from 'react';
 import Contact from './signup_components/Contact';
 import Personal from './signup_components/Personal';
 import Password from './signup_components/Password';
+import Summary from './signup_components/Summary';
 
-import { Card, FormGroup, Button, Container } from 'reactstrap';
+import { Card, FormGroup, Button, Jumbotron, Container, Row, Col } from 'reactstrap';
 
 // enum for registration step
 const stepEnum = {
@@ -18,7 +19,7 @@ class SignUp extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            step: stepEnum.CONTACT,
+            step: 1,
             firstName: '',
             lastName: '',
             email: '',
@@ -58,57 +59,49 @@ class SignUp extends Component {
         switch(step) {
             case stepEnum.CONTACT:
                 return (
-                    <Container className="h-100">
+                    <Jumbotron className="vertical-center">
                         <Contact
-                        className="h-100"
                         nextStep={this.next}
+                        prevStep={this.prev}
                         handleChange={this.handleChange}
                         values={values}
                         />         
-                    </Container>
+                    </Jumbotron>
                 );
-
 
             case stepEnum.PERSONAL:
                 return (
-                    <Card>
+                    <Jumbotron className="vertical-center">
                         <Personal
                         nextStep={this.next}
+                        prevStep={this.prev}
                         handleChange={this.handleChange}
                         values={values}
                         />         
-                        <FormGroup>
-                            <Button onClick={this.next} color="info" className="float-right">next</Button>
-                            <Button onClick={this.prev} color="secondary" className="float-right">prev</Button>
-                        </FormGroup>    
-                    </Card>
+                    </Jumbotron>
                 );
-
             
             case stepEnum.PASSWORD:
                 return (
-                    <Card>
+                    <Jumbotron className="vertical-center">
                         <Password
                         nextStep={this.next}
+                        prevStep={this.prev}
                         handleChange={this.handleChange}
                         values={values}
                         />         
-                        <FormGroup>
-                            <Button onClick={this.next} color="info" className="float-right">next</Button>
-                            <Button onClick={this.prev} color="secondary" className="float-right">prev</Button>
-                        </FormGroup>    
-                    </Card>
+                    </Jumbotron>
                 );
 
             case stepEnum.FINAL:
                 return (
-                    <Card>
-                        {/* finalise page */}
-                        <FormGroup>
-                            <Button onClick={this.next} color="info" className="float-right">next</Button>
-                            <Button onClick={this.prev} color="secondary" className="float-right">prev</Button>
-                        </FormGroup>    
-                    </Card>
+                    <Jumbotron className="vertical-center">
+                        <Summary
+                        prevStep={this.prev}
+                        handleChange={this.handleChange}
+                        values={values}
+                        />         
+                    </Jumbotron>
                 );
         }
     }

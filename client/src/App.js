@@ -14,9 +14,12 @@ import Staff from './views/Staff';
 import { BrowserRouter as Router, Route, Redirect } from "react-router-dom";
 
 export default class App extends Component {
-  state = {
-    
-  };
+  constructor(props){
+    super(props);
+    this.state = {
+      
+    }
+  }
 
   render() {
     return (

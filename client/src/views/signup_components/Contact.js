@@ -1,6 +1,6 @@
 // adapted from https://scotch.io/tutorials/creating-multistep-forms-with-react-and-semantic-ui
 import React, { Component } from 'react';
-import { Card, CardHeader, CardBody, Button, Form, FormGroup, Input, InputGroup, Row, Col  } from 'reactstrap';
+import { Container, Button, Form, FormGroup, Input, InputGroup, Row, Col  } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.css'
 
@@ -11,13 +11,16 @@ class Contact extends Component {
         this.props.nextStep();
     }
 
+    goBack = (e) => {
+        e.preventDefault();
+        this.props.prevStep();
+    }
+
     render() {
         return (
-            <CardBody style={this.props.style} className={this.props.className}>
-                <Row className="h-100 justify-content-center align-items-center">
-                <Col sm="12" md={{ size: 6, offset: 3 }}>
-                <h4 class="card-title mb-4 mt-1">contact info</h4>
+            <Container style={this.props.style} className={this.props.className}>
                     <Form>
+                    <h4 class="card-title mb-4 mt-1">contact info</h4>
                     <FormGroup>
                         <input 
                         required
@@ -39,13 +42,11 @@ class Contact extends Component {
                         />
                     </FormGroup>
                     <FormGroup>
-                            <Button onClick={this.next} color="info" className="float-right">next</Button>
-                            <Button disabled onClick={this.prev} color="secondary" className="float-right">prev</Button>
+                            <Button onClick={this.saveAndContinue} color="info" className="float-right">next</Button>
+                            <Button disabled onClick={this.prevStep} color="secondary" className="float-right">prev</Button>
                         </FormGroup>                                                       
                     </Form>
-                </Col>
-                </Row>
-            </CardBody>
+            </Container>
         );
     }
 }
