@@ -12,6 +12,10 @@ html, body {
   height: 100%;
 }
 
+.sidebar-contents {
+    padding: 15px;
+}
+
 .account-container {
   padding-top: 55px;
 }
