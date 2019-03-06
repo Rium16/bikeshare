@@ -60,6 +60,13 @@ const egpos = {
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+app.post('/api/user', (req, res) => {
+    con.query(`SELECT * FROM ${dbName}.customers WHERE email=? AND password=?`, [req.body.email, req.body.password], (err, rows) => {
+        if (err) throw err;
+        else res.send(rows);
+    });
+});
+
 app.get('/api/location', (req, res) => {
     con.query(`SELECT locations.*,
     (SELECT COUNT(*) FROM ${dbName}.equipment WHERE locationID=locations.LID AND type='bike' AND isUnavailable=0 AND isLocked=0) AS numFreeBikes, 
