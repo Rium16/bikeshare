@@ -8,10 +8,7 @@ import { userConstants } from '../_constants/userConstants';
     logging in (since it's not instantaneous) and set the (pending) user as whoever was specified in the action
 */
 
-const user = JSON.parse(localStorage.getItem('user'));
-const initialState = user ? { loggedIn: true, user} : {};
-
-export default function authentication(state = initialState, action) {
+export default function authentication(state = {}, action) {
     switch(action.type) {
         case userConstants.LOGIN_REQUEST:
             return {
