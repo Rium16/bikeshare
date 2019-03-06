@@ -8,10 +8,15 @@ import Navigation from './views/Navigation';
 import SignUp from './views/signup';
 import Settings from './views/Settings';
 import LoginModal from './views/LoginModal';
-
 import Staff from './views/Staff';
 
+// redux stuff
+import configStore from './configStore';
+import { Provider } from 'react-redux';
+
 import { BrowserRouter as Router, Route, Redirect } from "react-router-dom";
+
+const store = configStore();
 
 export default class App extends Component {
   constructor(props){
@@ -23,9 +28,11 @@ export default class App extends Component {
 
   render() {
     return (
-      <div className="App">
-        {Page()}
-      </div>
+      <Provider store={store}>
+        <div className="App">
+          {Page()}
+        </div>
+      </Provider>
     );
   }
 }

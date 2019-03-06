@@ -4,7 +4,7 @@
 import { Collapse, Navbar, NavbarToggler, NavbarBrand, Nav, NavItem, NavLink, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { IoIosContact, IoIosSettings, IoIosPulse } from 'react-icons/io';
+import { IoIosContact, IoIosSettings, IoIosPulse, IoIosPerson } from 'react-icons/io';
 
 class Navigation extends Component {
 
@@ -49,13 +49,16 @@ class Navigation extends Component {
                     <Nav className="ml-auto" navbar>
                         <NavItem>{this.state.loginMessage}</NavItem>
                         <NavItem>
-                            {this.state.loginData ?
-                            <Link to="/settings"><IoIosSettings size={32} /></Link>
+                            {localStorage.getItem('user') ?
+                            <Link to="/account"><IoIosContact size={32} /></Link>
+                           
                             :
                             <Link to="/map/login"><IoIosContact size={32} /></Link>
                             }
                             {/* temp link to account */}
-							<Link to="/account"><IoIosSettings size={32} /></Link>
+                            {localStorage.getItem('user') &&
+                            <Link to="/settings"><IoIosSettings size={32} /></Link>
+                            }
 							<Link to="/staff"><IoIosPulse size={32} /></Link>
                         </NavItem>
                     </Nav>
