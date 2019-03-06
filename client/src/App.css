@@ -25,6 +25,12 @@ html, body {
     padding: 15px;
 }
 
+.staff-center-page  {
+    padding-left: 210px;
+    padding-right: 210px;
+    padding-top: 60px;
+}
+
 .account-container {
   padding-top: 55px;
 }
