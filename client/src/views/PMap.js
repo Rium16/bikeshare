@@ -6,6 +6,10 @@ import LockPanel from './LockPanel';
 import { Button } from 'reactstrap';
 import { IoIosLock, IoIosKey } from 'react-icons/io';
 
+import { connect } from 'react-redux';
+import { lock } from '../_actions/userActions';
+import { userService } from '../services/userService';
+
 // defaults to edinburgh (for now)
 const DEFAULT_VIEWPORT = {
     center: [55.943, -3.188],
@@ -190,4 +194,12 @@ class PMap extends React.Component {
     }
 }
 
-export default PMap;
+function mapStateToProps(state) {
+    const { locked } = state.reservation;
+    return {
+        locked,
+
+    }
+}
+
+export default connect (mapStateToProps) (PMap);

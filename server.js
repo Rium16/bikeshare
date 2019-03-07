@@ -277,6 +277,7 @@ app.post('/api/lock', (req, res) => {
             con.query(`UPDATE ${dbName}.equipment SET isLocked=1 WHERE EID=?`, [chosenItem.EID], (err, rows) => {
                 if (err) throw err;
                 else {
+                    console.log(chosenItem);
                     res.send({reservedItem: chosenItem});
                 }
             });

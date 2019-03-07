@@ -1,7 +1,8 @@
 // inspired by http://jasonwatmore.com/post/2017/09/16/react-redux-user-registration-and-login-tutorial-example
 export const userService = {
     login,
-    logout
+    logout,
+    lock
 }
 
 /*
@@ -37,6 +38,55 @@ function login(email, password) {
 function logout() {
     // just remove user from local storage
     localStorage.removeItem('user');
+}
+
+function lock(itemLocation) {
+    const requestOptions = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ locationID: itemLocation.LID })
+    }
+
+    return fetch('/api/lock', requestOptions)
+        .then(handleResponse)
+        .then(response => {
+            console.log(response);
+            return {
+                location: itemLocation,
+                equipment: response.reservedItem,
+                message: response.message
+            }
+        })
+}
+
+lock = async (viewing) => {
+    this.setState({
+        messageDetails: null
+    })
+    const response = await fetch('/api/lock', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ locationID: viewing.LID }),
+      });
+    var body = await response.json();
+    if (body.reservedItem) {
+        this.setState({ lockDetails: {
+            location: viewing,
+            equipment: body.reservedItem
+        }});
+        this.getDockingStations();
+    } else {
+        this.setState({
+            messageDetails: {
+                message: body.message
+            }
+        })
+    }
+    
 }
 
 function getReservation(CID) {

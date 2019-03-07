@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Card, Row, Col } from 'reactstrap';
 
 class ReservationInformation extends Component {
     constructor(props) {
@@ -12,10 +13,16 @@ class ReservationInformation extends Component {
     }
 
     getReservation() {
-        
+
     }
 
     render() {
-        
+        return (
+            <Card className="reservation-information-container">
+            
+            </Card>
+
+        )
     }
 }
+export default ReservationInformation;

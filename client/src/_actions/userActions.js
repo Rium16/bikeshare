@@ -39,3 +39,23 @@ export function logout() {
     userService.logout();
     return { type: userConstants.LOGOUT };
 }
+
+export function lock(itemLocation) {
+    return dispatch => {
+        dispatch(request({ itemLocation }));
+
+        userService.lock(itemLocation)
+            .then(
+                reservation => {
+                    dispatch(success(reservation));
+                },
+                error => {
+                    dispatch(failure(error.toString()));
+                }
+            )
+    }
+
+    function request(reservation) { return { type: userConstants.LOCK_REQUEST, reservation } }
+    function success(reservation) { return { type: userConstants.LOCK_SUCCESS, reservation } }
+    function failure(error) { return { type: userConstants.LOCK_FAILURE, error } }
+}

@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux';
-import authentication from './authentication';
+import { authentication, reservation } from './authentication';
 
 /*
     Combines all the reducers into one for easy portability.
@@ -7,7 +7,7 @@ import authentication from './authentication';
 
 const rootReducer = combineReducers({
     authentication,
-
+    reservation
 });
 
 export default rootReducer;
