@@ -33,7 +33,7 @@ class Navigation extends Component {
                             }
                             {/* temp link to account */}
                             {localStorage.getItem('user') &&
-                            <Link to="/settings"><IoIosSettings size={32} /></Link>
+                            <Link to="/voucher"><IoIosSettings size={32} /></Link>
                             }
 							<Link to="/staff"><IoIosPulse size={32} /></Link>
                         </NavItem>

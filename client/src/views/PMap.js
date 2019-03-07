@@ -26,7 +26,7 @@ class PMap extends React.Component {
             viewport: DEFAULT_VIEWPORT,
             viewing: null,
             lockDetails: null,
-            messageDetails: null
+            messageDetails: null,
         }
     }
 

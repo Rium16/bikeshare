@@ -24,7 +24,7 @@ function login(email, password) {
             console.log(user);
             const login = JSON.stringify(user[0]);
             if (login !== undefined) {
-                localStorage.setItem('user', JSON.stringify(user[0]));
+                localStorage.setItem('user', login);
                 return user;
             } else {
                 throw new Error("Invalid login details");
@@ -37,6 +37,23 @@ function login(email, password) {
 function logout() {
     // just remove user from local storage
     localStorage.removeItem('user');
+}
+
+function getReservation(CID) {
+    const requestOptions = {
+        method: 'POST',
+        headers: {
+            'Content-type': 'application/json'
+        },
+        body: JSON.stringify({ CID })
+    }
+
+    return fetch('/api/reservation', requestOptions)
+        .then(handleResponse)
+        .then(reservation => {
+            console.log(reservation);
+            const res = JSON.stringify(reservation[0]);
+        });
 }
 
 function handleResponse(response) {
