@@ -51,7 +51,8 @@ class Login extends Component {
                     }
                 </FormGroup>
                 <FormGroup>
-                    <a class="float-right" href="#">forgot?</a>
+                    {/* need forgot? page */}
+                    <a class="float-right" href="https://www.youtube.com/watch?v=NPsmkyfyfak">forgot?</a>
                     <label>password</label>
                     <input onChange={this.handleChange('password')} name="password" class="form-control" placeholder="********" type="password"/>
                     {submitted && !password &&

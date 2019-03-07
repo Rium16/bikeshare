@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import { InputGroupAddon, Container, Button, Form, FormGroup, Input, InputGroup, Row, Col  } from 'reactstrap';
-import { IoIosPerson } from 'react-icons/io';
+import { Container, Button, Row, } from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.css'
 
 class Summary extends Component {

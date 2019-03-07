@@ -1,20 +1,13 @@
 import React, { Component } from 'react';
 import { Container, Row, Col } from 'reactstrap';
 import { IoIosContact, IoIosExit } from 'react-icons/io';
-import { userService } from '../services/userService';
 import ReservationDisplay from './ReservationDisplay';
-
 import { logout } from '../_actions/userActions';
-
 import { Link } from 'react-router-dom';
-
 import { connect } from 'react-redux';
 
 
 class AccountSummary extends Component {
-    constructor(props) {
-        super(props);
-    }
 
     handleLogout =() => {
         this.props.dispatch(logout());
