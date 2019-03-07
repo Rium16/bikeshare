@@ -1,10 +1,9 @@
-import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
-import { Map, TileLayer, Viewport,  Marker, Popup } from 'react-leaflet';
+import React from 'react';
+import { Map, TileLayer } from 'react-leaflet';
 import PMarker from './PMarker';
 import MessageModal from './MessageModal';
 import LockPanel from './LockPanel';
-import { Button, Card, CardBody, CardText, CardHeader } from 'reactstrap';
+import { Button } from 'reactstrap';
 import { IoIosLock, IoIosKey } from 'react-icons/io';
 
 // defaults to edinburgh (for now)
@@ -20,16 +19,15 @@ class PMap extends React.Component {
     //  -user's location viewport (not implemented)
     //  -which location is being viewed (popup is open or not)
     //  -locked location
-    state = {
-        docks: [],
-        viewport: DEFAULT_VIEWPORT,
-        viewing: null,
-        lockDetails: null,
-        messageDetails: null
-    }
-
     constructor(props) {
         super(props);
+        this.state = {
+            docks: [],
+            viewport: DEFAULT_VIEWPORT,
+            viewing: null,
+            lockDetails: null,
+            messageDetails: null
+        }
     }
 
     componentDidMount() {
@@ -129,11 +127,11 @@ class PMap extends React.Component {
         });
 
         this.getDockingStations();
-        this.setState({ lockDetails: null });
         this.setState({ 
             messageDetails: {
                 message: "Equipment lock successfully removed."
-            }
+            },
+            lockDetails: null
         });
     }
 

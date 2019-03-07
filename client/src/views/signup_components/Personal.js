@@ -1,7 +1,7 @@
 // adapted from https://scotch.io/tutorials/creating-multistep-forms-with-react-and-semantic-ui
 import React, { Component } from 'react';
 import { Container, Button, Form, FormGroup,  } from 'reactstrap';
-import { Link } from 'react-router-dom';
+
 import 'bootstrap/dist/css/bootstrap.css'
 
 class Personal extends Component {

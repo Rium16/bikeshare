@@ -1,6 +1,6 @@
 // repurposed example from https://reactstrap.github.io/components/modals/
 import React, { Component } from 'react';
-import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap';
+import { Modal, ModalFooter, Button } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import Login from './Login';
 

@@ -27,7 +27,7 @@ function login(email, password) {
                 localStorage.setItem('user', JSON.stringify(user[0]));
                 return user;
             } else {
-                throw "Invalid login details";
+                throw new Error("Invalid login details");
             }
 
         

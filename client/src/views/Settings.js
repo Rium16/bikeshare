@@ -5,10 +5,6 @@ import { AccountPage, BillingPage, DisplayPage, AboutPage, FAQPage } from './set
 
 
 class Settings extends Component {
-    constructor(props) {
-        super(props);
-
-    }
 
     render() {
         return (

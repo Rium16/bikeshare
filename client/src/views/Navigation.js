@@ -1,10 +1,10 @@
 // repurposed example from:
 // https://reactstrap.github.io/components/navbar/
 
-import { Collapse, Navbar, NavbarToggler, NavbarBrand, Nav, NavItem, NavLink, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+import { Navbar, NavbarBrand, Nav, NavItem } from 'reactstrap';
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { IoIosContact, IoIosSettings, IoIosPulse, IoIosPerson } from 'react-icons/io';
+import { IoIosContact, IoIosSettings, IoIosPulse,  } from 'react-icons/io';
 
 class Navigation extends Component {
 
@@ -16,31 +16,7 @@ class Navigation extends Component {
         }
     }
 
-    getLoginData = async () => {
-        const response = await fetch('/api/checkLogin');
-        const body = await response.json();
-        var message = "error";
-        var data = [];
-        if (response.status !== 200) throw Error(body.message);
-        else {
-            data = body;
-        }
-        //return message;
-        return data;
-    }
-    
-    componentDidMount() {
-        fetch('/api/checkLogin')
-            .then(res => res.json())
-            .then(json =>
-                this.setState({
-                    loginMessage : json + " test"
-                })
-            );
-    }    
-
     render() {
-
         return (
             <div>
                 <Navbar className="nav" color="light" light expand="md">

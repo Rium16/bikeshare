@@ -5,7 +5,7 @@ import Personal from './signup_components/Personal';
 import Password from './signup_components/Password';
 import Summary from './signup_components/Summary';
 
-import { Card, FormGroup, Button, Jumbotron, Container, Row, Col } from 'reactstrap';
+import { Jumbotron } from 'reactstrap';
 
 // enum for registration step
 const stepEnum = {
@@ -103,6 +103,11 @@ class SignUp extends Component {
                         />         
                     </Jumbotron>
                 );
+
+            default:
+                return (
+                    <h1>Reached an invalid sign-up step</h1>
+                )
         }
     }
 }

@@ -1,7 +1,7 @@
 // adapted from https://scotch.io/tutorials/creating-multistep-forms-with-react-and-semantic-ui
 import React, { Component } from 'react';
 import { Container, Form, FormGroup, Button } from 'reactstrap';
-import { Link } from 'react-router-dom';
+
 import 'bootstrap/dist/css/bootstrap.css'
 
 class Password extends Component {

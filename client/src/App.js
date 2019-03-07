@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import './App.css';
-import { Modal } from 'reactstrap';
 
 import AccountSummary from './views/AccountSummary';
 import PMap from './views/PMap';
@@ -38,12 +37,15 @@ export default class App extends Component {
 }
 
 function Page() {
+  // example of how we can change the default redirect based on who is 
+  // logged in - obviously this needs changed but whatev
+  const homepage = localStorage.getItem('user') ? "/staff" : "/map"
   return (
     <Router>
       <div>
 		<Navigation />
         <Route path="/" render={() => (
-          <Redirect to="/map" />
+          <Redirect to={homepage} />
         )}/>
         <Route path="/map" component={BikeMap} />
         <Route path="/map/login" component={LogIn} />
