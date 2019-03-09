@@ -5,10 +5,21 @@ import { Container, Button, Form, FormGroup,  } from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.css'
 
 class Personal extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            submitted: false
+        }
+    }
 
     saveAndContinue = (e) => {
         e.preventDefault();
-        this.props.nextStep();
+        this.setState({
+            submitted: true
+        })
+        if (this.props.firstNameIsValid() && this.props.lastNameIsValid()) {
+            this.props.nextStep();
+        }
     }
 
     goBack = (e) => {
@@ -32,6 +43,12 @@ class Personal extends Component {
                         type=""
                         defaultValue={this.props.values.firstName}
                         />
+                        {!this.props.values.firstName && this.state.submitted &&
+                            <div className="help-block"><span className="help-text">first name is required</span></div>
+                        }
+                        {!this.props.firstNameIsValid() && this.state.submitted && this.props.values.firstName &&
+                            <div className="help-block"><span className="help-text">invalid name string</span></div>
+                        }
                     </FormGroup>
 
                     <FormGroup>
@@ -42,6 +59,12 @@ class Personal extends Component {
                         type=""
                         defaultValue={this.props.values.lastName}
                         />
+                        {!this.props.values.lastName && this.state.submitted &&
+                            <div className="help-block"><span className="help-text">last name is required</span></div>
+                        }
+                        {!this.props.lastNameIsValid() && this.state.submitted && this.props.values.lastName &&
+                            <div className="help-block"><span className="help-text">invalid name string</span></div>
+                        }
                     </FormGroup>  
                     <FormGroup>
                         <Button onClick={this.saveAndContinue} color="info" className="float-right">next</Button>

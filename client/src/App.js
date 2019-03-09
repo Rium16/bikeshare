@@ -4,16 +4,18 @@ import './App.css';
 import AccountSummary from './views/AccountSummary';
 import PMap from './views/PMap';
 import Navigation from './views/Navigation';
-import SignUp from './views/signup';
+import SignupContainer from './views/SignupContainer';
 import Settings from './views/Settings';
-import LoginModal from './views/LoginModal';
+import LoginContainer from './views/LoginContainer';
 import Staff from './views/Staff';
 
 // redux stuff
 import configStore from './configStore';
 import { Provider } from 'react-redux';
 
-import { BrowserRouter as Router, Route, Redirect } from "react-router-dom";
+import { history } from './services/history';
+
+import { Router, Route, Redirect } from "react-router-dom";
 
 const store = configStore();
 
@@ -41,7 +43,7 @@ function Page() {
   // logged in - obviously this needs changed but whatev
   const homepage = localStorage.getItem('user') ? "/staff" : "/map"
   return (
-    <Router>
+    <Router history={history}>
       <div>
 		<Navigation />
         <Route path="/" render={() => (
@@ -68,13 +70,13 @@ function BikeMap() {
 
 function LogIn() {
   return (
-    <LoginModal className="col-md-5 col-md-offset-5" modal={true}/>
+    <LoginContainer className="col-md-5 col-md-offset-5" modal={true}/>
   );
 }
 
 function Register() {
   return (
-    <SignUp />
+    <SignupContainer />
   )
 }
 

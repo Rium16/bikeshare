@@ -6,6 +6,8 @@ import LockPanel from './LockPanel';
 import { Button } from 'reactstrap';
 import { IoIosLock, IoIosKey } from 'react-icons/io';
 
+import { connect } from 'react-redux';
+
 // defaults to edinburgh (for now)
 const DEFAULT_VIEWPORT = {
     center: [55.943, -3.188],
@@ -54,6 +56,15 @@ class PMap extends React.Component {
         });
         
         this.getDockingStations();
+    }
+
+    componentDidUpdate(prevProps) {
+        if (this.props.alert !== prevProps.alert) {
+            this.setState({
+                messageDetails: this.props.alert
+            });
+        }
+        
     }
 
     getDockingStations = async () => {
@@ -179,8 +190,8 @@ class PMap extends React.Component {
             />
             : "" }
 
-            {this.state.messageDetails ?
-            <MessageModal className="message-modal" message={this.state.messageDetails.message} modal={true} />
+            {this.props.messageDetails ?
+            <MessageModal className="message-modal" message="hi" modal={true} />
             :
             ""}
 
@@ -190,4 +201,13 @@ class PMap extends React.Component {
     }
 }
 
-export default PMap;
+function mapStateToProps(state) {
+    const message = state.alert.message;
+    const type = state.alert.type;
+    return {
+        message,
+        type
+    }
+}
+
+export default connect (mapStateToProps) (PMap);

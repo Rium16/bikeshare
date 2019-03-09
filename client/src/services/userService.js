@@ -1,7 +1,9 @@
 // inspired by http://jasonwatmore.com/post/2017/09/16/react-redux-user-registration-and-login-tutorial-example
 export const userService = {
     login,
-    logout
+    logout,
+    lock,
+    register
 }
 
 /*
@@ -24,7 +26,7 @@ function login(email, password) {
             console.log(user);
             const login = JSON.stringify(user[0]);
             if (login !== undefined) {
-                localStorage.setItem('user', JSON.stringify(user[0]));
+                localStorage.setItem('user', login);
                 return user;
             } else {
                 throw new Error("Invalid login details");
@@ -39,13 +41,64 @@ function logout() {
     localStorage.removeItem('user');
 }
 
+function register(email, phone, firstName, lastName, password) {
+    const requestOptions = {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email, phone, firstName, lastName, password })
+    }
+
+    return fetch('/api/user', requestOptions)
+        .then(handleResponse)
+}
+
+function lock(itemLocation) {
+    const requestOptions = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ locationID: itemLocation.LID })
+    }
+
+    return fetch('/api/lock', requestOptions)
+        .then(handleResponse)
+        .then(response => {
+            console.log(response);
+            return {
+                location: itemLocation,
+                equipment: response.reservedItem,
+                message: response.message
+            }
+        })
+}
+
+function getReservation(CID) {
+    const requestOptions = {
+        method: 'POST',
+        headers: {
+            'Content-type': 'application/json'
+        },
+        body: JSON.stringify({ CID })
+    }
+
+    return fetch('/api/reservation', requestOptions)
+        .then(handleResponse)
+        .then(reservation => {
+            console.log(reservation);
+            const res = JSON.stringify(reservation[0]);
+        });
+}
+
 function handleResponse(response) {
     return response.text().then(text => {
         const data = text && JSON.parse(text);
         if (!response.ok) {
 
             // may need to look at what response data looks like
-            const error = (data && data.message) || response.statusText;
+            const error = (data && data.message) || response.status;
             return Promise.reject(error);
         }
 
