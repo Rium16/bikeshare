@@ -1,6 +1,8 @@
 // inspired by http://jasonwatmore.com/post/2017/09/16/react-redux-user-registration-and-login-tutorial-example
 import { userConstants } from '../_constants/userConstants';
 import { userService } from '../services/userService';
+import { alertActions } from './alertActions';
+import { history } from '../services/history';
 
 // actions for transforming parts of the store that are related
 // to user functionality
@@ -20,7 +22,8 @@ export function login(username, password) {
         /* a promise that when resolved notifies of success/failure */
         userService.login(username, password)
             .then(
-                user => { 
+                user => {
+                    history.push('/map'); 
                     dispatch(success(user));
                 },
                 error => {
@@ -36,6 +39,34 @@ export function login(username, password) {
 }
 
 export function logout() {
-    userService.logout();
-    return { type: userConstants.LOGOUT };
+    return dispatch => {
+        userService.logout();
+        dispatch(alertActions.success("Logout successful!"));
+        return { type: userConstants.LOGOUT };
+    }
+    
+}
+
+export function register(user) {
+    return dispatch => {
+        dispatch(request(user));
+
+        userService.register(user.email, user.phone, user.firstName, user.lastName, user.password)
+            .then(
+                user => {
+                    dispatch(success());
+                    dispatch(alertActions.success("Customer account created!"));
+                    history.push('/map');
+                },
+                error => {
+                    dispatch(failure(error.toString()));
+                }
+            );
+
+        
+    }
+
+    function request(user) { return { type: userConstants.REGISTER_REQUEST, user } }
+    function success(user) { return { type: userConstants.REGISTER_SUCCESS, user } }
+    function failure(error) { return { type: userConstants.REGISTER_FAILURE, error } }
 }

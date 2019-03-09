@@ -69,7 +69,7 @@ export class BillingPage extends Component {
         return (
             <div className="sub-setting-page">
                 <SettingsNav />
-                <h1>BILLING</h1>
+                <h1>creeper? Awww man</h1>
             </div>
         );
     }

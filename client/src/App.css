@@ -7,6 +7,10 @@
   height: 100%;
 }
 
+.help-text {
+  color: red;
+}
+
 .vertical-center {
   position:absolute;
   width: 100%;

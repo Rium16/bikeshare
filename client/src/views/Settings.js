@@ -2,14 +2,14 @@ import React, { Component } from 'react';
 import { ListGroup, ListGroupItem, Badge } from 'reactstrap';
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 import { AccountPage, BillingPage, DisplayPage, AboutPage, FAQPage } from './settings_components/SettingsComponents';
-
+import { history } from '../services/history';
 
 class Settings extends Component {
 
     render() {
         return (
             <div className="h-100 settings">
-            <Router>
+            <Router history={history}>
                 <div>
                 <Route path="/settings/account" component={AccountPage} />
                 <Route path="/settings/billing" component={BillingPage} />

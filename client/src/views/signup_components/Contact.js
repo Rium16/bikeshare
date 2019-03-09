@@ -5,10 +5,25 @@ import { Container, Button, Form, FormGroup } from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.css'
 
 class Contact extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            submitted: false
+        }
+        
+    }
 
     saveAndContinue = (e) => {
         e.preventDefault();
-        this.props.nextStep();
+        this.setState({
+            submitted: true
+        });
+
+        if (this.props.emailIsValid() && this.props.phoneIsValid()) {
+            this.props.nextStep();
+        }
+
+        
     }
 
     goBack = (e) => {
@@ -31,6 +46,12 @@ class Contact extends Component {
                         onChange={this.props.handleChange('email')}
                         defaultValue={this.props.values.email}
                         />
+                        {!this.props.values.email && this.state.submitted &&
+                            <div className="help-block"><span className="help-text">email is required</span></div>
+                        }
+                        {!this.props.emailIsValid() && this.state.submitted && this.props.values.email &&
+                            <div className="help-block"><span className="help-text">invalid email address</span></div>
+                        }
                     </FormGroup>
                     <FormGroup>
                         <input 
@@ -40,6 +61,12 @@ class Contact extends Component {
                         onChange={this.props.handleChange('phone')}
                         defaultValue={this.props.values.phone}
                         />
+                        {!this.props.values.phone && this.state.submitted &&
+                            <div className="help-block"><span className="help-text">phone number is required</span></div>
+                        }
+                        {!this.props.phoneIsValid() && this.state.submitted && this.props.values.phone &&
+                            <div className="help-block"><span className="help-text">invalid phone number</span></div>
+                        }
                     </FormGroup>
                     <FormGroup>
                             <Button onClick={this.saveAndContinue} color="info" className="float-right">next</Button>

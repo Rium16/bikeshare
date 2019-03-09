@@ -3,7 +3,7 @@ const bodyParser = require('body-parser');
 const mysql = require('mysql');
 const moment = require('moment'); 
 const path = require('path'); 
-
+const Joi = require('joi');
 const CircularJSON = require('circular-json');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
@@ -19,6 +19,7 @@ var sess = {
     secret: 'some text, i think',
     cookie: {}
 };
+
 
 app.use(cookieParser());
 
@@ -59,6 +60,79 @@ const egpos = {
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+app.put('/api/user', (req, res) => {
+    const data = req.body;
+    const schema = Joi.object().keys({
+
+        // email is required
+        email: Joi.string().email().required(),
+
+        // phone is required
+        // note: this regex may or may not be entirely valid
+        phone: Joi.string().regex(/^(((\+44\s?\d{4}|\(?0\d{4}\)?)\s?\d{3}\s?\d{3})|((\+44\s?\d{3}|\(?0\d{3}\)?)\s?\d{3}\s?\d{4})|((\+44\s?\d{2}|\(?0\d{2}\)?)\s?\d{4}\s?\d{4}))(\s?\#(\d{4}|\d{3}))?$/).required(),
+
+        // name is required
+        firstName: Joi.string().alphanum().min(3).max(30).required(),
+
+        // lastname is required
+        lastName: Joi.string().alphanum().min(3).max(30).required(),
+
+        // password is required
+        password: Joi.string().min(8).required().strict()
+
+    });
+    
+    Joi.validate(data, schema, (err, value) => {
+        if (err) {
+            res.status(422).json({
+                status: 'error',
+                message: 'Invalid request data',
+                data: data
+            })
+        } else {
+            con.query(`SELECT * FROM ${dbName}.customers WHERE email=?`, [data.email], (err, rows) => {
+                if (err) throw err;
+                else {
+                    if (rows.length !== 0) {
+                        res.status(409).send({
+                            status: 'error',
+                            message: 'A user with this email already exists',
+                        });
+                    } else {
+                        con.query(`SELECT * FROM ${dbName}.customers WHERE phone=?`, [data.phone], (err, rows) => {
+                            if (err) throw err;
+                            else {
+                                if (rows.length !== 0) {
+                                    res.status(409).send({
+                                        status: 'error',
+                                        message: 'A user with this phone number alread exists',
+                                    });
+                                    
+                                } else {
+                                    con.query(`INSERT INTO ${dbName}.customers (password, firstname, lastname, DOB, email, phone, payment_details, address) VALUES (?, ?, ?, 'whateve', ?, ?, 'whateve', 'whateve')`, [data.password, data.firstName, data.lastName, data.email, data.phone], (err, rows) =>{
+                                        if (err) throw err;
+                                        else {
+                                            if (rows.length !== 0) {
+                                                console.log(res);
+                                                res.send({
+                                                    status: 'success',
+                                                    message: 'Customer account created'
+                                                });
+                                                
+                                            }
+                                        }
+                                    });
+                                }
+                            }
+                        });
+                    }
+                }
+            });
+        }
+    })
+});
+
 
 app.post('/api/user', (req, res) => {
     con.query(`SELECT * FROM ${dbName}.customers WHERE email=? AND password=?`, [req.body.email, req.body.password], (err, rows) => {
