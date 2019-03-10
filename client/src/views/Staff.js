@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import { Card, CardBody, CardText, CardTitle, Row, Col, Spinner } from 'reactstrap';
+import { Table, Card, CardBody, CardText, CardTitle, Row, Col, Spinner } from 'reactstrap';
 import Sidebar from 'react-sidebar';
-import { FaListUl } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
 
 const mql = window.matchMedia(`(min-width: 10px)`);
 const sidebarStyle = { background: "white", paddingTop: 55, width: 200 };
+const sp = <Spinner color="primary" />;
 
 
 class Staff extends Component {
@@ -13,7 +14,10 @@ class Staff extends Component {
 		super(props);
 		this.state = {
 			sidebarOpen: mql.matches,
-			sidebarDocked: true
+			sidebarDocked: true,
+			card1: sp,
+			card2: sp,
+			card3: sp
 		};
 		this.onSetSidebarOpen = this.onSetSidebarOpen.bind(this);
 		this.mediaQueryChanged = this.mediaQueryChanged.bind(this);
@@ -22,6 +26,9 @@ class Staff extends Component {
 
 	componentWillMount() {
 		mql.addListener(this.mediaQueryChanged);
+		//this.Card1();
+		//this.Card2();
+		this.Card3();
 	}
 
 	componentWillUnmount() {
@@ -36,84 +43,221 @@ class Staff extends Component {
 		this.setState({ sidebarDocked: mql.matches, sidebarOpen: false });
 	}
 
+	leftSidebar() {
+		return (
+			<Sidebar
+				sidebar={
+					<div>
+						<div className="sidebar-contents">
+							<Link to="/map">Map</Link>
+						</div>
+						<div className="sidebar-contents">
+							Links and options
+							</div>
+						<div className="sidebar-contents">
+							More options
+							</div>
+					</div>
+
+				}
+				defaultSidebarWidth={1}
+				open={this.state.sidebarOpen}
+				docked={this.state.sidebarDocked}
+				styles={{
+					sidebar: sidebarStyle
+				}}
+			></Sidebar>
+		)
+	}
+
+	rightSidebar() {
+		return (
+			<Sidebar
+				sidebar={
+					<div>
+						<div className="sidebar-contents">
+							Big Chunguska
+							</div>
+						<div className="sidebar-contents">
+							Same on this side
+							</div>
+						<div className="sidebar-contents">
+							More stuff
+							</div>
+						<div className="sidebar-contents">
+							etc.
+							</div>
+					</div>
+				}
+				defaultSidebarWidth={1}
+				open={this.state.sidebarOpen}
+				docked={this.state.sidebarDocked}
+				pullRight={true}
+				styles={{
+					sidebar: sidebarStyle
+				}}
+			></Sidebar>
+		)
+	}
+
+	Card1 = async() => {
+		this.setState({
+			card1:
+				<Table size="sm">
+					<thead>
+						<tr>
+							<th>#</th>
+							<th>First Name</th>
+							<th>Last Name</th>
+							<th>Username</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<th scope="row">1</th>
+							<td>Mark</td>
+							<td>Otto</td>
+							<td>@mdo</td>
+						</tr>
+						<tr>
+							<th scope="row">2</th>
+							<td>Jacob</td>
+							<td>Thornton</td>
+							<td>@fat</td>
+						</tr>
+						<tr>
+							<th scope="row">3</th>
+							<td>Larry</td>
+							<td>the Bird</td>
+							<td>@twitter</td>
+						</tr>
+					</tbody>
+				</Table>
+		});
+	}
+
+	Card2 = async () => {
+		const response = await fetch('/api/location');
+		const body = await response.json();
+		if (response.status != 200) throw Error(body.message);
+		else {
+			var locs = [];
+			body.map(function (x) {
+				var loc = {
+					LID: x.LID,
+					latitude: x.latitude,
+					longitude: x.longitude,
+					name: x.name,
+					numBikes: x.numBikes,
+					numFreeBikes: x.numFreeBikes,
+					bikeCapacity: x.bikeCapacity,
+					helmetCapacity: x.helmetCapcity
+				}
+				locs.push(loc);
+			})
+			this.setState({
+				card2:
+					<Table size="sm">
+						<thead>
+							<td>Location name</td>
+							<td>Number of bikes</td>
+							<td>Number of free bikes</td>
+						</thead>
+						<tbody>
+							<tr>
+								<td>{locs[0].name}</td>
+								<td>{locs[0].numBikes}</td>
+								<td>{locs[0].numFreeBikes}</td>
+							</tr>
+							<tr>
+								<td>{locs[1].name}</td>
+								<td>{locs[1].numBikes}</td>
+								<td>{locs[1].numFreeBikes}</td>
+							</tr>
+							<tr>
+								<td>{locs[2].name}</td>
+								<td>{locs[2].numBikes}</td>
+								<td>{locs[2].numFreeBikes}</td>
+							</tr>
+						</tbody>
+					</Table>
+			});
+		}
+	}
+
+	func = (locs) => {
+		return (
+			<Table size="sm">
+				<thead>
+					<th>Location</th>
+					<th>Number of bikes</th>
+					<th>Bikes avaiable</th>
+				</thead>
+				<tbody>
+					{locs.map(loc => (<tr><td>{loc.name}</td> <td>{loc.numBikes}</td> <td>{loc.numFreeBikes}</td></tr>))}
+				</tbody>
+			</Table>
+	)
+}
+
+	Card3 = async() => {
+		const response = await fetch('/api/location');
+		const body = await response.json();
+		if (response.status != 200) throw Error(body.message);
+		else {
+			var locs = [];
+			body.map(function (x) {
+				var loc = {
+					LID: x.LID,
+					latitude: x.latitude,
+					longitude: x.longitude,
+					name: x.name,
+					numBikes: x.numBikes,
+					numFreeBikes: x.numFreeBikes,
+					bikeCapacity: x.bikeCapacity,
+					helmetCapacity: x.helmetCapcity
+				}
+				locs.push(loc);
+			})
+			
+			this.setState({
+				card3: this.func(locs)
+			})
+		}
+	}
+
 	render() {
 		return (
 			<div>
-				<Sidebar
-					sidebar={
-						<div>
-							<div className="sidebar-contents">
-								Big Chunguska
-							</div>
-							<div className="sidebar-contents">
-								Links and options
-							</div>
-							<div className="sidebar-contents">
-								More options
-							</div>
-						</div>
-						
-					}
-					defaultSidebarWidth={1}
-					open={this.state.sidebarOpen}
-					docked={this.state.sidebarDocked}
-					styles={{
-						sidebar: sidebarStyle
-					}}
-				></Sidebar>
-
-				<Sidebar
-					sidebar={
-						<div>
-							<div className="sidebar-contents">
-								Big Chunguska
-							</div>
-							<div className="sidebar-contents">
-								Same on this side
-							</div>
-							<div className="sidebar-contents">
-								More stuff
-							</div>
-							<div className="sidebar-contents">
-								etc.
-							</div>
-						</div>
-					}
-					defaultSidebarWidth={1}
-					open={this.state.sidebarOpen}
-					docked={this.state.sidebarDocked}
-					pullRight={true}
-					styles={{
-						sidebar: sidebarStyle
-					}}
-				></Sidebar>
+				{this.leftSidebar()}
+				{this.rightSidebar()}
 
 				<div className="staff-center-page">
 					<Row>
 						<Col sm="6">
-							<Card body>
+							<Card body className="table-scroll">
 								<CardTitle>Some graph/figure</CardTitle>
-								<Spinner color="primary" />
+								{this.state.card1}
 							</Card>
 						</Col>
 						<Col sm="6">
-							<Card body>
+							<Card body className="table-scroll">
 								<CardTitle>Some other graph/figure</CardTitle>
-								<Spinner color="primary" />
+								{this.state.card2}
 							</Card>
 						</Col>
 					</Row>
 				</div>
 				<div className="staff-center-page">
-					<Row>
+					<Row className="card-row-height">
 						<Col sm="6">
-							<Card body>
-								<CardTitle>Some graph/figure</CardTitle>
-								<Spinner color="primary" />
+							<Card body className="table-scroll">
+								<CardTitle><b>Bikes & Locations</b></CardTitle>
+								{this.state.card3}
 							</Card>
 						</Col>
 						<Col sm="6">
-							<Card body>
+							<Card body className="table-scroll">
 								<CardTitle>Some other graph/figure</CardTitle>
 								<Spinner color="primary" />
 							</Card>
@@ -123,41 +267,6 @@ class Staff extends Component {
 			</div>
 		);
 	}
-
-    render1() {
-		return (
-			<div>
-				<Sidebar
-					sidebar={
-						<div>
-							<div>
-								<button onClick={() => this.onSetSidebarOpen(false)}>
-									<FaListUl />Close Staff Sidebar
-								</button>
-							</div>
-							<div className="sidebar-contents">
-								<a href="">Sidebar content</a><br />
-							</div>
-							<div className="sidebar-contents">
-								<a href="">Sidebar content</a><br />
-							</div>
-						</div>
-					}
-					open={this.state.sidebarOpen}
-					onSetOpen={this.onSetSidebarOpen}
-					styles={{
-						sidebar: { background: "white", paddingTop: 55 }
-					}}
-				>
-					<div style={{ paddingTop: '55px' }}>
-						<button onClick={() => this.onSetSidebarOpen(true)}>
-							<FaListUl />Open Staff Sidebar
-						</button>
-					</div>
-				</Sidebar>
-			</div>
-		);
-    }
 }
 
 export default Staff;

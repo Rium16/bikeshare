@@ -35,6 +35,17 @@ html, body {
     padding-top: 60px;
 }
 
+.table-scroll {
+    height: 240px;
+    overflow-x: auto;
+    overflow-y: auto;
+    width: 99%;
+}
+
+.card-row-height {
+    height: 250px;
+}
+
 .account-container {
   padding-top: 55px;
 }
