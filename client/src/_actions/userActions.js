@@ -69,4 +69,24 @@ export function register(user) {
     function request(user) { return { type: userConstants.REGISTER_REQUEST, user } }
     function success(user) { return { type: userConstants.REGISTER_SUCCESS, user } }
     function failure(error) { return { type: userConstants.REGISTER_FAILURE, error } }
+
+export function lock(itemLocation) {
+    return dispatch => {
+        dispatch(request({ itemLocation }));
+
+        userService.lock(itemLocation)
+            .then(
+                reservation => {
+                    dispatch(success(reservation));
+                },
+                error => {
+                    /* dispatch failure alert here */
+                    dispatch(failure(error.toString()));
+                }
+            )
+    }
+
+    function request(reservation) { return { type: userConstants.LOCK_REQUEST, reservation } }
+    function success(reservation) { return { type: userConstants.LOCK_SUCCESS, reservation } }
+    function failure(error) { return { type: userConstants.LOCK_FAILURE, error } }
 }

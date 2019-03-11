@@ -11,4 +11,11 @@ export const userConstants = {
     LOGIN_FAILURE: 'USERS_LOGIN_FAILURE',
 
     LOGOUT: 'USERS_LOGOUT',
+<<<<<<< HEAD
+=======
+
+    LOCK_REQUEST: 'USERS_LOCK_REQUEST',
+    LOCK_SUCCESS: 'USERS_LOCK_SUCCESS',
+    LOCK_FAILURE: 'USERS_LOCK_FAILURE',
+>>>>>>> super_reservations
 }

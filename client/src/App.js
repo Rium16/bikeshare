@@ -8,6 +8,7 @@ import SignupContainer from './views/SignupContainer';
 import Settings from './views/Settings';
 import LoginContainer from './views/LoginContainer';
 import Staff from './views/Staff';
+import ReservationVoucher from './views/ReservationPage/ReservationVoucher';
 
 // redux stuff
 import configStore from './configStore';
@@ -54,6 +55,7 @@ function Page() {
         <Route path="/settings" component={Settings} />
         <Route path="/register" component={Register} />
         <Route path="/account" component={AccountSummary} />
+        <Route path="/voucher" component={ReservationVoucher} />
 
         <Route path="/staff" component={StaffPage} />
 

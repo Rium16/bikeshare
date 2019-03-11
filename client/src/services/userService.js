@@ -2,8 +2,12 @@
 export const userService = {
     login,
     logout,
+<<<<<<< HEAD
     lock,
     register
+=======
+    lock
+>>>>>>> super_reservations
 }
 
 /*
@@ -73,6 +77,34 @@ function lock(itemLocation) {
                 message: response.message
             }
         })
+}
+
+lock = async (viewing) => {
+    this.setState({
+        messageDetails: null
+    })
+    const response = await fetch('/api/lock', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ locationID: viewing.LID }),
+      });
+    var body = await response.json();
+    if (body.reservedItem) {
+        this.setState({ lockDetails: {
+            location: viewing,
+            equipment: body.reservedItem
+        }});
+        this.getDockingStations();
+    } else {
+        this.setState({
+            messageDetails: {
+                message: body.message
+            }
+        })
+    }
+    
 }
 
 function getReservation(CID) {
