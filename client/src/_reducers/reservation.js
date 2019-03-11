@@ -17,6 +17,13 @@ export default function reservation(state = {}, action) {
             return {
 
             }
+        case userConstants.UNLOCK_REQUEST:
+            return {
+                unlocking: true
+            }
+        case userConstants.UNLOCK_SUCCESS:
+            return {}
+        case userConstants.UNLOCK_FAILURE:
         default:
             return state
     }

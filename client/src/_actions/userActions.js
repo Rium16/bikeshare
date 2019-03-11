@@ -91,3 +91,24 @@ export function lock(itemLocation) {
     function success(reservation) { return { type: userConstants.LOCK_SUCCESS, reservation } }
     function failure(error) { return { type: userConstants.LOCK_FAILURE, error } }
 }
+
+export function unlock(EID) {
+    return dispatch => {
+        dispatch(request({ EID }));
+
+        userService.unlock(EID)
+            .then(
+                message => {
+                    dispatch(success(message));
+                },
+                error => {
+                    dispatch(failure(error));
+                }
+            )
+    }
+
+
+    function request(EID) { return { type: userConstants.UNLOCK_REQUEST, EID } }
+    function success(message) { return { type: userConstants.UNLOCK_SUCCESS, message } }
+    function failure(error) { return { type: userConstants.UNLOCK_FAILURE, error } }
+}

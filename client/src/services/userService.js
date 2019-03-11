@@ -5,6 +5,7 @@ export const userService = {
     lock,
     register,
     lock,
+    unlock,
 }
 
 /*
@@ -76,32 +77,41 @@ function lock(itemLocation) {
         })
 }
 
-lock = async (viewing) => {
-    this.setState({
-        messageDetails: null
-    })
-    const response = await fetch('/api/lock', {
+function unlock(EID) {
+    const requestOptions = {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+            'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ locationID: viewing.LID }),
-      });
-    var body = await response.json();
-    if (body.reservedItem) {
-        this.setState({ lockDetails: {
-            location: viewing,
-            equipment: body.reservedItem
-        }});
-        this.getDockingStations();
-    } else {
-        this.setState({
-            messageDetails: {
-                message: body.message
-            }
-        })
+        body: JSON.stringify({ EID })
     }
-    
+
+    return fetch('/api/unlock', requestOptions)
+        .then(handleResponse)
+        .then(message => {
+            return {
+                message
+            }
+        });
+}
+
+unlock = async () => {
+    this.setState({ messageDetails: null });
+    const response = await fetch('/api/unlock', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ equipmentID: this.state.lockDetails.equipment.EID })
+    });
+
+    this.getDockingStations();
+    this.setState({ 
+        messageDetails: {
+            message: "Equipment lock successfully removed."
+        },
+        lockDetails: null
+    });
 }
 
 function getReservation(CID) {

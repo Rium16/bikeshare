@@ -3,6 +3,7 @@ import { Container, Row, Col, Card, CardHeader, CardBody, CardText } from 'react
 import ReservationInformation from './ReservationInformation';
 import SettingsNav from '../settings_components/SettingsNav';
 
+import { connect } from 'react-redux';
 
 class ReservationVoucher extends Component {
 
@@ -25,10 +26,10 @@ class ReservationVoucher extends Component {
                         <CardHeader>Reservation</CardHeader>
                         <CardBody>
                             <CardText>
-                                <p>Location: <span style={{float: 'right'}}>hi</span></p>
-                                <p>Equipment type: <span style={{float: 'right'}}>hasdfasdfasdfdasfi</span></p>
-                                <p>Equipment ID: <span style={{float: 'right'}}>hi</span></p>
-                                <p>Expires: <span style={{float: 'right'}}>hi</span></p>
+                                <p>Location: <span style={{float: 'right'}}>{this.props.location.name}</span></p>
+                                <p>Equipment type: <span style={{float: 'right'}}>{this.props.equipment.type}</span></p>
+                                <p>Equipment ID: <span style={{float: 'right'}}>{this.props.equipment.EID}</span></p>
+                                <p>Expires: <span style={{float: 'right'}}>Xmins</span></p>
                             </CardText>
                         </CardBody>
                     </Card>
@@ -41,4 +42,11 @@ class ReservationVoucher extends Component {
     }
 }
 
-export default ReservationVoucher;
+function mapStateToProps(state) {
+    const { location, equipment } = state.reservation;
+    return {
+        location,
+        equipment
+    }
+}
+export default connect (mapStateToProps) (ReservationVoucher);

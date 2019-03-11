@@ -7,7 +7,7 @@ import { Button } from 'reactstrap';
 import { IoIosLock, IoIosKey } from 'react-icons/io';
 
 import { connect } from 'react-redux';
-import { lock } from '../_actions/userActions';
+import { lock, unlock } from '../_actions/userActions';
 import { userService } from '../services/userService';
 
 // defaults to edinburgh (for now)
@@ -66,7 +66,6 @@ class PMap extends React.Component {
                 messageDetails: this.props.alert
             });
         }
-        
     }
 
     getDockingStations = async () => {
@@ -103,51 +102,22 @@ class PMap extends React.Component {
 
     lock = async (viewing) => {
         await this.props.dispatch(lock(viewing));
-
-
-        /*
-        const response = await fetch('/api/lock', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ locationID: viewing.LID }),
-          });
-        var body = await response.json();
-        if (body.reservedItem) {
-            this.setState({ lockDetails: {
-                location: viewing,
-                equipment: body.reservedItem
-            }});
-            this.getDockingStations();
-        } else {
-            this.setState({
-                messageDetails: {
-                    message: body.message
-                }
-            })
-        }
-        */
-        
+        this.setState({
+            messageDetails: {
+                message: "Equipment locked successfully!"
+            }
+        })
+        this.getDockingStations();
     }
 
     unlock = async () => {
-        this.setState({ messageDetails: null });
-        const response = await fetch('/api/unlock', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ equipmentID: this.state.lockDetails.equipment.EID })
-        });
-
-        this.getDockingStations();
-        this.setState({ 
+        await this.props.dispatch(unlock(this.props.lockDetails.equipment.EID));
+        this.setState({
             messageDetails: {
-                message: "Equipment lock successfully removed."
-            },
-            lockDetails: null
-        });
+                message: "Equipment unlocked successfully!"
+            }
+        })
+        this.getDockingStations();
     }
 
     render() {
@@ -180,7 +150,7 @@ class PMap extends React.Component {
             </Map>
 
             {this.props.locked ?
-            <Button color="info" onClick={() => this.unlock()}  className='locker'><IoIosKey size="1.5em"/></Button>
+            <Button color="info" onClick={() => this.unlock()}  className='locker'>{<IoIosKey size="1.5em"/>}</Button>
             : // can only lock if logged in and viewing a depot
             <Button color="info" disabled={!(this.state.viewing && localStorage.getItem('user'))} onClick={() => this.lock(this.state.viewing)} className='locker'><IoIosLock size="1.5em"/></Button>
             }

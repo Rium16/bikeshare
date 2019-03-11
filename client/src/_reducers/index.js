@@ -13,7 +13,8 @@ const rootReducer = combineReducers({
     authentication,
     alert,
     registration,
-    reservation
+    reservation,
+
 });
 
 export default rootReducer;

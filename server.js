@@ -366,9 +366,10 @@ app.post('/api/lock', (req, res) => {
 });
 
 app.post('/api/unlock', (req, res) => {
-    con.query(`UPDATE ${dbName}.equipment SET isLocked=0 WHERE EID=?;`, [req.body.equipmentID], (err, rows) => {
+    con.query(`UPDATE ${dbName}.equipment SET isLocked=0 WHERE EID=?;`, [req.body.EID], (err, rows) => {
         if (err) throw err;
         else {
+            console.log(rows);
             res.send({
                 message: "Item successfully unlocked."
             });
