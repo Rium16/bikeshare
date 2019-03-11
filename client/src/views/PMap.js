@@ -3,12 +3,14 @@ import { Map, TileLayer } from 'react-leaflet';
 import PMarker from './PMarker';
 import MessageModal from './MessageModal';
 import LockPanel from './LockPanel';
-import { Button } from 'reactstrap';
-import { IoIosLock, IoIosKey } from 'react-icons/io';
+import { Button, Col } from 'reactstrap';
+import { IoIosLock, IoIosKey, IoIosBicycle } from 'react-icons/io';
 
 import { connect } from 'react-redux';
 import { lock, unlock } from '../_actions/userActions';
 import { userService } from '../services/userService';
+
+import { history } from '../services/history';
 
 // defaults to edinburgh (for now)
 const DEFAULT_VIEWPORT = {
@@ -100,6 +102,10 @@ class PMap extends React.Component {
         this.setState({ viewing: false });
     }
 
+    viewReservation = () => {
+        history.push('/voucher')
+    }
+
     lock = async (viewing) => {
         await this.props.dispatch(lock(viewing));
         this.setState({
@@ -139,7 +145,7 @@ class PMap extends React.Component {
             {this.state.docks.map(function(location) {
             var position = [location.latitude, location.longitude];
             return (
-                <PMarker                {...location}
+                <PMarker                {...location} // what is this
                 position={position}
                 onOpen={() => _this.openLocation(location)}
                 onClose={_this.closeLocation}
@@ -149,19 +155,19 @@ class PMap extends React.Component {
             })}
             </Map>
 
+            <Button 
+            className="reservation-button" 
+            disabled={!this.props.locked}
+            onClick={this.viewReservation}
+            ><IoIosBicycle size="24"/></Button>
+                       
+            <div class="wrapper">
             {this.props.locked ?
-            <Button color="info" onClick={() => this.unlock()}  className='locker'>{<IoIosKey size="1.5em"/>}</Button>
+            <Button color="info" onClick={() => this.unlock()}  className="locker">{<IoIosKey size="1.5em"/>}</Button>
             : // can only lock if logged in and viewing a depot
-            <Button color="info" disabled={!(this.state.viewing && localStorage.getItem('user'))} onClick={() => this.lock(this.state.viewing)} className='locker'><IoIosLock size="1.5em"/></Button>
+            <Button color="info" disabled={!(this.state.viewing && localStorage.getItem('user'))} onClick={() => this.lock(this.state.viewing)} className="locker"><IoIosLock size="1.5em"/></Button>
             }
-
-            {this.props.locked ?
-            <LockPanel
-            locationName={this.props.lockDetails.location.name}
-            equipmentType={this.props.lockDetails.equipment.type}
-            equipmentID={this.props.lockDetails.equipment.EID}
-            />
-            : "" }
+            </div>
 
             {this.props.messageDetails ?
             <MessageModal className="message-modal" message="hi" modal={true} />

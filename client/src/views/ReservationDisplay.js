@@ -8,13 +8,19 @@ class ReservationDisplay extends Component {
         return (
             <Card>
                 <CardBody>
+                    {this.props.equipment && this.props.location ?
                     <CardText>
-                        Bike ID: 17
+                        Bike ID: {this.props.equipment.EID}
                         <br />
-                        Location: Haymarket 
+                        Location: {this.props.location.name}
                         <br />
                         Expires in <Count max={30} current={7}/> mins 
                     </CardText>
+                    :
+                    <CardText style={{textAlign: 'center'}}>
+                        [none]
+                    </CardText>
+                    }
                 </CardBody>
             </Card>
         );
