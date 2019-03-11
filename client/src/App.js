@@ -10,6 +10,7 @@ import LoginContainer from './views/LoginContainer';
 import Staff from './views/Staff';
 import ReservationVoucher from './views/ReservationPage/ReservationVoucher';
 
+
 // redux stuff
 import configStore from './configStore';
 import { Provider } from 'react-redux';
@@ -47,6 +48,7 @@ function Page() {
     <Router history={history}>
       <div>
 		<Navigation />
+
         <Route path="/" render={() => (
           <Redirect to={homepage} />
         )}/>

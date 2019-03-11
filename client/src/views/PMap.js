@@ -126,6 +126,10 @@ class PMap extends React.Component {
         this.getDockingStations();
     }
 
+    test = () => {
+        alert("disabled");
+    }
+
     render() {
         // reference to the instantiated PMap component, helpful for 
         // nested functions, can't tell if this is hacky or not
