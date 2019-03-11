@@ -24,7 +24,7 @@ class AccountSummary extends Component {
                         
                         <br />
                         <p>Current reservation:</p>
-                        <ReservationDisplay />
+                        <ReservationDisplay location={this.props.location} equipment={this.props.equipment}/>
                     </Col>
                 </Row>
             </Container>
@@ -33,8 +33,9 @@ class AccountSummary extends Component {
 }
 
 function mapStateToProps(state) {
+    const { location, equipment } = state.reservation;
     return {
-
+        location, equipment
     }
 }
 export default connect(mapStateToProps)(AccountSummary);

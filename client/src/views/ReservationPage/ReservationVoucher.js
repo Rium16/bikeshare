@@ -26,10 +26,13 @@ class ReservationVoucher extends Component {
                         <CardHeader>Reservation</CardHeader>
                         <CardBody>
                             <CardText>
-                                <p>Location: <span style={{float: 'right'}}>{this.props.location.name}</span></p>
-                                <p>Equipment type: <span style={{float: 'right'}}>{this.props.equipment.type}</span></p>
-                                <p>Equipment ID: <span style={{float: 'right'}}>{this.props.equipment.EID}</span></p>
-                                <p>Expires: <span style={{float: 'right'}}>Xmins</span></p>
+                                <ul style={{listStyleType:"none", marginLeft: "0px", paddingLeft: "0px"}}>
+                                    <li>Location: <span style={{float: 'right'}}>{this.props.location.name}</span></li>
+                                    <li>Equipment type: <span style={{float: 'right'}}>{this.props.equipment.type}</span></li>
+                                    <li>Equipment ID: <span style={{float: 'right'}}>{this.props.equipment.EID}</span></li>
+                                    <li>Locked at: <span style={{float: 'right'}}>idk</span></li>
+                                    <li>Expires: <span style={{float: 'right'}}>Xmins</span></li>
+                                </ul>
                             </CardText>
                         </CardBody>
                     </Card>
