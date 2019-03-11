@@ -50,6 +50,7 @@ export function lock(itemLocation) {
                     dispatch(success(reservation));
                 },
                 error => {
+                    /* dispatch failure alert here */
                     dispatch(failure(error.toString()));
                 }
             )

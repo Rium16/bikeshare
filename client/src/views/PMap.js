@@ -93,9 +93,10 @@ class PMap extends React.Component {
     }
 
     lock = async (viewing) => {
-        this.setState({
-            messageDetails: null
-        })
+        await this.props.dispatch(lock(viewing));
+
+
+        /*
         const response = await fetch('/api/lock', {
             method: 'POST',
             headers: {
@@ -117,6 +118,7 @@ class PMap extends React.Component {
                 }
             })
         }
+        */
         
     }
 
@@ -169,17 +171,17 @@ class PMap extends React.Component {
             })}
             </Map>
 
-            {this.state.lockDetails ?
+            {this.props.locked ?
             <Button color="info" onClick={() => this.unlock()}  className='locker'><IoIosKey size="1.5em"/></Button>
             : // can only lock if logged in and viewing a depot
             <Button color="info" disabled={!(this.state.viewing && localStorage.getItem('user'))} onClick={() => this.lock(this.state.viewing)} className='locker'><IoIosLock size="1.5em"/></Button>
             }
 
-            {this.state.lockDetails ?
+            {this.props.locked ?
             <LockPanel
-            locationName={this.state.lockDetails.location.name}
-            equipmentType={this.state.lockDetails.equipment.type}
-            equipmentID={this.state.lockDetails.equipment.EID}
+            locationName={this.props.lockDetails.location.name}
+            equipmentType={this.props.lockDetails.equipment.type}
+            equipmentID={this.props.lockDetails.equipment.EID}
             />
             : "" }
 
@@ -195,10 +197,15 @@ class PMap extends React.Component {
 }
 
 function mapStateToProps(state) {
-    const { locked } = state.reservation;
+    const { equipment, location, locked } = state.reservation;
+    console.log("here");
+    console.log(location)
     return {
         locked,
-
+        lockDetails: {
+            equipment,
+            location,
+        }
     }
 }
 

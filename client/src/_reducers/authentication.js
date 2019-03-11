@@ -35,13 +35,13 @@ export function reservation(state = {}, action) {
         case userConstants.LOCK_REQUEST:
             return {
                 locking: true,
-                location: action.location
+                location: action.itemLocation
             }
         case userConstants.LOCK_SUCCESS:
             return {
                 locked: true,
-                location: action.location,
-                equipment: action.equipment
+                location: action.reservation.location,
+                equipment: action.reservation.equipment
             }
         case userConstants.LOCK_FAILURE:
             return {
