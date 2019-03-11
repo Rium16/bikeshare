@@ -1,6 +1,6 @@
-import userConstants from '../_constants/userConstants';
+import { userConstants } from '../_constants/userConstants';
 
-export function reservation(state = {}, action) {
+export default function reservation(state = {}, action) {
     switch(action.type) {
         case userConstants.LOCK_REQUEST:
             return {

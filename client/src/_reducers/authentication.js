@@ -8,7 +8,7 @@ import { userConstants } from '../_constants/userConstants';
     logging in (since it's not instantaneous) and set the (pending) user as whoever was specified in the action
 */
 
-export function authentication(state = {}, action) {
+export default function authentication(state = {}, action) {
     switch(action.type) {
         case userConstants.LOGIN_REQUEST:
             return {
@@ -29,30 +29,4 @@ export function authentication(state = {}, action) {
             return state
     }
 }
-
-<<<<<<< HEAD
-
-=======
-export function reservation(state = {}, action) {
-    switch(action.type) {
-        case userConstants.LOCK_REQUEST:
-            return {
-                locking: true,
-                location: action.itemLocation
-            }
-        case userConstants.LOCK_SUCCESS:
-            return {
-                locked: true,
-                location: action.reservation.location,
-                equipment: action.reservation.equipment
-            }
-        case userConstants.LOCK_FAILURE:
-            return {
-
-            }
-        default:
-            return state
-    }
-}
->>>>>>> super_reservations
 

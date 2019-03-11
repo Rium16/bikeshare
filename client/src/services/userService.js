@@ -2,12 +2,9 @@
 export const userService = {
     login,
     logout,
-<<<<<<< HEAD
     lock,
-    register
-=======
-    lock
->>>>>>> super_reservations
+    register,
+    lock,
 }
 
 /*

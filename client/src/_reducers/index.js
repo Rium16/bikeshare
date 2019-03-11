@@ -1,12 +1,9 @@
 import { combineReducers } from 'redux';
-<<<<<<< HEAD
 import authentication from './authentication';
 import alert from './alert';
 import registration from './registration';
+import reservation from './reservation';
 
-=======
-import { authentication, reservation } from './authentication';
->>>>>>> super_reservations
 
 /*
     Combines all the reducers into one for easy portability.
@@ -14,12 +11,9 @@ import { authentication, reservation } from './authentication';
 
 const rootReducer = combineReducers({
     authentication,
-<<<<<<< HEAD
     alert,
-    registration
-=======
+    registration,
     reservation
->>>>>>> super_reservations
 });
 
 export default rootReducer;
