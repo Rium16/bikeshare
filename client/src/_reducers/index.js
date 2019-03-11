@@ -2,6 +2,7 @@ import { combineReducers } from 'redux';
 import authentication from './authentication';
 import alert from './alert';
 import registration from './registration';
+import reservation from './reservation';
 
 
 /*
@@ -11,7 +12,9 @@ import registration from './registration';
 const rootReducer = combineReducers({
     authentication,
     alert,
-    registration
+    registration,
+    reservation,
+
 });
 
 export default rootReducer;

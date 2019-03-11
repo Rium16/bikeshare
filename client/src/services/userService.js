@@ -3,7 +3,9 @@ export const userService = {
     login,
     logout,
     lock,
-    register
+    register,
+    lock,
+    unlock,
 }
 
 /*
@@ -73,6 +75,43 @@ function lock(itemLocation) {
                 message: response.message
             }
         })
+}
+
+function unlock(EID) {
+    const requestOptions = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ EID })
+    }
+
+    return fetch('/api/unlock', requestOptions)
+        .then(handleResponse)
+        .then(message => {
+            return {
+                message
+            }
+        });
+}
+
+unlock = async () => {
+    this.setState({ messageDetails: null });
+    const response = await fetch('/api/unlock', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ equipmentID: this.state.lockDetails.equipment.EID })
+    });
+
+    this.getDockingStations();
+    this.setState({ 
+        messageDetails: {
+            message: "Equipment lock successfully removed."
+        },
+        lockDetails: null
+    });
 }
 
 function getReservation(CID) {

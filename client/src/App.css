@@ -11,6 +11,16 @@
   color: red;
 }
 
+.reservation-information-container {
+  
+}
+
+.voucher-container {
+  padding-top: 55px;
+  padding-left: 2em;
+  padding-right: 2em;
+}
+
 .vertical-center {
   position:absolute;
   width: 100%;
