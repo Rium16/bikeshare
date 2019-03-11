@@ -95,25 +95,6 @@ function unlock(EID) {
         });
 }
 
-unlock = async () => {
-    this.setState({ messageDetails: null });
-    const response = await fetch('/api/unlock', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ equipmentID: this.state.lockDetails.equipment.EID })
-    });
-
-    this.getDockingStations();
-    this.setState({ 
-        messageDetails: {
-            message: "Equipment lock successfully removed."
-        },
-        lockDetails: null
-    });
-}
-
 function getReservation(CID) {
     const requestOptions = {
         method: 'POST',

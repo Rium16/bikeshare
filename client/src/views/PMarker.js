@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Marker, Popup } from 'react-leaflet';
+import { Marker, Popup,  } from 'react-leaflet';
 import Count from './Count';
 import L from 'leaflet';
 
@@ -17,15 +17,16 @@ class PMarker extends Component {
             <Marker 
             position={this.props.position} 
             icon={myIcon}>
-                <Popup
+                <Popup className="info-popup"
                 onOpen={this.props.onOpen}
                 onClose={this.props.onClose}
                 closeButton={false}
                 >
-                <p className="location-name">{this.props.name}</p>
+                <h1 className="location-name">{this.props.name}</h1>
                 <Count max={this.props.bikeCapacity} current={this.props.numFreeBikes} className="count">{this.props.numFreeBikes}</Count> bikes <br />
                 <Count max={this.props.bikeCapacity} current={this.props.bikeCapacity - this.props.numBikes} className="count">{this.props.bikeCapacity - this.props.numBikes}</Count> docks
                 </Popup>
+
             </Marker>
         )
     }

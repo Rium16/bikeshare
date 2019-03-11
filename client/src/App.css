@@ -16,6 +16,30 @@
   
 }
 
+.alert-bar {
+  z-index: 999;
+  position: absolute;
+  width: 100%;
+  text-align:center;
+  top: 70px;
+
+}
+
+.alert-container {
+  background-color:green;
+  
+}
+
+.alert-text {
+  top: 20%;
+  background-color: green;
+}
+
+.leaflet-popup-content-wrapper {
+  font-family: 'Fira Sans', sans-serif;
+  opacity: 0.95;
+}
+
 .voucher-container {
   padding-top: 55px;
   padding-left: 2em;
@@ -159,7 +183,7 @@ centering from https://www.w3.org/Style/Examples/007/center.en.html
   width: 100px;
   font-size: 1.5em;
   border-radius: 3%;
-  transition: 0.2s;
+  transition: 0.15s;
   box-shadow: 0 6px 10px 0 rgba(0,0,0,0.3);
 }
 
@@ -190,7 +214,7 @@ centering from https://www.w3.org/Style/Examples/007/center.en.html
   height: 60px;
   width: 60px;
   background-color: #3F51B5;
-  transition: 0.2s;
+  transition: 0.15s;
   text-align: center;
    
 }
@@ -211,7 +235,7 @@ centering from https://www.w3.org/Style/Examples/007/center.en.html
 }
 
 .location-name {
-  font-size: 1em;
+  font-size: 2em;
 }
 
 .count {
