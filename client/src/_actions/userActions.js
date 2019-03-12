@@ -42,6 +42,7 @@ export function logout() {
     return dispatch => {
         userService.logout();
         dispatch(alertActions.success("Logout successful!"));
+        history.push('/map');
         return { type: userConstants.LOGOUT };
     }
     
