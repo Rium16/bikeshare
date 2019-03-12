@@ -4,8 +4,8 @@ export const userService = {
     logout,
     lock,
     register,
-    lock,
     unlock,
+    getReservations
 }
 
 /*
@@ -56,13 +56,16 @@ function register(email, phone, firstName, lastName, password) {
         .then(handleResponse)
 }
 
-function lock(itemLocation) {
+function lock(itemLocation, customer) {
     const requestOptions = {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ locationID: itemLocation.LID })
+        body: JSON.stringify({ 
+            locationID: itemLocation.LID,
+            customerID: customer.CID
+         })
     }
 
     return fetch('/api/lock', requestOptions)
@@ -70,8 +73,7 @@ function lock(itemLocation) {
         .then(response => {
             console.log(response);
             return {
-                location: itemLocation,
-                equipment: response.reservedItem,
+                reservation: response.reservation,
                 message: response.message
             }
         })
@@ -95,20 +97,20 @@ function unlock(EID) {
         });
 }
 
-function getReservation(CID) {
+function getReservations(CID) {
     const requestOptions = {
-        method: 'POST',
+        method: 'GET',
         headers: {
             'Content-type': 'application/json'
-        },
-        body: JSON.stringify({ CID })
+        }
     }
 
-    return fetch('/api/reservation', requestOptions)
+    return fetch(`/api/reservation/${CID}`, requestOptions)
         .then(handleResponse)
-        .then(reservation => {
-            console.log(reservation);
-            const res = JSON.stringify(reservation[0]);
+        .then(response => {
+            return {
+                reservations: response.reservations
+            }
         });
 }
 

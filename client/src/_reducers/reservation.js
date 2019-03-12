@@ -5,18 +5,14 @@ export default function reservation(state = {}, action) {
         case userConstants.LOCK_REQUEST:
             return {
                 locking: true,
-                location: action.itemLocation
             }
         case userConstants.LOCK_SUCCESS:
             return {
                 locked: true,
-                location: action.reservation.location,
-                equipment: action.reservation.equipment
+                reservation: action.reservation
             }
         case userConstants.LOCK_FAILURE:
-            return {
-
-            }
+            return {}
         case userConstants.UNLOCK_REQUEST:
             return {
                 unlocking: true
@@ -24,6 +20,18 @@ export default function reservation(state = {}, action) {
         case userConstants.UNLOCK_SUCCESS:
             return {}
         case userConstants.UNLOCK_FAILURE:
+            return state
+        case userConstants.GETRES_REQUEST:
+            return {
+                getting: true
+            }
+        case userConstants.GETRES_SUCCESS:
+            return {
+                locked: true,
+                reservation: action.reservations
+            }
+        case userConstants.GETRES_FAILURE:
+            return {}
         default:
             return state
     }

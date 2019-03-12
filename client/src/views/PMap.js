@@ -7,7 +7,7 @@ import { Button, Col } from 'reactstrap';
 import { IoIosLock, IoIosKey, IoIosBicycle } from 'react-icons/io';
 
 import { connect } from 'react-redux';
-import { lock, unlock } from '../_actions/userActions';
+import { lock, unlock, getReservations } from '../_actions/userActions';
 import { userService } from '../services/userService';
 
 import { history } from '../services/history';
@@ -60,6 +60,11 @@ class PMap extends React.Component {
         });
         
         this.getDockingStations();
+
+        // try and get an existing customer reservation (if one exists)
+        if (localStorage.getItem('user')) {
+            this.props.dispatch(getReservations(JSON.parse(localStorage.getItem('user')).CID));
+        }
     }
 
     componentDidUpdate(prevProps) {
@@ -107,7 +112,7 @@ class PMap extends React.Component {
     }
 
     lock = async (viewing) => {
-        await this.props.dispatch(lock(viewing));
+        await this.props.dispatch(lock(viewing, JSON.parse(localStorage.getItem('user'))));
         this.setState({
             messageDetails: {
                 message: "Equipment locked successfully!"
@@ -117,7 +122,8 @@ class PMap extends React.Component {
     }
 
     unlock = async () => {
-        await this.props.dispatch(unlock(this.props.lockDetails.equipment.EID));
+        // for now just 0th reservation
+        await this.props.dispatch(unlock(this.props.reservation.equipmentID));
         this.setState({
             messageDetails: {
                 message: "Equipment unlocked successfully!"
@@ -185,15 +191,12 @@ class PMap extends React.Component {
 }
 
 function mapStateToProps(state) {
-    const { equipment, location, locked } = state.reservation;
+    const { reservation, locked } = state.reservation;
     console.log("here");
-    console.log(location)
+
     return {
         locked,
-        lockDetails: {
-            equipment,
-            location,
-        }
+        reservation,
     }
 }
 
