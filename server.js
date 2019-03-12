@@ -260,6 +260,36 @@ app.post('/register', (req, res) => {
     });
 });
 
+app.get('/api/reservation/:CID', (req, res) => {
+    con.query(`SELECT * FROM ${dbName}.reservations WHERE customerID=?`, [req.params.CID], (err, rows) => {
+        if (err) throw err;
+        console.log(rows);
+        res.send({
+            reservations: rows
+        });
+    })
+});
+
+app.get('/api/location/:LID', (req, res) => {
+    con.query(`SELECT * FROM ${dbName}.locations WHERE LID=?`, [req.params.LID], (err, rows) => {
+        if (err) throw err;
+        console.log(rows);
+        res.send({
+            response: rows
+        });
+    });
+});
+
+app.get('/api/equipment/:EID', (req, res) => {
+    con.query(`SELECT * FROM ${dbName}.equipment WHERE EID=?`, [req.params.EID], (err, rows) => {
+        if (err) throw err;
+        console.log(rows);
+        res.send({
+            response: rows
+        });
+    });
+});
+
 //call this to check if user is logged in (still using a session that they logged into or registered with)
 app.get('/api/checkLogin', (req, res) => {
     console.log("SessionID: " + req.sessionID);
@@ -326,7 +356,7 @@ app.put('/api/loan', (req, res) => {
                     });
                   }
                   console.log('Transaction Complete.');
-                  con.end();
+
                 });
               });
             });
@@ -348,32 +378,76 @@ app.post('/api/lock', (req, res) => {
         if (equipmentList.length > 0) {
             var chosenItem = equipmentList[Math.floor(Math.random()*equipmentList.length)];
 
-            con.query(`UPDATE ${dbName}.equipment SET isLocked=1 WHERE EID=?`, [chosenItem.EID], (err, rows) => {
-                if (err) throw err;
-                else {
-                    console.log(chosenItem);
-                    res.send({reservedItem: chosenItem});
-                }
-            });
+            updateResource(chosenItem);
         } else {
             res.send({
-                reservedItem: null,
+                reservation: null,
                 message: "No equipment currently available."
             });
         }
+    }
 
+    function updateResource(equipmentItem) {
+        console.log("transaction begin");
+        con.beginTransaction((err) => {
+            if (err) throw err;
+            con.query(`INSERT INTO ${dbName}.reservations (customerID, start, end, equipmentID, locationID, closed) VALUES (?, ?, ?, ?, ?, 0);`,
+            [req.body.customerID, moment().format('YYYY-MM-DD HH:mm:ss'), moment().add(30,'minutes').format('YYYY-MM-DD HH:mm:ss'), equipmentItem.EID, req.body.locationID], (err, rows) => {
+                if (err) {
+                    con.rollback(() => {throw err});
+                }
+                con.query(`UPDATE ${dbName}.equipment SET isLocked=1 WHERE EID=?`, [equipmentItem.EID], (err, rows) => {
+                    if (err) {
+                        con.rollback(() => {throw err});
+                    }
+                    con.commit((err) => {
+                        if (err) {
+                            con.rollback(() => {throw err});
+                        }
+                        console.log("transaction complete");
+                        con.query(`SELECT * FROM ${dbName}.reservations WHERE customerID=? AND equipmentID=? AND locationID=? AND closed=0`, [req.body.customerID, equipmentItem.EID, req.body.locationID], (err, rows) => {
+                            if (err) throw err;
+                            res.send({
+                                reservation: rows,
+                                message: "Reservation made successfully"
+                            });
+                        })
+                    });
+
+                   
+                });
+                
+            })
+        })
     }
 });
 
+
 app.post('/api/unlock', (req, res) => {
-    con.query(`UPDATE ${dbName}.equipment SET isLocked=0 WHERE EID=?;`, [req.body.EID], (err, rows) => {
-        if (err) throw err;
-        else {
-            console.log(rows);
-            res.send({
-                message: "Item successfully unlocked."
-            });
+    con.beginTransaction((err) => {
+        if (err) {
+            con.rollback(() => {throw err});
         }
+        con.query(`UPDATE ${dbName}.equipment SET isLocked=0 WHERE EID=?;`, [req.body.EID], (err, rows) => {
+            if (err) {
+                con.rollback(() => {throw err});
+            }
+
+            con.query(`UPDATE ${dbName}.reservations SET closed=1 WHERE equipmentID=?;`, [req.body.EID], (err, rows) => {
+                if (err) {
+                    con.rollback(() => {throw err});
+                }
+
+                con.commit((err) => {
+                    if (err) {
+                        con.rollback(() => {throw err});
+                    }
+                    res.send({
+                        message: "Item successfully unlocked."
+                    });
+                });
+            });
+        });
     });
 });
 

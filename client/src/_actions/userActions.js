@@ -1,5 +1,6 @@
 // inspired by http://jasonwatmore.com/post/2017/09/16/react-redux-user-registration-and-login-tutorial-example
 import { userConstants } from '../_constants/userConstants';
+import { apiConstants } from '../_constants/apiConstants';
 import { userService } from '../services/userService';
 import { alertActions } from './alertActions';
 import { history } from '../services/history';
@@ -72,14 +73,14 @@ export function register(user) {
     function failure(error) { return { type: userConstants.REGISTER_FAILURE, error } }
 }
 
-export function lock(itemLocation) {
+export function lock(itemLocation, customer) {
     return dispatch => {
         dispatch(request({ itemLocation }));
 
-        userService.lock(itemLocation)
+        userService.lock(itemLocation, customer)
             .then(
-                reservation => {
-                    dispatch(success(reservation));
+                response => {
+                    dispatch(success(response.reservation[0]));
                 },
                 error => {
                     /* dispatch failure alert here */
@@ -112,4 +113,29 @@ export function unlock(EID) {
     function request(EID) { return { type: userConstants.UNLOCK_REQUEST, EID } }
     function success(message) { return { type: userConstants.UNLOCK_SUCCESS, message } }
     function failure(error) { return { type: userConstants.UNLOCK_FAILURE, error } }
+}
+
+export function getReservations(customerID) {
+    return dispatch => {
+        dispatch(request());
+
+        userService.getReservations(customerID)
+            .then(
+                response => {
+    
+                    dispatch(success(response.reservations[0]));
+ 
+                },
+                error => {
+                    dispatch(failure(error.toString()));
+                }
+            );
+    }
+    
+
+    
+    function request() { return { type: userConstants.GETRES_REQUEST } }
+    function success(reservations) { return { type: userConstants.GETRES_SUCCESS, reservations } }
+    function failure(error) { return { type: userConstants.GETRES_FAILURE, error } }
+
 }
