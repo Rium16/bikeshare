@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import SettingsNav from './SettingsNav';
-import { Container, Row, Col, Form, FormGroup, Label, Input, Button } from 'reactstrap';
-
+import { Container, Row, Col, Form, FormGroup, Label, Input, Button, CustomInput } from 'reactstrap';
+import 'bootstrap/dist/css/bootstrap.css';
 
 
 export class AccountPage extends Component {
@@ -29,16 +29,13 @@ export class AccountPage extends Component {
         return (
             <div className="sub-setting-page">
                 <SettingsNav />
+               
                 <Container className="settings-container">
+                <h4>Personal</h4>
                     <Row>
                         <Col sm="12" md="6" className="offset-md-3">
-                        <h4>Personal</h4>
+                        
                         <Form>
-                            <FormGroup>
-                                <Label for="name">Name</Label>
-                                <Input type="text" name="name" id="name" defaultValue={this.state.firstname}/>
-                                
-                            </FormGroup>
                             
                             <FormGroup>
                                 <Label for="email">Email</Label>
@@ -52,9 +49,10 @@ export class AccountPage extends Component {
                         </Form>
                         </Col>
                     </Row>
+                    <h4>Password</h4>
                     <Row>
                         <Col sm="12" md="6" className="offset-md-3">
-                        <h4>Password</h4>
+                        Forgotten your password? Click below to reset. <br />
                         <Button>Reset password</Button>
                         </Col>
                     </Row>
@@ -76,11 +74,20 @@ export class BillingPage extends Component {
 }
 
 export class DisplayPage extends Component {
+
     render() {
         return (
             <div className="sub-setting-page">
                 <SettingsNav />
-                <h1>DISPLAY</h1>
+                
+                <Container style={{marginTop: "2%"}} className="settings-container">
+                <h4>Display</h4>
+                    <Row>
+                        <Col sm="12" md="6" className="offset-md-3">
+                        <CustomInput type="switch" id="exampleCustomSwitch" name="customSwitch" label="enable dark mode" className="dark-toggle" />
+                        </Col>
+                    </Row>
+                </Container>
             </div>
         );
     }
@@ -117,7 +124,54 @@ export class FAQPage extends Component {
         return (
             <div className="sub-setting-page">
                 <SettingsNav />
-                <h1>FAQ</h1>
+                <Container className="settings-container">
+                    <h4>FAQ</h4>
+                    <Row>
+                        <Col sm="12" md="6" className="offset-md-3">
+                            <h5>Who</h5>
+                            <p>
+                                We are Chay Rice, Conor O'Brien, Jacob Cooper, Charlie Cowan, 
+                                Lewis Hendry, and Jamie Muir.
+                            </p>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col sm="12" md="6" className="offset-md-3">
+                            <h5>Where</h5>
+                            <p>
+                                Our Headquarters is in Riccarton, Edinburgh. 
+                                The first city covered by our service was Edinburgh.
+                            </p>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col sm="12" md="6" className="offset-md-3">
+                            <h5>When</h5>
+                            <p>
+                                Pyrois Technologies was established in 2018. The pyroiscycles service 
+                                was first introduced in early 2019.
+                            </p>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col sm="12" md="6" className="offset-md-3">
+                            <h5>Why</h5>
+                            <p>
+                                We had a vision. A vision for a world without conflict, pain or death.
+                                Also, we were contracted.
+                            </p>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col sm="12" md="6" className="offset-md-3">
+                            <h5>How</h5>
+                            <p>
+                                W3Schools and StackOverflow. And some Googling.
+                                And a little bit of Bing but let's just keep that between us.
+                            </p>
+                        </Col>
+                    </Row>
+                </Container>
             </div>
         );
     }
