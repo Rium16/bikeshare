@@ -460,7 +460,8 @@ app.get('/api/pastLoans', (req, res) => {
 			for (var i in rows) {
 				var rental = "resID_" + rows[i].reservationID;
 				rentals[rental] = {
-					start: rows[i].start
+					start: rows[i].start,
+					location: rows[i].locationID
 				};
 			}
 			console.log(rentals);
