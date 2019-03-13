@@ -33,7 +33,7 @@ class Staff extends Component {
 
 	componentWillMount() {
 		mql.addListener(this.mediaQueryChanged);
-		this.plotBikeRentals();
+		this.plotBikeRentals(1, new Date(2019, 1, 1))
 		//this.Card2();
 		this.Card3();
 	}
@@ -108,8 +108,8 @@ class Staff extends Component {
 	}
 
 	//generates a graph of all bike rentals since a specified date "startFrom"
-	plotBikeRentals = async (stateComponent, startFrom) => {
-		const response = await fetch(`/api/pastLoans`, {
+	plotBikeRentals = async (cardPosition, startFrom) => {
+		const response = await fetch(`/api/pastLoans?startFrom=${startFrom.getTime()}`, {
 			method: "GET",
 		});
 		const body = await response.json();
@@ -137,7 +137,6 @@ class Staff extends Component {
 				total += weightedDates[date];
 				data.push([date, total]);
 			}
-			data.push([startFrom, 0]);
 			var myData = [
 				{
 					label: "Bikes rented during X period",
@@ -160,21 +159,33 @@ class Staff extends Component {
 					/>
 				</div>
 			);
-			this.setState({
-				stateComponent:
-					<Card body className="table-scroll">
-						<CardTitle><b>Rentals - All Time</b></CardTitle>
-						{lineChart}
-					</Card>,
-			});
 			//return lineChart;
-			this.setState({
-				card1:
-					<Card body className="table-scroll">
-						<CardTitle><b>Rentals - All Time</b></CardTitle>
-						{lineChart}
-					</Card>,
-			});
+			var component =
+			<Card body className="table-scroll">
+				<CardTitle><b>Rentals - All Time (Starting {new Date(dates[0]).toString()}</b></CardTitle>
+				{lineChart}
+			</Card>
+
+			if (cardPosition == 1) {
+				this.setState({
+					card1: component
+				});
+			}
+			else if (cardPosition == 2) {
+				this.setState({
+					card2: component
+				});
+			}
+			else if (cardPosition == 3) {
+				this.setState({
+					card3: component
+				});
+			}
+			else if (cardPosition == 4) {
+				this.setState({
+					card4: component
+				});
+			}
 		}
 	}
 		
