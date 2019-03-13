@@ -260,8 +260,13 @@ app.post('/register', (req, res) => {
     });
 });
 
-app.get('/api/reservation/:CID', (req, res) => {
-    con.query(`SELECT * FROM ${dbName}.reservations WHERE customerID=?`, [req.params.CID], (err, rows) => {
+// returns only open reservations, unless 'closed' parameter is specified
+app.get('/api/reservation/:CID/:open?', (req, res) => {
+    var closed = false;
+    if (req.params.open === 'closed')
+        closed = true;
+
+    con.query(`SELECT * FROM ${dbName}.reservations WHERE customerID=? AND closed=${closed}`, [req.params.CID], (err, rows) => {
         if (err) throw err;
         console.log(rows);
         res.send({
@@ -309,60 +314,48 @@ app.get('/api/checkLogin', (req, res) => {
     });
 });
 
-app.put('/api/loan', (req, res) => {
-
-    // this query needs generalised
-    // req.body.type, req.body.locationID
-    con.query(`SELECT * FROM ${dbName}.equipment WHERE type='bike' AND locationID=1;`, (err, rows) => {
-        if (err) throw err;
-        else {
-            chooseItem(rows);
-            res.send(rows);
+app.post('/api/loan/', (req, res) => {
+    con.beginTransaction((err) => {
+        if (err) {
+            con.rollback(() => {throw err});
         }
-    });
 
-    // randomly select one of the available pieces of equipment, then call the update function 
-    function chooseItem(equipmentList) {
-        var chosenItem = equipmentList[Math.floor(Math.random()*equipmentList.length)].EID;
+        con.query(`INSERT INTO ${dbName}.equipment_loan
+        (customerID, start, end, equipmentID, locationID)
+        VALUES (?, ?, NULL, ?, ?);`,
+        [req.body.customerID, moment().format('YYYY-MM-DD HH:mm:ss'), req.body.equipmentID, req.body.locationID], (err, rows) => {
+            if (err) {
+                con.rollback(() => {throw err});
+            }
 
-        updateResources(chosenItem);
+            con.query(`UPDATE ${dbName}.equipment SET 
+            isUnavailable=1, isLocked=0, locationID=NULL
+            WHERE EID=?;`, 
+            [req.body.equipmentID], (err, rows) => {
+                if (err) {
+                    con.rollback(() => {throw err});
+                }
 
-    }
-
-    // transaction: insert a row into equipment_loan, set equipment as unavailable and locationID=NULL
-    function updateResources(equipmentID) {
-        con.beginTransaction(function(err) {
-            if (err) { throw err; }
-            con.query(`INSERT INTO ${dbName}.equipment_loan VALUES (?, ?, NULL, ?, ?);`,
-            [req.body.customerID, moment().format('YYYY-MM-DD HH:mm:ss'), equipmentID, req.body.locationID], 
-            function(err, result) {
-              if (err) { 
-                con.rollback(function() {
-                  throw err;
-                });
-              }
-        
-              con.query(`UPDATE ${dbName}.equipment SET isUnavailable=1, locationID=NULL WHERE EID=?;`, [equipmentID], function(err, result) {
-                if (err) { 
-                  con.rollback(function() {
-                    throw err;
-                  });
-                }  
-                
-                con.commit(function(err) {
-                  if (err) { 
-                    con.rollback(function() {
-                      throw err;
+                con.commit((err) => {
+                    if (err) {
+                        con.rollback(() => {throw err});
+                    }
+                    
+                    con.query(`SELECT * FROM ${dbName}.equipment_loan
+                    WHERE customerID=? AND equipmentID=? AND locationID=?;`,
+                    [req.body.customerID, req.body.equipmentID, req.body.locationID], (err, rows) => {
+                        if (err) throw err;
+                        console.log(rows);
+                        res.send({
+                            loan: rows,
+                            message: 'Loan began successfully'
+                        })
                     });
-                  }
-                  console.log('Transaction Complete.');
-
-                });
-              });
-            });
-          });
-        }
-    });
+                })
+            })
+        })
+    })
+});
 
 app.post('/api/lock', (req, res) => {
     console.log(req.body.locationID);

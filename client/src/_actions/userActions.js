@@ -122,9 +122,11 @@ export function getReservations(customerID) {
         userService.getReservations(customerID)
             .then(
                 response => {
-    
-                    dispatch(success(response.reservations[0]));
- 
+                    if (!response.reservations[0]) {
+                        dispatch(failure("Couldn't find a reservation"));
+                    } else {
+                        dispatch(success(response.reservations[0]));
+                    }
                 },
                 error => {
                     dispatch(failure(error.toString()));
@@ -138,4 +140,24 @@ export function getReservations(customerID) {
     function success(reservations) { return { type: userConstants.GETRES_SUCCESS, reservations } }
     function failure(error) { return { type: userConstants.GETRES_FAILURE, error } }
 
+}
+
+export function loan(CID, EID, LID) {
+    return dispatch => {
+        dispatch(request());
+
+        userService.loan(CID, EID, LID)
+            .then(
+                response => {
+                    dispatch(success(response.loan[0]));
+                },
+                error => {
+                    dispatch(failure(error.toString()));
+                }
+            )
+    }
+
+    function request() { return { type: userConstants.LOAN_REQUEST } }
+    function success(loan) { return { type: userConstants.LOAN_SUCCESS, loan } }
+    function failure(error) { return { type: userConstants.LOAN_FAILURE, error } }
 }

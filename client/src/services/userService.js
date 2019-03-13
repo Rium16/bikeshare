@@ -5,7 +5,8 @@ export const userService = {
     lock,
     register,
     unlock,
-    getReservations
+    getReservations,
+    loan
 }
 
 /*
@@ -72,10 +73,7 @@ function lock(itemLocation, customer) {
         .then(handleResponse)
         .then(response => {
             console.log(response);
-            return {
-                reservation: response.reservation,
-                message: response.message
-            }
+            return response;
         })
 }
 
@@ -112,6 +110,27 @@ function getReservations(CID) {
                 reservations: response.reservations
             }
         });
+}
+
+function loan(CID, EID, LID) {
+    const requestOptions = {
+        method: 'POST',
+        headers: {
+            'Content-type': 'application/json'
+        },
+        body: JSON.stringify({
+            customerID: CID,
+            equipmentID: EID,
+            locationID: LID
+        })
+    }
+
+    return fetch('/api/loan', requestOptions)
+        .then(handleResponse)
+        .then(response => {
+            console.log(response);
+            return response;
+        })
 }
 
 function handleResponse(response) {

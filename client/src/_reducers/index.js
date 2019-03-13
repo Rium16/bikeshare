@@ -3,6 +3,7 @@ import authentication from './authentication';
 import alert from './alert';
 import registration from './registration';
 import reservation from './reservation';
+import loan from './loan';
 
 
 /*
@@ -14,7 +15,7 @@ const rootReducer = combineReducers({
     alert,
     registration,
     reservation,
-
+    loan
 });
 
 export default rootReducer;
