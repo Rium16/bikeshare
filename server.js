@@ -451,6 +451,54 @@ app.post('/api/unlock', (req, res) => {
     });
 });
 
+app.get('/api/pastLoans', (req, res) => {
+	con.query(`SELECT * FROM ${dbName}.reservations`, (err, rows) => {
+		if (err) throw err;
+		else {
+			console.log(req.query);
+			var rentals = {};
+			for (var i in rows) {
+				var rental = "resID_" + rows[i].reservationID;
+				rentals[rental] = {
+					start: rows[i].start
+				};
+			}
+			console.log(rentals);
+
+			var pastRentals = {
+				res1: {
+					start: new Date(2019, 12, 03),
+					location: "loc1"
+				},
+				res2: {
+					start: new Date(2019, 12, 03),
+					location: "loc2"
+				},
+				res3: {
+					start: new Date(2019, 13, 03),
+					location: "loc3"
+				},
+				res4: {
+					start: new Date(2019, 14, 03),
+					location: "loc4"
+				},
+				res5: {
+					start: new Date(2019, 15, 03),
+					location: "loc5"
+				},
+				res6: {
+					start: new Date(2019, 15, 03),
+					location: "loc6"
+				}
+			}
+			
+			res.send({
+				rentals
+			});
+		}
+	})
+})
+
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname+'/client/build/index.js'));
 });

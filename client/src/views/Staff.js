@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Table, Card, CardBody, CardText, CardTitle, Row, Col, Spinner } from 'reactstrap';
 import Sidebar from 'react-sidebar';
 import { Link } from 'react-router-dom';
+import { Chart } from 'react-charts';
 
 const mql = window.matchMedia(`(min-width: 10px)`);
 const sidebarStyle = { background: "white", paddingTop: 55, width: 200 };
@@ -15,9 +16,15 @@ class Staff extends Component {
 		this.state = {
 			sidebarOpen: mql.matches,
 			sidebarDocked: true,
-			card1: sp,
+			card1:
+				<Card body className="table-scroll">
+					<CardTitle><b>Rentals - All Time</b></CardTitle>
+					{sp}
+				</Card>,
 			card2: sp,
-			card3: sp
+			card3: sp,
+			data: [[0, 1], [1, 2], [2, 4], [3, 2], [4, 7]]
+
 		};
 		this.onSetSidebarOpen = this.onSetSidebarOpen.bind(this);
 		this.mediaQueryChanged = this.mediaQueryChanged.bind(this);
@@ -26,7 +33,7 @@ class Staff extends Component {
 
 	componentWillMount() {
 		mql.addListener(this.mediaQueryChanged);
-		//this.Card1();
+		this.plotBikeRentals();
 		//this.Card2();
 		this.Card3();
 	}
@@ -100,41 +107,78 @@ class Staff extends Component {
 		)
 	}
 
-	Card1 = async() => {
-		this.setState({
-			card1:
-				<Table size="sm">
-					<thead>
-						<tr>
-							<th>#</th>
-							<th>First Name</th>
-							<th>Last Name</th>
-							<th>Username</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<th scope="row">1</th>
-							<td>Mark</td>
-							<td>Otto</td>
-							<td>@mdo</td>
-						</tr>
-						<tr>
-							<th scope="row">2</th>
-							<td>Jacob</td>
-							<td>Thornton</td>
-							<td>@fat</td>
-						</tr>
-						<tr>
-							<th scope="row">3</th>
-							<td>Larry</td>
-							<td>the Bird</td>
-							<td>@twitter</td>
-						</tr>
-					</tbody>
-				</Table>
+	//generates a graph of all bike rentals since a specified date "startFrom"
+	plotBikeRentals = async (stateComponent, startFrom) => {
+		const response = await fetch(`/api/pastLoans`, {
+			method: "GET",
 		});
+		const body = await response.json();
+		if (response.status != 200) throw Error(body.message);
+		else {
+			var rentals = body.rentals;
+			var data = [];
+			var dates = [];
+			for (var rental in rentals) {
+				if (rentals.hasOwnProperty(rental)) {
+					var date = new Date(rentals[rental].start).getTime();
+					dates.push(date);
+				}
+			}
+			dates.sort();
+			var total = 0;
+			var weightedDates = {}
+			for (var i = 0; i < dates.length; i++) {
+				if (!weightedDates[dates[i]]) {
+					weightedDates[dates[i]] = 0;
+				}
+				++weightedDates[dates[i]];
+			}
+			for (var date in weightedDates) {
+				total += weightedDates[date];
+				data.push([date, total]);
+			}
+			data.push([startFrom, 0]);
+			var myData = [
+				{
+					label: "Bikes rented during X period",
+					data: data
+				}
+			];
+			const lineChart = (
+				<div
+					style={{
+						width: "100%",
+						height: "100%"
+					}}
+				>
+					<Chart
+						data={myData}
+						axes={[
+							{ primary: true, type: "linear", position: "bottom" },
+							{ type: "linear", position: "left" }
+						]}
+					/>
+				</div>
+			);
+			this.setState({
+				stateComponent:
+					<Card body className="table-scroll">
+						<CardTitle><b>Rentals - All Time</b></CardTitle>
+						{lineChart}
+					</Card>,
+			});
+			//return lineChart;
+			this.setState({
+				card1:
+					<Card body className="table-scroll">
+						<CardTitle><b>Rentals - All Time</b></CardTitle>
+						{lineChart}
+					</Card>,
+			});
+		}
 	}
+		
+
 
 	Card2 = async () => {
 		const response = await fetch('/api/location');
@@ -190,8 +234,8 @@ class Staff extends Component {
 			<Table size="sm">
 				<thead>
 					<th>Location</th>
-					<th>Number of bikes</th>
-					<th>Bikes avaiable</th>
+					<th>Total bikes</th>
+					<th>Available</th>
 				</thead>
 				<tbody>
 					{locs.map(loc => (<tr><td>{loc.name}</td> <td>{loc.numBikes}</td> <td>{loc.numFreeBikes}</td></tr>))}
@@ -235,10 +279,7 @@ class Staff extends Component {
 				<div className="staff-center-page">
 					<Row>
 						<Col sm="6">
-							<Card body className="table-scroll">
-								<CardTitle>Some graph/figure</CardTitle>
-								{this.state.card1}
-							</Card>
+							{this.state.card1}
 						</Col>
 						<Col sm="6">
 							<Card body className="table-scroll">
