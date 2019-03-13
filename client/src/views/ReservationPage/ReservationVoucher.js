@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
-import { Container, Row, Col, Card, CardHeader, CardBody, CardText } from 'reactstrap';
+import { Container, Row, Col, Card, CardHeader, CardBody, CardText, Button } from 'reactstrap';
 import ReservationInformation from './ReservationInformation';
 import SettingsNav from '../settings_components/SettingsNav';
 
+import { loan, unlock } from '../../_actions/userActions';
 import { connect } from 'react-redux';
+import { history } from '../../services/history';
 
 class ReservationVoucher extends Component {
     constructor(props) {
@@ -37,9 +39,19 @@ class ReservationVoucher extends Component {
         });
     }
 
+    handleClick = () => {
+        const { customerID, equipmentID, locationID } = this.props.reservation;
+        this.props.dispatch(loan(customerID, equipmentID, locationID));
+        this.props.dispatch(unlock(equipmentID));
+        history.push('/map');
+
+    }
+
     render() {
         const ts = this.props.reservation.start.split(/[T\.]/);
         const te = this.props.reservation.end.split(/[T\.]/);
+        const qr = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${this.props.reservation.customerID}${this.props.reservation.start}`;
+
         return (
             <div>
             
@@ -47,7 +59,9 @@ class ReservationVoucher extends Component {
                 <Row>
                 {/* not centered properly idk*/}
                 <Col sm="12" md="6" className="offset-md-3">
-                    <p style={{textAlign:'center'}}><img src="https://www.webopedia.com/imagesvr_ce/7576/webo-qr.png" alt="QR" width="250" height="250"/></p>
+                    <br />
+                    <p style={{textAlign:'center'}}><img src={qr} alt="QR" width="250" height="250"/></p>
+                    <div style={{textAlign: 'center'}}><Button onClick={this.handleClick} style={{marginBottom: "10px"}} color="info">Simulate scan</Button></div>
                 </Col>
                 </Row>
 
