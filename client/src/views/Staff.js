@@ -21,7 +21,11 @@ class Staff extends Component {
 					<CardTitle><b>Rentals - All Time</b></CardTitle>
 					{sp}
 				</Card>,
-			card2: sp,
+			card2:
+				<Card body className="table-scroll">
+					<CardTitle><b>Rentals - 24h</b></CardTitle>
+					{sp}
+				</Card>,
 			card3: sp,
 			data: [[0, 1], [1, 2], [2, 4], [3, 2], [4, 7]]
 
@@ -33,7 +37,10 @@ class Staff extends Component {
 
 	componentWillMount() {
 		mql.addListener(this.mediaQueryChanged);
-		this.plotBikeRentals(1, new Date(2019, 1, 1))
+		this.plotBikeRentals(1, new Date(2019, 1, 1), "Rentals - All Time");
+		var today = new Date();
+		today.setDate(today.getDate() - 1);
+		this.plotBikeRentals(2, today, "Rentals - 24h");
 		//this.Card2();
 		this.Card3();
 	}
@@ -108,7 +115,7 @@ class Staff extends Component {
 	}
 
 	//generates a graph of all bike rentals since a specified date "startFrom"
-	plotBikeRentals = async (cardPosition, startFrom) => {
+	plotBikeRentals = async (cardPosition, startFrom, message) => {
 		const response = await fetch(`/api/pastLoans?startFrom=${startFrom.getTime()}`, {
 			method: "GET",
 		});
@@ -162,7 +169,7 @@ class Staff extends Component {
 			//return lineChart;
 			var component =
 			<Card body className="table-scroll">
-				<CardTitle><b>Rentals - All Time (Starting {new Date(dates[0]).toString()}</b></CardTitle>
+					<CardTitle><b>{message} (Starting {new Date(dates[0]).toString()}</b></CardTitle>
 				{lineChart}
 			</Card>
 
@@ -293,10 +300,7 @@ class Staff extends Component {
 							{this.state.card1}
 						</Col>
 						<Col sm="6">
-							<Card body className="table-scroll">
-								<CardTitle>Some other graph/figure</CardTitle>
-								{this.state.card2}
-							</Card>
+							{this.state.card2}
 						</Col>
 					</Row>
 				</div>
