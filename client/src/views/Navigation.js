@@ -26,10 +26,10 @@ class Navigation extends Component {
                         <NavItem>{this.state.loginMessage}</NavItem>
                         <NavItem>
                             {localStorage.getItem('user') ?
-                            <Link to="/account"><IoIosContact size={32} /></Link>
+                            <Link to="/account"><IoIosContact style={{color: 'green'}} size={32} /></Link>
                            
                             :
-                            <Link to="/map/login"><IoIosContact size={32} /></Link>
+                            <Link to="/map/login"><IoIosContact style={{color: 'red'}} size={32} /></Link>
                             }
                             {/* temp link to account */}
                             {localStorage.getItem('user') &&

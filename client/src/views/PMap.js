@@ -176,7 +176,7 @@ class PMap extends React.Component {
             <Button color="info" onClick={() => this.unlock()}  className="locker">{<IoIosKey size="1.5em"/>}</Button>
             : // can only lock if logged in and viewing a depot
             <Button color="info" disabled={!(this.state.viewing && localStorage.getItem('user'))} onClick={() => this.lock(this.state.viewing)} className="locker">
-            {localStorage.getItem('user') ? <IoIosLock size="1.5em"/> : <IoIosWarning size="1.5em"/>}
+            <IoIosLock size="1.5em"/>
             </Button>
             }
             </div>

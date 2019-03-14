@@ -34,7 +34,6 @@ class AlertBanner extends Component {
         this.setState({
             visible: false
         })
-        this.props.dispatch(alertActions.clear());
     }   
 
     onClick = () => {
