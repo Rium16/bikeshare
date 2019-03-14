@@ -266,7 +266,7 @@ app.get('/api/reservation/:CID/:open?', (req, res) => {
     if (req.params.open === 'closed')
         closed = true;
 
-    con.query(`SELECT * FROM ${dbName}.reservations WHERE customerID=? AND closed=${closed}`, [req.params.CID], (err, rows) => {
+    con.query(`SELECT * FROM ${dbName}.reservations WHERE customerID=? AND closed=?`, [req.params.CID, closed], (err, rows) => {
         if (err) throw err;
         console.log(rows);
         res.send({
@@ -274,6 +274,27 @@ app.get('/api/reservation/:CID/:open?', (req, res) => {
         });
     })
 });
+
+app.get('/api/loan/:CID/:open?', (req, res) => {
+    var closed = false;
+    if (req.params.open === 'closed') {
+        con.query(`SELECT * FROM ${dbName}.equipment_loan WHERE customerID=? AND end IS NOT NULL;`, [req.params.CID], (err, rows) => {
+            if (err) throw err;
+            console.log(rows);
+            res.send({
+                loans: rows
+            });
+        })
+    } else {
+        con.query(`SELECT * FROM ${dbName}.equipment_loan WHERE customerID=? AND end IS NULL;`, [req.params.CID], (err, rows) => {
+            if (err) throw err;
+            console.log(rows);
+            res.send({
+                loans: rows
+            })
+        })
+    }
+})
 
 app.get('/api/location/:LID', (req, res) => {
     con.query(`SELECT * FROM ${dbName}.locations WHERE LID=?`, [req.params.LID], (err, rows) => {
@@ -336,21 +357,30 @@ app.post('/api/loan/', (req, res) => {
                     con.rollback(() => {throw err});
                 }
 
-                con.commit((err) => {
+                con.query(`UPDATE ${dbName}.reservations SET
+                closed=1
+                WHERE equipmentID=?;`,
+                [req.body.equipmentID], (err, rows) => {
                     if (err) {
                         con.rollback(() => {throw err});
                     }
-                    
-                    con.query(`SELECT * FROM ${dbName}.equipment_loan
-                    WHERE customerID=? AND equipmentID=? AND locationID=?;`,
-                    [req.body.customerID, req.body.equipmentID, req.body.locationID], (err, rows) => {
-                        if (err) throw err;
-                        console.log(rows);
-                        res.send({
-                            loan: rows,
-                            message: 'Loan began successfully'
-                        })
-                    });
+
+                    con.commit((err) => {
+                        if (err) {
+                            con.rollback(() => {throw err});
+                        }
+                        
+                        con.query(`SELECT * FROM ${dbName}.equipment_loan
+                        WHERE customerID=? AND equipmentID=? AND locationID=?;`,
+                        [req.body.customerID, req.body.equipmentID, req.body.locationID], (err, rows) => {
+                            if (err) throw err;
+                            console.log(rows);
+                            res.send({
+                                loan: rows,
+                                message: 'Loan began successfully'
+                            })
+                        });
+                    })
                 })
             })
         })
@@ -359,12 +389,27 @@ app.post('/api/loan/', (req, res) => {
 
 app.post('/api/lock', (req, res) => {
     console.log(req.body.locationID);
-    con.query(`SELECT * FROM ${dbName}.equipment WHERE type='bike' AND locationID=? AND isUnavailable=0 AND isLocked=0;`, [req.body.locationID], (err, rows) => {
+    // check the user hasn't exceeded the max (3) concurrent loans
+    con.query(`SELECT * FROM ${dbName}.equipment_loan WHERE customerID=? AND end IS NULL`, [req.body.customerID], (err, rows) => {
         if (err) throw err;
-        else {
-            chooseItem(rows);
+        console.log(rows);
+        if (rows.length >= 3) {
+            res.send({
+                reservation: null,
+                message: `You already have ${rows.length} ongoing loans, which is the max permitted. Return a bike to re-enable reservation functionality.`
+            })
+        } else {
+            con.query(`SELECT * FROM ${dbName}.equipment WHERE type='bike' AND locationID=? AND isUnavailable=0 AND isLocked=0;`, [req.body.locationID], (err, rows) => {
+                if (err) throw err;
+                else {
+                    chooseItem(rows);
+                }
+            });
         }
-    });
+    })
+
+    // choose one of the possible items randomly
+    
 
     // randomly select one of the available pieces of equipment, then call the update function 
     function chooseItem(equipmentList) {

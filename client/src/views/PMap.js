@@ -1,10 +1,10 @@
 import React from 'react';
-import { Map, TileLayer } from 'react-leaflet';
+import { Map, TileLayer, } from 'react-leaflet';
 import PMarker from './PMarker';
 import MessageModal from './MessageModal';
 import LockPanel from './LockPanel';
 import { Button, Col } from 'reactstrap';
-import { IoIosLock, IoIosKey, IoIosBicycle } from 'react-icons/io';
+import { IoIosLock, IoIosKey, IoIosBicycle, IoIosWarning } from 'react-icons/io';
 
 import { connect } from 'react-redux';
 import { lock, unlock, getReservations } from '../_actions/userActions';
@@ -175,7 +175,9 @@ class PMap extends React.Component {
             {this.props.locked ?
             <Button color="info" onClick={() => this.unlock()}  className="locker">{<IoIosKey size="1.5em"/>}</Button>
             : // can only lock if logged in and viewing a depot
-            <Button color="info" disabled={!(this.state.viewing && localStorage.getItem('user'))} onClick={() => this.lock(this.state.viewing)} className="locker"><IoIosLock size="1.5em"/></Button>
+            <Button color="info" disabled={!(this.state.viewing && localStorage.getItem('user'))} onClick={() => this.lock(this.state.viewing)} className="locker">
+            <IoIosLock size="1.5em"/>
+            </Button>
             }
             </div>
 

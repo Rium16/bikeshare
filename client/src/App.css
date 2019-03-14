@@ -7,11 +7,10 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 999;
+  z-index: 1000;
 }
 
 .alert-banner {
-  background: #9cd36b;
   padding: 1em;
   align-self: center;
   border-radius: 1%;
@@ -19,6 +18,19 @@
   transition: 1s;
   box-shadow: 0 1px 10px 0 rgba(0,0,0,0.3);
   z-index: 1000;
+}
+
+.alert-success {
+  background: #9cd36b;
+}
+
+.alert-danger {
+  background: #c93c3c;
+  color: black;
+}
+
+.alert-banner {
+  cursor: pointer;
 }
 
 .alert-showing {
@@ -220,6 +232,10 @@ centering from https://www.w3.org/Style/Examples/007/center.en.html
   cursor: auto
 }
 
+.locker:disabled:active {
+  transform: none;
+}
+
 .locker:hover {
   cursor: pointer;
 }
@@ -249,8 +265,8 @@ centering from https://www.w3.org/Style/Examples/007/center.en.html
 }
 
 .reservation-button:active {
-    transform: scale(0.90);
-    box-shadow: 0 2px 15px 0 rgba(0,0,0,0.3);
+  transform: scale(0.90);
+  box-shadow: 0 2px 15px 0 rgba(0,0,0,0.3);
 }
 
 .reservation-button:hover {
@@ -261,6 +277,10 @@ centering from https://www.w3.org/Style/Examples/007/center.en.html
 
 .reservation-button:disabled:hover {
   cursor: auto;
+}
+
+.reservation-button:disabled:active {
+  transform: none;
 }
 
 .location-name {

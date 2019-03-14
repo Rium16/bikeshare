@@ -9,13 +9,20 @@ import loan from './loan';
 /*
     Combines all the reducers into one for easy portability.
 */
-
-const rootReducer = combineReducers({
+const appReducer = combineReducers({
     authentication,
     alert,
     registration,
     reservation,
     loan
 });
+
+const rootReducer = (state, action) => {
+    if (action.type === 'USERS_LOGOUT') {
+        state = undefined;
+    }
+    
+    return appReducer(state, action);
+}
 
 export default rootReducer;

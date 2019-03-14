@@ -24,8 +24,11 @@ export function login(username, password) {
         userService.login(username, password)
             .then(
                 user => {
+                    console.log("inside login");
+                    console.log(user);
                     history.push('/map'); 
                     dispatch(success(user));
+                    dispatch(getReservations(user.CID));
                     dispatch(alertActions.success(`Login successful!`));
                 },
                 error => {
@@ -44,6 +47,7 @@ export function logout() {
     return dispatch => {
         userService.logout();
         history.push('/map');
+        dispatch({ type: userConstants.LOGOUT});
         dispatch(alertActions.success("Logout successful!"));
         return { type: userConstants.LOGOUT };
     }
@@ -83,8 +87,14 @@ export function lock(itemLocation, customer) {
         userService.lock(itemLocation, customer)
             .then(
                 response => {
-                    dispatch(success(response.reservation[0]));
-                    dispatch(alertActions.success("Equipment reserved successfully!"));
+                    if (response.reservation !== null) {
+                        dispatch(success(response.reservation[0]));
+                        dispatch(alertActions.success("Equipment reserved successfully!"));
+                    } else {
+                        dispatch(failure(response.message));
+                        dispatch(alertActions.error(response.message));
+                    }
+                    
                 },
                 error => {
                     /* dispatch failure alert here */
@@ -123,12 +133,13 @@ export function unlock(EID) {
 export function getReservations(customerID) {
     return dispatch => {
         dispatch(request());
-
+        console.log("getRes");
+        console.log(customerID);
         userService.getReservations(customerID)
             .then(
                 response => {
                     if (!response.reservations[0]) {
-                        dispatch(failure("Couldn't find a reservation"));
+                        dispatch(failure(`Couldn't find a reservation for CID ${customerID}`));
                     } else {
                         dispatch(success(response.reservations[0]));
                     }
