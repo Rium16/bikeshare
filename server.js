@@ -445,10 +445,17 @@ app.post('/api/unlock', (req, res) => {
 });
 
 app.get('/api/pastLoans', (req, res) => {
-	con.query(`SELECT * FROM ${dbName}.reservations`, (err, rows) => {
+	var startFrom = new Date(parseInt(req.query.startFrom, 10));
+	var year = startFrom.getFullYear();
+	var month = startFrom.getMonth();
+	if (month < 10)
+		month = '0' + month;
+	var day = startFrom.getDate();
+	if (day < 10)
+		day = '0' + day;
+	con.query(`SELECT * FROM ${dbName}.reservations WHERE start >= '${year}-${month}-${day} 00:00:00'`, (err, rows) => {
 		if (err) throw err;
 		else {
-			console.log(req.query);
 			var rentals = {};
 			for (var i in rows) {
 				var rental = "resID_" + rows[i].reservationID;
@@ -457,34 +464,7 @@ app.get('/api/pastLoans', (req, res) => {
 					location: rows[i].locationID
 				};
 			}
-			console.log(rentals);
-
-			var pastRentals = {
-				res1: {
-					start: new Date(2019, 12, 03),
-					location: "loc1"
-				},
-				res2: {
-					start: new Date(2019, 12, 03),
-					location: "loc2"
-				},
-				res3: {
-					start: new Date(2019, 13, 03),
-					location: "loc3"
-				},
-				res4: {
-					start: new Date(2019, 14, 03),
-					location: "loc4"
-				},
-				res5: {
-					start: new Date(2019, 15, 03),
-					location: "loc5"
-				},
-				res6: {
-					start: new Date(2019, 15, 03),
-					location: "loc6"
-				}
-			}
+			//console.log(rentals);
 			
 			res.send({
 				rentals
