@@ -23,8 +23,8 @@ class PMarker extends Component {
                 closeButton={false}
                 >
                 <h1 className="location-name">{this.props.name}</h1>
-                <Count max={this.props.bikeCapacity} current={this.props.numFreeBikes} className="count">{this.props.numFreeBikes}</Count> bikes <br />
-                <Count max={this.props.bikeCapacity} current={this.props.bikeCapacity - this.props.numBikes} className="count">{this.props.bikeCapacity - this.props.numBikes}</Count> docks
+                <Count max={this.props.bikeCapacity} current={this.props.numFreeBikes} className="count">{this.props.numFreeBikes}</Count> available bikes <br />
+                <Count max={this.props.bikeCapacity} current={this.props.bikeCapacity - this.props.numBikes} className="count">{this.props.bikeCapacity - this.props.numBikes}</Count> empty docks
                 </Popup>
 
             </Marker>

@@ -34,26 +34,30 @@ class AlertBanner extends Component {
         this.setState({
             visible: false
         })
+        this.props.dispatch(alertActions.clear());
     }   
 
     onClick = () => {
         this.setState({
             visible: false
         })
+        this.props.dispatch(alertActions.clear());
     }
 
 
     render() {
+        const display = this.state.visible ? 'inline' : 'none';
 
         return (
-            
-            <div className="alert-wrapper">
+            <div>
                 {this.props.alert.message &&
-                <Fade in={this.state.visible}>
-                    <div onClick={this.onClick} className="alert-banner">
-                        <p>{this.props.alert.message}</p>
-                    </div>
-                </Fade>
+                <div className="alert-wrapper">
+                    <Fade in={this.state.visible}>
+                        <div onClick={this.onClick} className="alert-banner">
+                            <p>{this.props.alert.message}</p>
+                        </div>
+                    </Fade>
+                </div>
                 }
             </div>
         );
