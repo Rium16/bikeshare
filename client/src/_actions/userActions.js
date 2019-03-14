@@ -26,6 +26,7 @@ export function login(username, password) {
                 user => {
                     history.push('/map'); 
                     dispatch(success(user));
+                    dispatch(alertActions.success(`Login successful!`));
                 },
                 error => {
                     dispatch(failure(error.toString()));
@@ -42,8 +43,8 @@ export function login(username, password) {
 export function logout() {
     return dispatch => {
         userService.logout();
-        dispatch(alertActions.success("Logout successful!"));
         history.push('/map');
+        dispatch(alertActions.success("Logout successful!"));
         return { type: userConstants.LOGOUT };
     }
     
@@ -57,11 +58,13 @@ export function register(user) {
             .then(
                 user => {
                     dispatch(success());
-                    dispatch(alertActions.success("Customer account created!"));
                     history.push('/map');
+                    dispatch(alertActions.success("Customer account created!"));
+                    
                 },
                 error => {
                     dispatch(failure(error.toString()));
+                    dispatch(alertActions.error("Account creation failed."));
                 }
             );
 
@@ -81,6 +84,7 @@ export function lock(itemLocation, customer) {
             .then(
                 response => {
                     dispatch(success(response.reservation[0]));
+                    dispatch(alertActions.success("Equipment reserved successfully!"));
                 },
                 error => {
                     /* dispatch failure alert here */
@@ -102,6 +106,7 @@ export function unlock(EID) {
             .then(
                 message => {
                     dispatch(success(message));
+                    dispatch(alertActions.success("Equipment lock removed!"));
                 },
                 error => {
                     dispatch(failure(error));
@@ -150,6 +155,7 @@ export function loan(CID, EID, LID) {
             .then(
                 response => {
                     dispatch(success(response.loan[0]));
+                    dispatch(alertActions.success("Item is now on loan!"))
                 },
                 error => {
                     dispatch(failure(error.toString()));

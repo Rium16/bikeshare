@@ -9,7 +9,7 @@ import Settings from './views/Settings';
 import LoginContainer from './views/LoginContainer';
 import Staff from './views/Staff';
 import ReservationVoucher from './views/ReservationPage/ReservationVoucher';
-
+import AlertBanner from './views/AlertBanner';
 
 // redux stuff
 import configStore from './configStore';
@@ -48,7 +48,7 @@ function Page() {
     <Router history={history}>
       <div>
 		<Navigation />
-
+    <AlertBanner />
         <Route path="/" render={() => (
           <Redirect to={homepage} />
         )}/>
