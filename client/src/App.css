@@ -7,11 +7,10 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 999;
+  z-index: 1000;
 }
 
 .alert-banner {
-  background: #9cd36b;
   padding: 1em;
   align-self: center;
   border-radius: 1%;
@@ -19,6 +18,15 @@
   transition: 1s;
   box-shadow: 0 1px 10px 0 rgba(0,0,0,0.3);
   z-index: 1000;
+}
+
+.alert-success {
+  background: #9cd36b;
+}
+
+.alert-danger {
+  background: #c93c3c;
+  color: black;
 }
 
 .alert-banner {

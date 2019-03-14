@@ -26,11 +26,9 @@ function login(email, password) {
     return fetch('/api/user', requestOptions)
         .then(handleResponse)
         .then(user => {
-            console.log(user);
-            const login = JSON.stringify(user[0]);
-            if (login !== undefined) {
-                localStorage.setItem('user', login);
-                return user;
+            if (user[0] !== undefined) {
+                localStorage.setItem('user', JSON.stringify(user[0]));
+                return user[0];
             } else {
                 throw new Error("Invalid login details");
             }

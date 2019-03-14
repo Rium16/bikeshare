@@ -1,5 +1,5 @@
 import React from 'react';
-import { Map, TileLayer } from 'react-leaflet';
+import { Map, TileLayer, } from 'react-leaflet';
 import PMarker from './PMarker';
 import MessageModal from './MessageModal';
 import LockPanel from './LockPanel';

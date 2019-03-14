@@ -34,6 +34,7 @@ class AlertBanner extends Component {
         this.setState({
             visible: false
         })
+        this.props.dispatch(alertActions.clear());
     }   
 
     onClick = () => {
@@ -52,7 +53,7 @@ class AlertBanner extends Component {
                 {this.props.alert.message &&
                 <div className="alert-wrapper">
                     <Fade in={this.state.visible}>
-                        <div onClick={this.onClick} className="alert-banner">
+                        <div onClick={this.onClick} className={`alert-banner ${this.props.alert.type}`}>
                             <p>{this.props.alert.message}</p>
                         </div>
                     </Fade>

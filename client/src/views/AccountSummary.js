@@ -27,7 +27,7 @@ class AccountSummary extends Component {
     }
 
     render() {
-        const userDetails = JSON.parse(localStorage.getItem('user'));
+        const userDetails = localStorage.getItem('user');
         return (
             <Container className="account-container">
                 <Row>
