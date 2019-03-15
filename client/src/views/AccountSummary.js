@@ -12,8 +12,18 @@ class AccountSummary extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            modal: false
+            modal: false,
+            userDetails: JSON.parse(localStorage.getItem('user')),
         }
+    }
+
+    componentDidMount() {
+        const te = new Date(this.props.reservation.end);
+        const t = te.getTime() - Date.now();
+        console.log(new Date(t).getMinutes());
+        this.setState({
+            timeLeft:  new Date(t).getMinutes()
+        })
     }
 
     handleLogout =() => {
@@ -27,18 +37,17 @@ class AccountSummary extends Component {
     }
 
     render() {
-        const userDetails = localStorage.getItem('user');
         return (
             <Container className="account-container">
                 <Row>
                     <LogoutModal logout={this.handleLogout} toggle={this.toggle} isOpen={this.state.modal} onClick={this.toggle} />
                     <Col sm="12" md="6" className="offset-md-3">
                         <p style={{margin:"0px"}} align="center"><Link to="/settings/account"><IoIosContact size="256"/></Link></p>
-                        <h2 align="center">{userDetails.firstname}</h2>
+                        <h2 align="center">{this.state.userDetails.firstname}</h2>
                         <div style={{textAlign: 'center'}}><Button color="info" onClick={this.toggle}>Log out<IoIosExit size="24"/></Button></div>
                         <br />
                         <p>Current reservation:</p>
-                        <ReservationDisplay location={this.props.location} equipment={this.props.equipment}/>
+                        <ReservationDisplay timeLeft={this.state.timeLeft} reservation={this.props.reservation} />
                     </Col>
                 </Row>
             </Container>
@@ -47,9 +56,10 @@ class AccountSummary extends Component {
 }
 
 function mapStateToProps(state) {
-    const { location, equipment } = state.reservation;
+    const { reservation } = state.reservation;
     return {
-        location, equipment
+        reservation,
+
     }
 }
 export default connect(mapStateToProps)(AccountSummary);
