@@ -34,6 +34,9 @@ class PMap extends React.Component {
             lockDetails: null,
             messageDetails: null,
         }
+        setInterval(() => {
+            this.getDockingStations();
+        }, 5000);
     }
 
     componentDidMount() {
@@ -118,7 +121,6 @@ class PMap extends React.Component {
                 message: "Equipment locked successfully!"
             }
         })
-        this.getDockingStations();
     }
 
     unlock = async () => {
@@ -129,7 +131,6 @@ class PMap extends React.Component {
                 message: "Equipment unlocked successfully!"
             }
         })
-        this.getDockingStations();
     }
 
     test = () => {
