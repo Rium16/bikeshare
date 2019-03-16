@@ -21,7 +21,7 @@ class Navigation extends Component {
         return (
             <div>
                 <Navbar className="nav" style={{backgroundColor: theme(localStorage.getItem('theme')).backgroundColor}} light expand="md">
-                    <NavbarBrand><Link to="/map">pyroiscycles</Link></NavbarBrand>
+                    <NavbarBrand className="brand"><Link to="/map">pyroiscycles</Link></NavbarBrand>
 
                     <Nav className="ml-auto" navbar>
                         <NavItem>{this.state.loginMessage}</NavItem>
