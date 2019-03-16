@@ -18,12 +18,15 @@ class AccountSummary extends Component {
     }
 
     componentDidMount() {
-        const te = new Date(this.props.reservation.end);
-        const t = te.getTime() - Date.now();
-        console.log(new Date(t).getMinutes());
-        this.setState({
-            timeLeft:  new Date(t).getMinutes()
-        })
+        if (this.props.reservation) {
+            const te = new Date(this.props.reservation.end);
+            const t = te.getTime() - Date.now();
+            console.log(new Date(t).getMinutes());
+            this.setState({
+                timeLeft:  new Date(t).getMinutes()
+            })
+        }
+        
     }
 
     handleLogout =() => {

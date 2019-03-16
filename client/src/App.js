@@ -13,7 +13,8 @@ import AlertBanner from './views/AlertBanner';
 
 // redux stuff
 import configStore from './configStore';
-import { Provider } from 'react-redux';
+import { connect } from 'react-redux';
+import { getReservations } from './_actions/userActions';
 
 import { history } from './services/history';
 
@@ -21,7 +22,7 @@ import { Router, Route, Redirect } from "react-router-dom";
 
 const store = configStore();
 
-export default class App extends Component {
+class App extends Component {
   constructor(props){
     super(props);
     this.state = {
@@ -29,13 +30,17 @@ export default class App extends Component {
     }
   }
 
+  componentDidMount() {
+    if (localStorage.getItem('user')) {
+      this.props.dispatch(getReservations(JSON.parse(localStorage.getItem('user')).CID));
+    }
+  }
+
   render() {
     return (
-      <Provider store={store}>
         <div className="App">
           {Page()}
         </div>
-      </Provider>
     );
   }
 }
@@ -43,7 +48,7 @@ export default class App extends Component {
 function Page() {
   // example of how we can change the default redirect based on who is 
   // logged in - obviously this needs changed but whatev
-  const homepage = localStorage.getItem('user') ? "/staff" : "/map"
+  const homepage = localStorage.getItem('user') ? "/map" : "/map"
   return (
     <Router history={history}>
       <div>
@@ -89,3 +94,10 @@ function StaffPage() {
       <Staff />  
     );
 }
+
+function mapStateToProps(state) {
+  return {
+  }
+}
+
+export default connect(mapStateToProps)(App);
