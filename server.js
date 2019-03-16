@@ -396,7 +396,7 @@ app.post('/api/lock', (req, res) => {
         if (rows.length >= 3) {
             res.send({
                 reservation: null,
-                message: `You already have ${rows.length} ongoing loans, which is the max permitted. Return a bike to re-enable reservation functionality.`
+                message: `You've exceed the max number of allowed concurrent loans.`
             })
         } else {
             con.query(`SELECT * FROM ${dbName}.equipment WHERE type='bike' AND locationID=? AND isUnavailable=0 AND isLocked=0;`, [req.body.locationID], (err, rows) => {

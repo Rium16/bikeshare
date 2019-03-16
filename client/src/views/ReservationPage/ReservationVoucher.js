@@ -4,6 +4,7 @@ import ReservationInformation from './ReservationInformation';
 import SettingsNav from '../settings_components/SettingsNav';
 
 import { loan, unlock } from '../../_actions/userActions';
+
 import { connect } from 'react-redux';
 import { history } from '../../services/history';
 
@@ -50,6 +51,8 @@ class ReservationVoucher extends Component {
     render() {
         const ts = this.props.reservation.start.split(/[T\.]/);
         const te = this.props.reservation.end.split(/[T\.]/);
+        const t = new Date(this.props.reservation.start);
+        console.log(t.toDateString());
         const qr = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${this.props.reservation.customerID}${this.props.reservation.start}`;
 
         return (
