@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Marker, Popup,  } from 'react-leaflet';
+import Hider from './Hider';
 import Count from './Count';
 import L from 'leaflet';
 
@@ -22,9 +23,11 @@ class PMarker extends Component {
                 onClose={this.props.onClose}
                 closeButton={false}
                 >
+                <Hider visible={!this.props.loggedIn} />
                 <h1 className="location-name">{this.props.name}</h1>
                 <Count max={this.props.bikeCapacity} current={this.props.numFreeBikes} className="count">{this.props.numFreeBikes}</Count> available bikes <br />
                 <Count max={this.props.bikeCapacity} current={this.props.bikeCapacity - this.props.numBikes} className="count">{this.props.bikeCapacity - this.props.numBikes}</Count> empty docks
+                
                 </Popup>
 
             </Marker>
