@@ -5,6 +5,7 @@ import { Navbar, NavbarBrand, Nav, NavItem } from 'reactstrap';
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { IoIosContact, IoIosSettings, IoIosPulse,  } from 'react-icons/io';
+import { theme } from '../services/theme';
 
 class Navigation extends Component {
 
@@ -19,7 +20,7 @@ class Navigation extends Component {
     render() {
         return (
             <div>
-                <Navbar className="nav" color="light" light expand="md">
+                <Navbar className="nav" style={{backgroundColor: theme(localStorage.getItem('theme')).backgroundColor}} light expand="md">
                     <NavbarBrand><Link to="/map">pyroiscycles</Link></NavbarBrand>
 
                     <Nav className="ml-auto" navbar>

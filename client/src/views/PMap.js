@@ -6,6 +6,7 @@ import LockPanel from './LockPanel';
 import { Button, Col } from 'reactstrap';
 import { IoIosLock, IoIosKey, IoIosBicycle, IoIosWarning } from 'react-icons/io';
 
+import { theme } from '../services/theme';
 import { connect } from 'react-redux';
 import { lock, unlock, getReservations } from '../_actions/userActions';
 import { userService } from '../services/userService';
@@ -33,6 +34,8 @@ class PMap extends React.Component {
             viewing: null,
             lockDetails: null,
             messageDetails: null,
+            mapUrl: theme(localStorage.getItem('theme')).mapUrl,
+            mapAttribution: theme(localStorage.getItem('theme')).mapAttribution
         }
         setInterval(() => {
             this.getDockingStations();
@@ -150,8 +153,8 @@ class PMap extends React.Component {
                 onViewportChanged={this.onViewportChanged}
             >
             <TileLayer
-                attribution='&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>'
-                url='https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png'
+                attribution={this.state.mapAttribution}
+                url={this.state.mapUrl}
             />
             {this.state.docks.map(function(location) {
             var position = [location.latitude, location.longitude];

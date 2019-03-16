@@ -3,6 +3,9 @@ import SettingsNav from './SettingsNav';
 import { Container, Row, Col, Form, FormGroup, Label, Input, Button, CustomInput } from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.css';
 
+import { theme } from '../../services/theme';
+import { history } from '../../services/history';
+
 
 export class AccountPage extends Component {
     constructor(props) {
@@ -74,6 +77,27 @@ export class BillingPage extends Component {
 }
 
 export class DisplayPage extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            dark: localStorage.getItem('theme') === 'dark',
+        }
+    }
+
+    toggle = () => {
+        if (this.state.dark === true) {
+            localStorage.setItem('theme', 'light');
+            this.setState({
+                dark: false,
+            })
+        } else {
+            localStorage.setItem('theme', 'dark');
+            this.setState({
+                dark: true
+            })
+        }
+        history.push('/map');
+    }
 
     render() {
         return (
@@ -84,7 +108,7 @@ export class DisplayPage extends Component {
                 <h4>Display</h4>
                     <Row>
                         <Col sm="12" md="6" className="offset-md-3">
-                        <CustomInput type="switch" id="exampleCustomSwitch" name="customSwitch" label="enable dark mode" className="dark-toggle" />
+                        <CustomInput onClick={this.toggle} checked={this.state.dark} type="switch" id="exampleCustomSwitch" name="customSwitch" label="enable dark mode" className="dark-toggle" />
                         </Col>
                     </Row>
                 </Container>
