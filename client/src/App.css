@@ -66,9 +66,27 @@
 
 }
 
+.hider {
+  position: absolute;
+  background-color: white;
+  opacity: 0.8;
+  height: 75%;
+  width: 77%;
+}
+
+.hider-icon {
+  text-align: center;
+  margin: 0px;
+}
+
+.hider-text {
+  margin: 0px;
+  text-align: center;
+  font-size: 1.3em;
+}
+
 .alert-container {
   background-color:green;
-  
 }
 
 .alert-text {

@@ -163,6 +163,7 @@ class PMap extends React.Component {
                 position={position}
                 onOpen={() => _this.openLocation(location)}
                 onClose={_this.closeLocation}
+                loggedIn={localStorage.getItem('user') !== null}
                 >
                 </PMarker>
                 );
