@@ -16,6 +16,7 @@
     "circular-json": "^0.5.9",
     "concurrently": "^4.1.0",
     "cookie-parser": "^1.4.3",
+    "crypto-js": "^3.1.9-1",
     "express": "^4.16.4",
     "express-session": "^1.15.6",
     "joi": "^14.3.1",
