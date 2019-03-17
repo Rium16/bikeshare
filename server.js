@@ -8,6 +8,7 @@ const CircularJSON = require('circular-json');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const uuid = require('uuid/v1');
+const sha256 = require('crypto-js/sha256')
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -109,8 +110,8 @@ app.put('/api/user', (req, res) => {
                                         message: 'A user with this phone number alread exists',
                                     });
                                     
-                                } else {
-                                    con.query(`INSERT INTO ${dbName}.customers (password, firstname, lastname, DOB, email, phone, payment_details, address) VALUES (?, ?, ?, 'whateve', ?, ?, 'whateve', 'whateve')`, [data.password, data.firstName, data.lastName, data.email, data.phone], (err, rows) =>{
+								} else {
+                                    con.query(`INSERT INTO ${dbName}.customers (password, firstname, lastname, DOB, email, phone, payment_details, address) VALUES (?, ?, ?, 'whateve', ?, ?, 'whateve', 'whateve')`, [sha256(data.password).words[0], data.firstName, data.lastName, data.email, data.phone], (err, rows) =>{
                                         if (err) throw err;
                                         else {
                                             if (rows.length !== 0) {
@@ -135,7 +136,7 @@ app.put('/api/user', (req, res) => {
 
 
 app.post('/api/user', (req, res) => {
-    con.query(`SELECT * FROM ${dbName}.customers WHERE email=? AND password=?`, [req.body.email, req.body.password], (err, rows) => {
+    con.query(`SELECT * FROM ${dbName}.customers WHERE email=? AND password=?`, [req.body.email, sha256(req.body.password).words[0]], (err, rows) => {
         if (err) throw err;
         else res.send(rows);
     });
@@ -490,9 +491,10 @@ app.post('/api/unlock', (req, res) => {
 });
 
 app.get('/api/pastLoans', (req, res) => {
+	var locs = {};
 	var startFrom = new Date(parseInt(req.query.startFrom, 10));
 	var year = startFrom.getFullYear();
-	var month = startFrom.getMonth();
+	var month = startFrom.getMonth() + 1;
 	if (month < 10)
 		month = '0' + month;
 	var day = startFrom.getDate();
@@ -501,22 +503,67 @@ app.get('/api/pastLoans', (req, res) => {
 	con.query(`SELECT * FROM ${dbName}.reservations WHERE start >= '${year}-${month}-${day} 00:00:00'`, (err, rows) => {
 		if (err) throw err;
 		else {
-			var rentals = {};
-			for (var i in rows) {
-				var rental = "resID_" + rows[i].reservationID;
-				rentals[rental] = {
-					start: rows[i].start,
-					location: rows[i].locationID
-				};
-			}
-			//console.log(rentals);
-			
-			res.send({
-				rentals
+			con.query(`SELECT * FROM ${dbName}.locations`, (err, locRows) => {
+				if (err)
+					throw err;
+				else {
+					for (var loc in locRows) {
+						locs[locRows[loc].LID] = locRows[loc].name;
+					}
+					var rentals = {};
+					for (var i in rows) {
+						var rental = "resID_" + rows[i].reservationID;
+						rentals[rental] = {
+							start: rows[i].start,
+							location: locs[rows[i].locationID.toString()]
+						};
+					}
+					res.send({
+						rentals
+					});
+				}
 			});
 		}
 	})
 })
+
+app.post('/api/addLocation', (req, res) => {
+	con.beginTransaction((err) => {
+		if (err) {
+			con.rollback(() => { throw err });
+		}
+		console.log(req.body);
+		con.query(`INSERT INTO ${dbName}.locations (name, activeDock, bikeCapacity, lockerCapacity, latitude, longitude) VALUES (?, ?, ?, ?, ?, ?);`, [req.body.name, req.body.activeDock, req.body.bikeCapacity, req.body.lockerCapacity, req.body.latitude, req.body.longitude], (err, rows) => {
+			if (err) {
+				con.rollback(() => { throw err });
+			}
+			res.status = 200;
+			res.send(req.body);
+			console.log("sent response")
+		});
+	});
+});
+
+//Needs some work, MySQL DELETE will always return (add SELECT error checking)
+app.post('/api/removeLocation', (req, res) => {
+	con.beginTransaction((err) => {
+		if (err) {
+			con.rollback(() => { throw err });
+		}
+		con.query(`DELETE FROM ${dbName}.locations WHERE name=?`, [req.body.name], (err) => {
+			if (err) {
+				con.rollback(() => { throw err });
+			}
+			else {
+				res.status(200);
+				res.send({
+					message: `Location ${req.body.name} removed`
+				})
+			}
+		});
+	});
+});
+
 
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname+'/client/build/index.js'));

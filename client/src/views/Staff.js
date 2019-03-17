@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { Table, Card, CardBody, CardText, CardTitle, Row, Col, Spinner } from 'reactstrap';
+import { Table, Card, CardBody, CardText, CardTitle, Row, Col, Spinner, Form, FormGroup, Label, Input, Button } from 'reactstrap';
 import Sidebar from 'react-sidebar';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import { Chart } from 'react-charts';
 
 const mql = window.matchMedia(`(min-width: 10px)`);
@@ -23,11 +23,29 @@ class Staff extends Component {
 				</Card>,
 			card2:
 				<Card body className="table-scroll">
-					<CardTitle><b>Rentals - 24h</b></CardTitle>
+					<CardTitle><b>Rentals - Today</b></CardTitle>
 					{sp}
 				</Card>,
-			card3: sp,
-			data: [[0, 1], [1, 2], [2, 4], [3, 2], [4, 7]]
+			card3:
+				<Card body className="table-scroll">
+					<CardTitle><b>Overview of Locations</b></CardTitle>
+					{sp}
+				</Card>,
+			card4:
+				<Card body className="table-scroll">
+					<CardTitle><b>Add a Location</b></CardTitle>
+					{sp}
+				</Card>,
+			card5:
+				<Card body className="table-scroll">
+					<CardTitle><b>Popular Locations - All Time</b></CardTitle>
+					{sp}
+				</Card>,
+			card6:
+				<Card body className="table-scroll">
+					<CardTitle><b>Popular Locations - 24h</b></CardTitle>
+					{sp}
+				</Card>,
 
 		};
 		this.onSetSidebarOpen = this.onSetSidebarOpen.bind(this);
@@ -37,12 +55,14 @@ class Staff extends Component {
 
 	componentWillMount() {
 		mql.addListener(this.mediaQueryChanged);
-		this.plotBikeRentals(1, new Date(2019, 1, 1), "Rentals - All Time");
-		var today = new Date();
-		today.setDate(today.getDate() - 1);
-		this.plotBikeRentals(2, today, "Rentals - 24h");
-		//this.Card2();
+		this.plotBikeRentals(1, new Date(2019, 0, 1), "Rentals - All Time");
+		this.plotBikeRentals(2, new Date(Date.now()), "Rentals - Today");
 		this.Card3();
+		this.popularLocations(5, new Date(2019, 0, 1), "Popular Locations - All Time");
+		this.popularLocations(6, new Date(Date.now()), "Popular Locations - Today");
+		this.addLocation();
+		this.removeLocation("");
+		//this.removeLocation("test");
 	}
 
 	componentWillUnmount() {
@@ -66,11 +86,8 @@ class Staff extends Component {
 							<Link to="/map">Map</Link>
 						</div>
 						<div className="sidebar-contents">
-							Links and options
-							</div>
-						<div className="sidebar-contents">
-							More options
-							</div>
+							<Link to="">Company Website</Link>
+						</div>
 					</div>
 
 				}
@@ -88,7 +105,8 @@ class Staff extends Component {
 		return (
 			<Sidebar
 				sidebar={
-					<div>
+					<div></div>
+					/*<div>
 						<div className="sidebar-contents">
 							Big Chunguska
 							</div>
@@ -101,7 +119,7 @@ class Staff extends Component {
 						<div className="sidebar-contents">
 							etc.
 							</div>
-					</div>
+					</div>*/
 				}
 				defaultSidebarWidth={1}
 				open={this.state.sidebarOpen}
@@ -112,6 +130,165 @@ class Staff extends Component {
 				}}
 			></Sidebar>
 		)
+	}
+
+	addLocation() {
+		var formData = {
+			name: 'test',
+			activeDock: 1,
+			bikeCapacity: 20,
+			lockerCapacity: 20,
+			latitude: 0,
+			longitude: 0
+		}
+		this.setState({
+			card4:
+				<Card body className="table-scroll" >
+					<CardTitle><b>Add a Location</b></CardTitle>
+					<Form>
+						<FormGroup>
+							<Label>Location name</Label>
+							<Input type="text" name="name" id="name" />
+						</FormGroup>
+						<FormGroup>
+							<Label>Active Dock</Label>
+							<Input type="number" name="activeDock" id="activeDock" />
+						</FormGroup>
+						<FormGroup>
+							<Label>Bike Capacity</Label>
+							<Input type="number" name="bikeCapacity" id="bikeCapacity" />
+						</FormGroup>
+						<FormGroup>
+							<Label>Locker Capacity</Label>
+							<Input type="number" name="lockerCapacity" id="lockerCapacity" />
+						</FormGroup>
+						<FormGroup>
+							<Label>Latitude</Label>
+							<Input type="number" name="latitude" id="latitude" />
+						</FormGroup>
+						<FormGroup>
+							<Label>Longitude</Label>
+							<Input type="number" name="longitude" id="longitude" />
+						</FormGroup>
+						<Button onClick="{this.onSubmit()}">Add Location</Button>
+					</Form>
+				</Card>
+		})
+	}
+
+	onSubmit = async () => {
+		this.setState({
+			card4:
+				<Card body className="table-scroll">
+					<CardTitle><b>Add a LocationTest</b></CardTitle>
+				</Card>
+		})
+		var formData = {
+			name: document.getElementById('name'),
+			activeDock: document.getElementById('activeDock'),
+			bikeCapacity: document.getElementById('bikeCapacity'),
+			lockerCapacity: document.getElementById('lockerCapacity'),
+			latitude: document.getElementById('latitude'),
+			longitude: document.getElementById('longitude'),
+		}
+		const response = await fetch(`/api/addLocation`, {
+			method: "POST",
+			headers: {
+				'Accept': 'application/json',
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				name: formData.name,
+				activeDock: formData.activeDock,
+				bikeCapacity: formData.bikeCapacity,
+				lockerCapacity: formData.lockerCapacity,
+				latitude: formData.latitude,
+				longitude: formData.longitude
+			})
+		});
+		const body = await response.json();
+		if (response.status != 200) throw Error(body.message);
+		else {
+			//this.removeLocation('test');
+			/*this.setState({
+				card4:
+					<Card body className="table-scroll">
+						<CardTitle><b>Add a LocationTest</b></CardTitle>
+					</Card>
+			})*/
+		}
+	}
+
+	removeLocation = async (name) => {
+		const response = await fetch(`/api/removeLocation`, {
+			method: "POST",
+			headers: {
+				'Accept': 'application/json',
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				name: name
+			})
+		});
+	}
+
+	//table of locations in order of popularity
+	popularLocations = async (cardPosition, startFrom, message) => {
+		const response = await fetch(`/api/pastLoans?startFrom=${startFrom.getTime()}`, {
+			method: "GET",
+		});
+		const body = await response.json();
+		if (response.status != 200) throw Error(body.message);
+		else {
+			var rentals = body.rentals;
+			var locs = {};
+			for (var rental in rentals) {
+				var loc = rentals[rental].location;
+				if (!locs[loc]) {
+					locs[loc] = 0
+				}
+				++locs[loc];
+			}
+
+			var sorted = [];
+			for (var loc in locs) {
+				sorted.push({
+					name: loc,
+					nbRes: locs[loc]
+				})
+			}
+			sorted.sort(function (a, b) {
+				return b.nbRes - a.nbRes;
+			})
+			var jsx =
+				<Card body className="table-scroll">
+					<CardTitle><b>{message}</b></CardTitle>
+					<Table size="sm">
+						<thead>
+							<th>Location</th>
+							<th>Hires</th>
+						</thead>
+						<tbody>
+							{sorted.map(loc => (<tr><td>{loc.name}</td><td>{loc.nbRes}</td></tr>))}
+						</tbody>
+					</Table>
+				</Card>
+			;
+
+			if (cardPosition == 4) {
+				this.setState({
+					card4: jsx
+				})
+			} else if (cardPosition == 5) {
+				this.setState({
+					card5: jsx
+				})
+			} else if (cardPosition == 6) {
+				this.setState({
+					card6: jsx
+				})
+			}
+		}
 	}
 
 	//generates a graph of all bike rentals since a specified date "startFrom"
@@ -166,10 +343,15 @@ class Staff extends Component {
 					/>
 				</div>
 			);
-			//return lineChart;
+			var startMessage = "";
+			if (isNaN(dates[0])) {
+				startMessage = "(No Rentals)";
+			} else {
+				startMessage = "(Starting " + new Date(dates[0]).toString() + ")";
+			}
 			var component =
-			<Card body className="table-scroll">
-					<CardTitle><b>{message} (Starting {new Date(dates[0]).toString()}</b></CardTitle>
+				<Card body className="table-scroll">
+					<CardTitle><b>{message} {startMessage}</b></CardTitle>
 				{lineChart}
 			</Card>
 
@@ -195,65 +377,14 @@ class Staff extends Component {
 			}
 		}
 	}
-		
 
-
-	Card2 = async () => {
-		const response = await fetch('/api/location');
-		const body = await response.json();
-		if (response.status != 200) throw Error(body.message);
-		else {
-			var locs = [];
-			body.map(function (x) {
-				var loc = {
-					LID: x.LID,
-					latitude: x.latitude,
-					longitude: x.longitude,
-					name: x.name,
-					numBikes: x.numBikes,
-					numFreeBikes: x.numFreeBikes,
-					bikeCapacity: x.bikeCapacity,
-					helmetCapacity: x.helmetCapcity
-				}
-				locs.push(loc);
-			})
-			this.setState({
-				card2:
-					<Table size="sm">
-						<thead>
-							<td>Location name</td>
-							<td>Number of bikes</td>
-							<td>Number of free bikes</td>
-						</thead>
-						<tbody>
-							<tr>
-								<td>{locs[0].name}</td>
-								<td>{locs[0].numBikes}</td>
-								<td>{locs[0].numFreeBikes}</td>
-							</tr>
-							<tr>
-								<td>{locs[1].name}</td>
-								<td>{locs[1].numBikes}</td>
-								<td>{locs[1].numFreeBikes}</td>
-							</tr>
-							<tr>
-								<td>{locs[2].name}</td>
-								<td>{locs[2].numBikes}</td>
-								<td>{locs[2].numFreeBikes}</td>
-							</tr>
-						</tbody>
-					</Table>
-			});
-		}
-	}
-
-	func = (locs) => {
+	makeBikeTable = (locs) => {
 		return (
 			<Table size="sm">
 				<thead>
 					<th>Location</th>
-					<th>Total bikes</th>
-					<th>Available</th>
+					<th>Total Docks</th>
+					<th>Available Bikes</th>
 				</thead>
 				<tbody>
 					{locs.map(loc => (<tr><td>{loc.name}</td> <td>{loc.numBikes}</td> <td>{loc.numFreeBikes}</td></tr>))}
@@ -262,7 +393,7 @@ class Staff extends Component {
 	)
 }
 
-	Card3 = async() => {
+	Card3 = async () => {
 		const response = await fetch('/api/location');
 		const body = await response.json();
 		if (response.status != 200) throw Error(body.message);
@@ -281,13 +412,17 @@ class Staff extends Component {
 				}
 				locs.push(loc);
 			})
-			
+
 			this.setState({
-				card3: this.func(locs)
+				card3:
+					<Card body className="table-scroll">
+						<CardTitle><b>Location Bike Count</b></CardTitle>
+						{this.makeBikeTable(locs)}
+					</Card>
 			})
 		}
 	}
-
+						
 	render() {
 		return (
 			<div>
@@ -307,16 +442,20 @@ class Staff extends Component {
 				<div className="staff-center-page">
 					<Row className="card-row-height">
 						<Col sm="6">
-							<Card body className="table-scroll">
-								<CardTitle><b>Bikes & Locations</b></CardTitle>
-								{this.state.card3}
-							</Card>
+							{this.state.card3}
 						</Col>
 						<Col sm="6">
-							<Card body className="table-scroll">
-								<CardTitle>Some other graph/figure</CardTitle>
-								<Spinner color="primary" />
-							</Card>
+							{this.state.card4}
+						</Col>
+					</Row>
+				</div>
+				<div className="staff-center-page">
+					<Row className="card-row-height">
+						<Col sm="6">
+							{this.state.card5}
+						</Col>
+						<Col sm="6">
+							{this.state.card6}
 						</Col>
 					</Row>
 				</div>
