@@ -8,6 +8,7 @@ const CircularJSON = require('circular-json');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const uuid = require('uuid/v1');
+const sha256 = require('crypto-js/sha256')
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -109,8 +110,8 @@ app.put('/api/user', (req, res) => {
                                         message: 'A user with this phone number alread exists',
                                     });
                                     
-                                } else {
-                                    con.query(`INSERT INTO ${dbName}.customers (password, firstname, lastname, DOB, email, phone, payment_details, address) VALUES (?, ?, ?, 'whateve', ?, ?, 'whateve', 'whateve')`, [data.password, data.firstName, data.lastName, data.email, data.phone], (err, rows) =>{
+								} else {
+                                    con.query(`INSERT INTO ${dbName}.customers (password, firstname, lastname, DOB, email, phone, payment_details, address) VALUES (?, ?, ?, 'whateve', ?, ?, 'whateve', 'whateve')`, [sha256(data.password).words[0], data.firstName, data.lastName, data.email, data.phone], (err, rows) =>{
                                         if (err) throw err;
                                         else {
                                             if (rows.length !== 0) {
@@ -135,7 +136,7 @@ app.put('/api/user', (req, res) => {
 
 
 app.post('/api/user', (req, res) => {
-    con.query(`SELECT * FROM ${dbName}.customers WHERE email=? AND password=?`, [req.body.email, req.body.password], (err, rows) => {
+    con.query(`SELECT * FROM ${dbName}.customers WHERE email=? AND password=?`, [req.body.email, sha256(req.body.password).words[0]], (err, rows) => {
         if (err) throw err;
         else res.send(rows);
     });

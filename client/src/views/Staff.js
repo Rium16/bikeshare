@@ -61,6 +61,7 @@ class Staff extends Component {
 		this.popularLocations(5, new Date(2019, 0, 1), "Popular Locations - All Time");
 		this.popularLocations(6, new Date(Date.now()), "Popular Locations - Today");
 		this.addLocation();
+		this.removeLocation("");
 		//this.removeLocation("test");
 	}
 
