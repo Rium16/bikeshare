@@ -86,7 +86,7 @@ class Staff extends Component {
 							<Link to="/map">Map</Link>
 						</div>
 						<div className="sidebar-contents">
-							<Link to="">Company Website</Link>
+							<a href="https://www2.macs.hw.ac.uk/~lh54/company%20web/home.html">Company Website</a>
 						</div>
 					</div>
 
@@ -323,7 +323,7 @@ class Staff extends Component {
 			}
 			var myData = [
 				{
-					label: "Bikes rented during X period",
+					//label: "Bikes rented during X period",
 					data: data
 				}
 			];
@@ -331,13 +331,13 @@ class Staff extends Component {
 				<div
 					style={{
 						width: "100%",
-						height: "100%"
+						height: "200%"
 					}}
 				>
 					<Chart
 						data={myData}
 						axes={[
-							{ primary: true, type: "linear", position: "bottom" },
+							{ primary: true, type: "time", time: { unit: "month" }, position: "bottom" },
 							{ type: "linear", position: "left" }
 						]}
 					/>
