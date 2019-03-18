@@ -3,9 +3,10 @@ import { Map, TileLayer, } from 'react-leaflet';
 import PMarker from './PMarker';
 import MessageModal from './MessageModal';
 import LockPanel from './LockPanel';
+import SearchLocationsList from './SearchLocationsList';
 import { Button, Col } from 'reactstrap';
-import { IoIosLock, IoIosKey, IoIosBicycle, IoIosWarning } from 'react-icons/io';
-
+import { IoIosLock, IoIosKey, IoIosBicycle, IoIosMenu } from 'react-icons/io';
+import Sidebar from 'react-sidebar';
 import { theme } from '../services/theme';
 import { connect } from 'react-redux';
 import { lock, unlock, getReservations } from '../_actions/userActions';
@@ -34,8 +35,8 @@ class PMap extends React.Component {
             viewing: null,
             lockDetails: null,
             messageDetails: null,
-            mapUrl: theme(localStorage.getItem('theme')).mapUrl,
-            mapAttribution: theme(localStorage.getItem('theme')).mapAttribution
+            theme: theme(localStorage.getItem('theme')),
+            sidebarOpen: false
         }
         setInterval(() => {
             this.getDockingStations();
@@ -81,6 +82,12 @@ class PMap extends React.Component {
         }
     }
 
+    setViewport = (viewport) => {
+        this.setState({
+            viewport: viewport
+        })
+    }
+
     getDockingStations = async () => {
         const response = await fetch('/api/location');
         const body = await response.json();
@@ -117,6 +124,12 @@ class PMap extends React.Component {
         history.push('/voucher')
     }
 
+    openSidebar = () => {
+        this.setState({
+            sidebarOpen: !this.state.sidebarOpen
+        })
+    }
+
     lock = async (viewing) => {
         await this.props.dispatch(lock(viewing, JSON.parse(localStorage.getItem('user'))));
         this.setState({
@@ -144,6 +157,7 @@ class PMap extends React.Component {
         // reference to the instantiated PMap component, helpful for 
         // nested functions, can't tell if this is hacky or not
         const _this = this;
+        const theme = this.state.theme;
         return (
             <div className="map-container">
             <Map
@@ -153,8 +167,8 @@ class PMap extends React.Component {
                 onViewportChanged={this.onViewportChanged}
             >
             <TileLayer
-                attribution={this.state.mapAttribution}
-                url={this.state.mapUrl}
+                attribution={theme.mapAttribution}
+                url={theme.mapUrl}
             />
             {this.state.docks.map(function(location) {
             var position = [location.latitude, location.longitude];
@@ -175,12 +189,32 @@ class PMap extends React.Component {
             disabled={!this.props.locked}
             onClick={this.viewReservation}
             ><IoIosBicycle size="24"/></Button>
-                       
+
+            {this.state.sidebarOpen &&
+            <Sidebar
+            className="search-sidebar"
+            sidebar={<SearchLocationsList style={{backgroundColor: theme.backgroundColor, color: theme.color}} setViewport={this.setViewport}/>}
+            open={this.state.sidebarOpen}
+            onSetOpen={this.openSidebar}
+            styles={{sidebar: {background: theme.backgroundColor, zIndex: 1001,},
+                        
+            }}
+            />       
+            }
+            <Button
+            className="search-button"
+            style={{backgroundColor: theme.backgroundColor, color: theme.color}}
+            onClick={() => this.openSidebar()}
+            >
+            <IoIosMenu size="28"/>
+            </Button>
+
+            
             <div class="wrapper">
             {this.props.locked ?
-            <Button color="info" onClick={() => this.unlock()}  className="locker">{<IoIosKey size="1.5em"/>}</Button>
+            <Button color="primary" onClick={() => this.unlock()}  className="locker">{<IoIosKey size="1.5em"/>}</Button>
             : // can only lock if logged in and viewing a depot
-            <Button color="info" disabled={!(this.state.viewing && localStorage.getItem('user'))} onClick={() => this.lock(this.state.viewing)} className="locker">
+            <Button color="primary" disabled={!(this.state.viewing && localStorage.getItem('user'))} onClick={() => this.lock(this.state.viewing)} className="locker">
             <IoIosLock size="1.5em"/>
             </Button>
             }

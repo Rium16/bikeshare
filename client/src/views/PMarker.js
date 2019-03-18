@@ -22,6 +22,7 @@ class PMarker extends Component {
                 onOpen={this.props.onOpen}
                 onClose={this.props.onClose}
                 closeButton={false}
+                autoPan={false}
                 >
                 <Hider visible={!this.props.loggedIn} />
                 <h1 className="location-name">{this.props.name}</h1>
