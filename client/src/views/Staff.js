@@ -86,7 +86,7 @@ class Staff extends Component {
 							<Link to="/map">Map</Link>
 						</div>
 						<div className="sidebar-contents">
-							<Link to="">Company Website</Link>
+							<a href="http://www2.macs.hw.ac.uk/~lh54/company%20web/home.html?fbclid=IwAR2_ZdifYGjPY0FBUTYXVdzKWjmKm2CyTAOUPHgaCwFb49yXPqTp7JhXFdc">Company Website</a>
 						</div>
 					</div>
 
