@@ -62,6 +62,16 @@ const egpos = {
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+/*app.get('/api/isStaff', (req, res) => {
+	var message = {
+		isStaff: 'false'
+	}
+	console.log(`SELECT COUNT(*) FROM ${dbName}.customers WHERE email=${req.body.email}`);
+	con.query(`SELECT COUNT(*) FROM ${dbName}.customers WHERE email=?`, [req.body.email], (err, rows) => {
+		if (err) throw err;
+		else {
+})*/
+
 app.put('/api/user', (req, res) => {
     const data = req.body;
     const schema = Joi.object().keys({

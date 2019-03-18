@@ -32,7 +32,7 @@ class Login extends Component {
                     {/* need forgot? page */}
                     <a class="float-right" href="#">forgot?</a>
                     <label>password</label>
-                    <input onChange={this.props.handleChange('password')} name="password" class="form-control" placeholder="********" type="password"/>
+							<input onChange={this.props.handleChange('password')} name="password" class="form-control" placeholder="********" type="password"/>
                     {this.props.submitted && !this.props.password &&
                         <div className="help-block help-text">password is required</div>
                     }
