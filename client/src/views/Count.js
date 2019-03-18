@@ -6,34 +6,43 @@ import React, { Component } from 'react';
 
 class Count extends Component {
 
-    chooseColour(max, current) {
-        var ratio = current/max;
+    chooseColour() {
+        var ratio = this.props.current/this.props.max;
 
         if (ratio < 0.4) {
-            return {
-                color: 'red'
-            }
+            return 'red'
         } else if (ratio < 0.7) {
-            return {
-                color: "orange"
-            }
+            return 'orange'
         } else {
-            return {
-                color: "green"
-            }
+            return 'green'
         }
 
     }
 
     render() {
-        return (
-            <span 
-            className={this.props.className}
-            style={this.chooseColour(this.props.max, this.props.current)}
-            >
-            {this.props.current}
-            </span>
-        ) 
+        switch(this.props.type) {
+            case 'hist':
+                return (
+                    <div
+                    style={{
+                        backgroundColor: this.chooseColour(),
+                        width: "10px",
+                        height: `${3*this.props.current}px`,
+                    }}
+                    ></div>
+                )
+            case 'text':
+            default:
+                return (
+                    <span 
+                    className={this.props.className}
+                    style={{color: this.chooseColour()}}
+                    >
+                    {this.props.current}
+                    </span>
+                ) 
+        }
+        
     }
 }
 

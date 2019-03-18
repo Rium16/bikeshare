@@ -70,7 +70,7 @@ export class BillingPage extends Component {
         return (
             <div className="sub-setting-page">
                 <SettingsNav />
-                <h1>creeper? Awww man</h1>
+                <h1 style={{textAlign: 'center', marginTop: "30px"}}>[not implemented]</h1>
             </div>
         );
     }
@@ -126,15 +126,16 @@ export class AboutPage extends Component {
                     <Row>
                         
                         <Col sm="12" md="6" className="offset-md-3">
-                        <h4 align="center">About</h4>
-                            <p align="center">
-                                We're just a couple a' dudes being guys.
+                        <h4>About</h4>
+                            <p>
+                                We're an Edinburgh-based startup interested in smart, innovative
+                                solutions to common problems.
                             </p>
                         </Col>
                     </Row>
                     <Row>
                         <Col sm="12" md="6" className="offset-md-3">
-                            <p align="center">Find our company website&nbsp;<a href="https://i.imgur.com/EzQZz.jpg">here</a>.</p>
+                            <p align="center">Find our company website&nbsp;<a href="http://www2.macs.hw.ac.uk/~lh54/company%20web/home.html?fbclid=IwAR2_ZdifYGjPY0FBUTYXVdzKWjmKm2CyTAOUPHgaCwFb49yXPqTp7JhXFdc">here</a>.</p>
                         </Col>
                     </Row>
                 </Container>
