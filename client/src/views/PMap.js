@@ -82,6 +82,12 @@ class PMap extends React.Component {
         }
     }
 
+    setViewport = (viewport) => {
+        this.setState({
+            viewport: viewport
+        })
+    }
+
     getDockingStations = async () => {
         const response = await fetch('/api/location');
         const body = await response.json();
@@ -187,10 +193,12 @@ class PMap extends React.Component {
             {this.state.sidebarOpen &&
             <Sidebar
             className="search-sidebar"
-            sidebar={<SearchLocationsList />}
+            sidebar={<SearchLocationsList style={{backgroundColor: theme.backgroundColor, color: theme.color}} setViewport={this.setViewport}/>}
             open={this.state.sidebarOpen}
             onSetOpen={this.openSidebar}
-            styles={{sidebar: {background: "white", zIndex: 1001,}}}
+            styles={{sidebar: {background: theme.backgroundColor, zIndex: 1001,},
+                        
+            }}
             />       
             }
             <Button
@@ -204,9 +212,9 @@ class PMap extends React.Component {
             
             <div class="wrapper">
             {this.props.locked ?
-            <Button color="info" onClick={() => this.unlock()}  className="locker">{<IoIosKey size="1.5em"/>}</Button>
+            <Button color="primary" onClick={() => this.unlock()}  className="locker">{<IoIosKey size="1.5em"/>}</Button>
             : // can only lock if logged in and viewing a depot
-            <Button color="info" disabled={!(this.state.viewing && localStorage.getItem('user'))} onClick={() => this.lock(this.state.viewing)} className="locker">
+            <Button color="primary" disabled={!(this.state.viewing && localStorage.getItem('user'))} onClick={() => this.lock(this.state.viewing)} className="locker">
             <IoIosLock size="1.5em"/>
             </Button>
             }

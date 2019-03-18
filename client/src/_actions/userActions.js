@@ -24,8 +24,6 @@ export function login(username, password) {
         userService.login(username, password)
             .then(
                 user => {
-                    console.log("inside login");
-                    console.log(user);
                     history.push('/map'); 
                     dispatch(success(user));
                     dispatch(getReservations(user.CID));
@@ -89,7 +87,7 @@ export function lock(itemLocation, customer) {
                 response => {
                     if (response.reservation !== null) {
                         dispatch(success(response.reservation[0]));
-                        dispatch(alertActions.success("Equipment reserved successfully!"));
+                        dispatch(alertActions.success("Bike locked successfully!"));
                     } else {
                         dispatch(failure(response.message));
                         dispatch(alertActions.error(response.message));
@@ -116,7 +114,7 @@ export function unlock(EID) {
             .then(
                 message => {
                     dispatch(success(message));
-                    dispatch(alertActions.success("Equipment lock removed!"));
+                    dispatch(alertActions.success("Bike lock removed!"));
                 },
                 error => {
                     dispatch(failure(error));
@@ -166,7 +164,7 @@ export function loan(CID, EID, LID) {
             .then(
                 response => {
                     dispatch(success(response.loan[0]));
-                    dispatch(alertActions.success("Item is now on loan!"))
+                    dispatch(alertActions.success("Bike is now on loan!"))
                 },
                 error => {
                     dispatch(failure(error.toString()));
